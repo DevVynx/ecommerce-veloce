@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { googleAuthAction } from "@/shared/actions/auth/googleAuth";
 import googleGLogo from "@/shared/assets/images/authLogos/google-G.png";
 import { Button } from "@/shared/components/shadcn-ui/button";
-import { useAuthState } from "@/shared/states/useUser";
+import { useAuthState } from "@/shared/states/auth";
 
 type GoogleSocialLoginButtonProps = {
   redirectTo?: string;

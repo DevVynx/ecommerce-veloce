@@ -27,7 +27,7 @@ import {
   registerSchema,
   registerSteps,
 } from "@/shared/schemas/auth/registerForm";
-import { useAuthState } from "@/shared/states/useUser";
+import { useAuthState } from "@/shared/states/auth";
 
 import { Step1Identification } from "./Steps/Step1Identification";
 import { Step2Security } from "./Steps/Step2Security";

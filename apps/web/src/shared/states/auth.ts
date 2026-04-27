@@ -2,6 +2,20 @@ import type { GetUserResponse } from "@repo/types/contracts";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+type AuthMutexState = {
+  refreshPromise: Promise<unknown> | null;
+  logoutPromise: Promise<unknown> | null;
+  setRefreshPromise: (promise: Promise<unknown> | null) => void;
+  setLogoutPromise: (promise: Promise<unknown> | null) => void;
+};
+
+export const useAuthMutex = create<AuthMutexState>()((set) => ({
+  refreshPromise: null,
+  logoutPromise: null,
+  setRefreshPromise: (promise) => set({ refreshPromise: promise }),
+  setLogoutPromise: (promise) => set({ logoutPromise: promise }),
+}));
+
 type AuthState = {
   user: GetUserResponse["user"] | null;
   isAuthenticated: boolean;

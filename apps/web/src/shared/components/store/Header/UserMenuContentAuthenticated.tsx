@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { logout } from "@/shared/actions/auth/logout";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
-import { useAuthState } from "@/shared/states/useUser";
+import { useAuthState } from "@/shared/states/auth";
 
 export const UserMenuContentAuthenticated = () => {
   const { user, clearUser } = useAuthState();

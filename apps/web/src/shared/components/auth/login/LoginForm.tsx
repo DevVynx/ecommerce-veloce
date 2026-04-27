@@ -18,7 +18,7 @@ import { Input } from "@/shared/components/shadcn-ui/input";
 import { Label } from "@/shared/components/shadcn-ui/label";
 import { Spinner } from "@/shared/components/shadcn-ui/spinner";
 import { type LoginFormData, loginSchema } from "@/shared/schemas/auth/loginForm";
-import { useAuthState } from "@/shared/states/useUser";
+import { useAuthState } from "@/shared/states/auth";
 
 type LoginFormProps = {
   redirectTo?: string;

@@ -3,7 +3,7 @@ import { Heart, ShoppingCart } from "lucide-react";
 
 import { BadgedIconButton } from "@/shared/components/BadgedIconButton";
 import { UserMenu } from "@/shared/components/store/Header/UserMenu";
-import { useWishlistState } from "@/shared/states/useWishlist";
+import { useWishlistState } from "@/shared/states/wishlist";
 
 import { HeaderLogo } from "./Logo";
 import { MobileSideMenu } from "./MobileSideMenu";

@@ -14,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/shared/components/shadcn-ui/sheet";
-import { useAuthState } from "@/shared/states/useUser";
+import { useAuthState } from "@/shared/states/auth";
 
 import { sideMenuPersonalActionIcons, sideMenuStoreActionIcons } from "./MenuActions";
 import { MobileSideMenuItem } from "./MobileSideMenuItem";

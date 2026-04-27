@@ -11,7 +11,7 @@ import {
   NavigationMenuTrigger,
 } from "@/shared/components/shadcn-ui/navigation-menu";
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
-import { useAuthState } from "@/shared/states/useUser";
+import { useAuthState } from "@/shared/states/auth";
 
 import { UserMenuContentAuthenticated } from "./UserMenuContentAuthenticated";
 import { UserMenuContentUnauthenticated } from "./UserMenuContentUnauthenticated";
