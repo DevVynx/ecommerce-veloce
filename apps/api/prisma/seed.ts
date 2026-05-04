@@ -1,15 +1,3 @@
-/**
- * ========================================
- * SEED FINAL - 100% COMPATÍVEL COM SCHEMA
- * ========================================
- *
- * ANÁLISE COMPLETA DO SCHEMA:
- * ✅ Product NÃO tem campo "price" (só ProductVariant tem)
- * ✅ ProductOption usa campo "name" (não "type")
- * ✅ Promoções podem ser vinculadas a: category, product ou variant
- * ✅ Todos os campos opcionais tratados corretamente
- */
-
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
@@ -77,11 +65,63 @@ function generateSku(title: string, variantIndex: number = 0): string {
   return `${sanitized}-${suffix}`;
 }
 
+/**
+ * Gera todas as combinações possíveis de opções para um produto
+ * @param options - Array de opções (ex: [{ name: "Tamanho", values: ["P", "M"] }, { name: "Cor", values: ["Preto", "Branco"] }])
+ * @param baseVariant - Dados base para as variantes (price, stock, weight, isActive)
+ * @returns Array com todas as combinações de variantes
+ */
+function generateAllVariantCombinations(
+  options: { name: string; values: string[] }[],
+  baseVariant: { price: number; stock: number; weight: number; isActive?: boolean }
+): Array<{
+  price: number;
+  stock: number;
+  weight: number;
+  isActive?: boolean;
+  options: Record<string, string>;
+}> {
+  if (options.length === 0) {
+    return [{ ...baseVariant, options: {} }];
+  }
+
+  // Função recursiva para gerar combinações
+  function generateCombinations(
+    optionIndex: number,
+    currentCombination: Record<string, string>
+  ): Array<Record<string, string>> {
+    if (optionIndex === options.length) {
+      return [currentCombination];
+    }
+
+    const currentOption = options[optionIndex];
+    if (!currentOption) return [currentCombination]; // ← ADICIONADO: verificação de undefined
+    const combinations: Array<Record<string, string>> = [];
+
+    for (const value of currentOption.values) {
+      const newCombination = {
+        ...currentCombination,
+        [currentOption.name]: value,
+      };
+      combinations.push(...generateCombinations(optionIndex + 1, newCombination));
+    }
+
+    return combinations;
+  }
+
+  const allCombinations = generateCombinations(0, {});
+
+  return allCombinations.map((combination) => ({
+    ...baseVariant,
+    options: combination,
+  }));
+}
+
 // ==========================================
 // DADOS BASE
 // ==========================================
 
-const categories = ["men's clothing", "jewelery", "electronics", "women's clothing"];
+const categories = ["men's clothing", "jewelry", "electronics", "women's clothing"];
 
 // Promoções de categoria
 const categoryPromotions = [
@@ -109,7 +149,7 @@ const productsData: ProductData[] = [
   {
     title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
     description: "Your perfect pack for everyday use and walks in the forest...",
-    image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png",
+    image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.png",
     totalStock: 45,
     ratingRate: 3.9,
     ratingCount: 120,
@@ -134,7 +174,7 @@ const productsData: ProductData[] = [
   {
     title: "Mens Casual Premium Slim Fit T-Shirts",
     description: "Slim-fitting style, contrast raglan long sleeve...",
-    image: "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_t.png",
+    image: "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.png",
     totalStock: 95,
     ratingRate: 4.1,
     ratingCount: 259,
@@ -243,7 +283,7 @@ const productsData: ProductData[] = [
   {
     title: "Mens Cotton Jacket",
     description: "Great outerwear jackets for Spring/Autumn/Winter...",
-    image: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
+    image: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.png",
     totalStock: 30,
     ratingRate: 4.7,
     ratingCount: 500,
@@ -294,7 +334,7 @@ const productsData: ProductData[] = [
   {
     title: "Mens Casual Slim Fit",
     description: "The color could be slightly different between on the screen and in practice...",
-    image: "https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_t.png",
+    image: "https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.png",
     totalStock: 200,
     ratingRate: 2.1,
     ratingCount: 430,
@@ -338,11 +378,11 @@ const productsData: ProductData[] = [
     title: "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
     description:
       "From our Legends Collection, the Naga was inspired by the mythical water dragon...",
-    image: "https://fakestoreapi.com/img/71pWzhdJNwL._AC_UL640_QL65_ML3_t.png",
+    image: "https://fakestoreapi.com/img/71pWzhdJNwL._AC_UL640_QL65_ML3_.png",
     totalStock: 8,
     ratingRate: 4.6,
     ratingCount: 400,
-    category: "jewelery",
+    category: "jewelry",
     variants: [
       { price: 695, stock: 5, weight: 0.2, isActive: true, options: { Material: "Prata" } },
       { price: 695, stock: 3, weight: 0.2, isActive: true, options: { Material: "Ouro Amarelo" } },
@@ -362,11 +402,11 @@ const productsData: ProductData[] = [
   {
     title: "Solid Gold Petite Micropave",
     description: "Satisfaction Guaranteed. Return or exchange any order within 30 days...",
-    image: "https://fakestoreapi.com/img/61sbMiUnoGL._AC_UL640_QL65_ML3_t.png",
+    image: "https://fakestoreapi.com/img/61sbMiUnoGL._AC_UL640_QL65_ML3_.png",
     totalStock: 19,
     ratingRate: 3.9,
     ratingCount: 70,
-    category: "jewelery",
+    category: "jewelry",
     variants: [
       { price: 168, stock: 6, weight: 0.05, isActive: true, options: { "Tamanho do Anel": "14" } },
       { price: 168, stock: 0, weight: 0.05, isActive: false, options: { "Tamanho do Anel": "16" } },
@@ -376,11 +416,11 @@ const productsData: ProductData[] = [
     productOptions: [{ name: "Tamanho do Anel", values: ["14", "16", "18", "20"] }],
     promotions: [
       {
-        name: "Queima de Estoque - Anéis",
-        type: "PERCENTAGE",
-        discountValue: 25,
-        startsAt: new Date("2024-02-01"),
-        endsAt: new Date("2030-02-28"),
+        name: "Promoção Anel Princesa",
+        type: "FIXED",
+        discountValue: 2.0,
+        startsAt: new Date("2024-01-01"),
+        endsAt: new Date("2030-10-23"),
         isActive: true,
       },
     ],
@@ -388,11 +428,11 @@ const productsData: ProductData[] = [
   {
     title: "White Gold Plated Princess",
     description: "Classic Created Wedding Engagement Solitaire Diamond Promise Ring for Her...",
-    image: "https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_t.png",
+    image: "https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.png",
     totalStock: 150,
     ratingRate: 3.0,
     ratingCount: 400,
-    category: "jewelery",
+    category: "jewelry",
     variants: [{ price: 9.99, stock: 150, weight: 0.04, isActive: true }],
     productOptions: [],
     promotions: [
@@ -409,18 +449,18 @@ const productsData: ProductData[] = [
   {
     title: "Pierced Owl Rose Gold Plated Stainless Steel Double",
     description: "Rose Gold Plated Double Flared Tunnel Plug Earrings...",
-    image: "https://fakestoreapi.com/img/51UDEzMJVpL._AC_UL640_QL65_ML3_t.png",
+    image: "https://fakestoreapi.com/img/51UDEzMJVpL._AC_UL640_QL65_ML3_.png",
     totalStock: 300,
     ratingRate: 1.9,
     ratingCount: 100,
-    category: "jewelery",
+    category: "jewelry",
     variants: [{ price: 10.99, stock: 300, weight: 0.03, isActive: true }],
     productOptions: [],
   },
   {
     title: "WD 2TB Elements Portable External Hard Drive - USB 3.0",
     description: "USB 3.0 and USB 2.0 Compatibility Fast data transfers...",
-    image: "https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_t.png",
+    image: "https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_.png",
     totalStock: 80,
     ratingRate: 3.3,
     ratingCount: 203,
@@ -449,7 +489,7 @@ const productsData: ProductData[] = [
   {
     title: "SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s",
     description: "Easy upgrade for faster boot up, shutdown, application load and response...",
-    image: "https://fakestoreapi.com/img/61U7T1koQqL._AC_SX679_t.png",
+    image: "https://fakestoreapi.com/img/61U7T1koQqL._AC_SX679_.png",
     totalStock: 50,
     ratingRate: 2.9,
     ratingCount: 470,
@@ -474,7 +514,7 @@ const productsData: ProductData[] = [
   {
     title: "Silicon Power 256GB SSD 3D NAND A55 SLC Cache Performance Boost SATA III 2.5",
     description: "3D NAND flash are applied to deliver high transfer speeds...",
-    image: "https://fakestoreapi.com/img/71kWymZ+c+L._AC_SX679_t.png",
+    image: "https://fakestoreapi.com/img/71kWymZ+c+L._AC_SX679_.png",
     totalStock: 60,
     ratingRate: 4.8,
     ratingCount: 319,
@@ -489,7 +529,7 @@ const productsData: ProductData[] = [
   {
     title: "WD 4TB Gaming Drive Works with Playstation 4 Portable External Hard Drive",
     description: "Expand your PS4 gaming experience, Play anywhere Fast and easy...",
-    image: "https://fakestoreapi.com/img/61mtL65D4cL._AC_SX679_t.png",
+    image: "https://fakestoreapi.com/img/61mtL65D4cL._AC_SX679_.png",
     totalStock: 35,
     ratingRate: 4.8,
     ratingCount: 400,
@@ -513,7 +553,7 @@ const productsData: ProductData[] = [
   {
     title: "Acer SB220Q bi 21.5 inches Full HD (1920 x 1080) IPS Ultra-Thin",
     description: "21.5 inches Full HD widescreen IPS display...",
-    image: "https://fakestoreapi.com/img/81QpkIctqPL._AC_SX679_t.png",
+    image: "https://fakestoreapi.com/img/81QpkIctqPL._AC_SX679_.png",
     totalStock: 15,
     ratingRate: 2.9,
     ratingCount: 250,
@@ -527,7 +567,7 @@ const productsData: ProductData[] = [
   {
     title: "Samsung 49-Inch CHG90 144Hz Curved Gaming Monitor – Super Ultrawide Screen QLED",
     description: "49 INCH SUPER ULTRAWIDE 32:9 CURVED GAMING MONITOR...",
-    image: "https://fakestoreapi.com/img/81Zt42ioCgL._AC_SX679_t.png",
+    image: "https://fakestoreapi.com/img/81Zt42ioCgL._AC_SX679_.png",
     totalStock: 8,
     ratingRate: 2.2,
     ratingCount: 140,
@@ -551,7 +591,7 @@ const productsData: ProductData[] = [
   {
     title: "BIYLACLESEN Women's 3-in-1 Snowboard Jacket Winter Coats",
     description: "Note:The Jackets is US standard size...",
-    image: "https://fakestoreapi.com/img/51Y5NI-I5jL._AC_UX679_t.png",
+    image: "https://fakestoreapi.com/img/51Y5NI-I5jL._AC_UX679_.png",
     totalStock: 55,
     ratingRate: 2.6,
     ratingCount: 235,
@@ -594,7 +634,7 @@ const productsData: ProductData[] = [
   {
     title: "Lock and Love Women's Removable Hooded Faux Leather Moto Biker Jacket",
     description: "100% POLYURETHANE(shell) 100% POLYESTER(lining)...",
-    image: "https://fakestoreapi.com/img/81XH0e8fefL._AC_UY879_t.png",
+    image: "https://fakestoreapi.com/img/81XH0e8fefL._AC_UY879_.png",
     totalStock: 65,
     ratingRate: 2.9,
     ratingCount: 340,
@@ -647,7 +687,7 @@ const productsData: ProductData[] = [
   {
     title: "Rain Jacket Women Windbreaker Striped Climbing Raincoats",
     description: "Lightweight perfect for trip or casual wear...",
-    image: "https://fakestoreapi.com/img/71HblAHs5xL._AC_UY879_-2t.png",
+    image: "https://fakestoreapi.com/img/71HblAHs5xL._AC_UY879_.png",
     totalStock: 40,
     ratingRate: 3.8,
     ratingCount: 679,
@@ -690,7 +730,7 @@ const productsData: ProductData[] = [
   {
     title: "MBJ Women's Solid Short Sleeve Boat Neck V",
     description: "95% RAYON 5% SPANDEX, Made in USA or Imported...",
-    image: "https://fakestoreapi.com/img/71z3kpMAYsL._AC_UY879_t.png",
+    image: "https://fakestoreapi.com/img/71z3kpMAYsL._AC_UY879_.png",
     totalStock: 25,
     ratingRate: 4.7,
     ratingCount: 130,
@@ -732,8 +772,8 @@ const productsData: ProductData[] = [
   },
   {
     title: "Opna Women's Short Sleeve Moisture",
-    description: "100% Polyester, Machine wash...",
-    image: "https://fakestoreapi.com/img/51eg55uWmdL._AC_UX679_t.png",
+    description: "100% Cotton, Machine wash...",
+    image: "https://fakestoreapi.com/img/51eg55uWmdL._AC_UX679_.png",
     totalStock: 70,
     ratingRate: 4.5,
     ratingCount: 146,
@@ -786,7 +826,7 @@ const productsData: ProductData[] = [
   {
     title: "DANVOUY Womens T Shirt Casual Cotton Short",
     description: "95%Cotton,5%Spandex, Features: Casual, Short Sleeve...",
-    image: "https://fakestoreapi.com/img/61pHAEJ4NML._AC_UX679_t.png",
+    image: "https://fakestoreapi.com/img/61pHAEJ4NML._AC_UX679_.png",
     totalStock: 90,
     ratingRate: 3.6,
     ratingCount: 145,
@@ -888,6 +928,7 @@ async function main() {
   // Produtos com variantes
   console.log("🛍️  Inserindo produtos com variantes e opções...");
   let totalVariants = 0;
+  // eslint-disable-next-line prefer-const
   let totalPromotions = 0;
   let totalVariantPromotions = 0;
 
@@ -899,9 +940,25 @@ async function main() {
       continue;
     }
 
-    console.log(`  📦 Produto ${i + 1}/${productsData.length}: ${data.title.substring(0, 40)}...`);
+    console.log(`📦 Produto ${i + 1}/${productsData.length}: ${data.title.substring(0, 40)}...`);
 
-    // Criar produto (SEM campo price!)
+    // Gerar todas as combinações de variantes automaticamente
+    const baseVariant = data.variants[0] ?? { price: 0, stock: 0, weight: 0, isActive: true };
+    const totalCombinations = data.productOptions.reduce((acc, opt) => acc * opt.values.length, 1);
+
+    // Gerar todas as variantes primeiro
+    const allVariants = generateAllVariantCombinations(data.productOptions, {
+      price: baseVariant.price,
+      stock:
+        totalCombinations > 0 ? Math.floor(data.totalStock / totalCombinations) : data.totalStock,
+      weight: baseVariant.weight,
+      isActive: true,
+    });
+
+    // Calcular totalStock como a soma dos estoques das variantes geradas
+    const calculatedTotalStock = allVariants.reduce((sum, v) => sum + v.stock, 0);
+
+    // Criar produto (com totalStock calculado das variantes)
     const product = await prisma.product.create({
       data: {
         title: data.title,
@@ -909,6 +966,7 @@ async function main() {
         image: data.image,
         ratingRate: data.ratingRate,
         ratingCount: data.ratingCount,
+        totalStock: calculatedTotalStock, // ← Usa a soma das variantes geradas
         categoryId: categoryId,
       },
     });
@@ -916,31 +974,7 @@ async function main() {
     // Criar ProductOptions e ProductOptionValues
     const optionValueMap = new Map<string, Map<string, string>>();
 
-    for (const option of data.productOptions) {
-      const productOption = await prisma.productOption.create({
-        data: {
-          name: option.name,
-          productId: product.id,
-        },
-      });
-
-      const valueMap = new Map<string, string>();
-
-      for (const value of option.values) {
-        const productOptionValue = await prisma.productOptionValue.create({
-          data: {
-            value: value,
-            productOptionId: productOption.id,
-          },
-        });
-        valueMap.set(value, productOptionValue.id);
-      }
-
-      optionValueMap.set(option.name, valueMap);
-    }
-
-    // Criar ProductVariants
-    for (const [variantIndex, variantData] of data.variants.entries()) {
+    for (const [variantIndex, variantData] of allVariants.entries()) {
       const sku = generateSku(data.title, variantIndex);
 
       const variant = await prisma.productVariant.create({
@@ -956,7 +990,7 @@ async function main() {
 
       totalVariants++;
 
-      // Associar opções à variant
+      // Associar opções à variante
       if (variantData.options) {
         for (const [optionName, optionValue] of Object.entries(variantData.options)) {
           const valueMap = optionValueMap.get(optionName);
@@ -973,47 +1007,38 @@ async function main() {
           }
         }
       }
-
-      // Criar promoção específica da variante (se existir)
-      if (variantData.promotion) {
-        await prisma.promotion.create({
-          data: {
-            name: variantData.promotion.name,
-            type: variantData.promotion.type,
-            discountValue: variantData.promotion.discountValue,
-            isActive: variantData.promotion.isActive,
-            startsAt: variantData.promotion.startsAt,
-            endsAt: variantData.promotion.endsAt,
-            variantId: variant.id,
-          },
-        });
-        totalVariantPromotions++;
-      }
     }
 
-    // Criar promoções do produto (vinculadas ao produto)
-    if (data.promotions) {
-      for (const promoData of data.promotions) {
-        await prisma.promotion.create({
-          data: {
-            name: promoData.name,
-            type: promoData.type,
-            discountValue: promoData.discountValue,
-            isActive: promoData.isActive,
-            startsAt: promoData.startsAt,
-            endsAt: promoData.endsAt,
-            productId: product.id,
-          },
+    // Criar promoções específicas das variantes (usar dados originais)
+    for (const [variantIndex, originalVariant] of data.variants.entries()) {
+      if (originalVariant.promotion) {
+        const sku = generateSku(data.title, variantIndex);
+        const variant = await prisma.productVariant.findFirst({
+          where: { sku, productId: product.id },
         });
-        totalPromotions++;
+
+        if (variant) {
+          await prisma.promotion.create({
+            data: {
+              name: originalVariant.promotion.name,
+              type: originalVariant.promotion.type,
+              discountValue: originalVariant.promotion.discountValue,
+              isActive: originalVariant.promotion.isActive,
+              startsAt: originalVariant.promotion.startsAt,
+              endsAt: originalVariant.promotion.endsAt,
+              variantId: variant.id,
+            },
+          });
+          totalVariantPromotions++;
+        }
       }
     }
   }
 
   console.log(`✅ Produtos inseridos!`);
-  console.log(`   - Variantes: ${totalVariants}`);
-  console.log(`   - Promoções de produto: ${totalPromotions}`);
-  console.log(`   - Promoções de variante: ${totalVariantPromotions}\n`);
+  console.log(`- Variantes: ${totalVariants}`);
+  console.log(`- Promoções de produto: ${totalPromotions}`);
+  console.log(`- Promoções de variante: ${totalVariantPromotions}\n`);
 
   // Relatório final
   const counts = {
@@ -1027,16 +1052,16 @@ async function main() {
   };
 
   console.log("📊 CONTAGENS FINAIS:");
-  console.log(`   ✓ Categorias: ${counts.categories}`);
-  console.log(`   ✓ Produtos: ${counts.products}`);
-  console.log(`   ✓ Variantes: ${counts.variants}`);
-  console.log(`   ✓ Opções: ${counts.options}`);
-  console.log(`   ✓ Valores de Opção: ${counts.optionValues}`);
-  console.log(`   ✓ Associações: ${counts.variantOptions}`);
-  console.log(`   ✓ Promoções TOTAIS: ${counts.promotions}`);
-  console.log(`     • Categoria: ${categoryPromotions.length}`);
-  console.log(`     • Produto: ${totalPromotions}`);
-  console.log(`     • Variante: ${totalVariantPromotions}\n`);
+  console.log(`✓ Categorias: ${counts.categories}`);
+  console.log(`✓ Produtos: ${counts.products}`);
+  console.log(`✓ Variantes: ${counts.variants}`);
+  console.log(`✓ Opções: ${counts.options}`);
+  console.log(`✓ Valores de Opção: ${counts.optionValues}`);
+  console.log(`✓ Associações: ${counts.variantOptions}`);
+  console.log(`✓ Promoções TOTAIS: ${counts.promotions}`);
+  console.log(`• Categoria: ${categoryPromotions.length}`);
+  console.log(`• Produto: ${totalPromotions}`);
+  console.log(`• Variante: ${totalVariantPromotions}\n`);
 
   console.log("✅ SEED CONCLUÍDO COM SUCESSO! ✅\n");
 }
