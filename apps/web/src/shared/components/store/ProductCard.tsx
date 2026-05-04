@@ -1,10 +1,11 @@
 "use client";
 import type { PublicProductDto } from "@repo/types/contracts";
 import { HeartIcon, ShoppingCartIcon, StarIcon } from "lucide-react";
+import { useState } from "react";
 
 import { addToWishlist } from "@/shared/actions/wishlist/addToWishlist";
 import { removeFromWishlist } from "@/shared/actions/wishlist/removeFromWishlist";
-import { useProductDetailsContext } from "@/shared/contexts/ProductDetailsContext";
+import { ProductDetailsDialog } from "@/shared/components/store/ProductDetailsModal/ProductDetailsDialog";
 import { useWishlistState } from "@/shared/states/wishlist";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
 
@@ -14,23 +15,20 @@ type ProductCardProps = {
 };
 
 export const ProductCard = ({ product, grid }: ProductCardProps) => {
-  const { add, remove, rollback } = useWishlistState();
-  const hasHydrated = useWishlistState((state) => state.hasHydrated);
-  const ids = useWishlistState((state) => state.ids);
-  const { handleOpenProductDetails } = useProductDetailsContext();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { add, remove, rollback, hasHydrated, ids } = useWishlistState();
 
   const isWishlisted = hasHydrated && ids.includes(product.id);
-
   const percentDiscount = product.display.isOnSale
     ? Math.round(100 - (product.display.salePrice / product.display.price) * 100)
     : 0;
 
-  const onCartClick = async (product: PublicProductDto) => handleOpenProductDetails(product);
+  const onCartClick = () => setIsDialogOpen(true);
 
   const handleToggleWishlist = async () => {
     if (isWishlisted) {
       remove(product.id);
-      const { error } = await authenticatedAction(removeFromWishlist, product.id);
+      const { error } = await authenticatedAction(removeFromWishlist, { productId: product.id });
       if (error) {
         rollback();
       }
@@ -38,7 +36,7 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
     }
 
     add(product.id);
-    const { error } = await authenticatedAction(addToWishlist, product.id);
+    const { error } = await authenticatedAction(addToWishlist, { productId: product.id });
     if (error) {
       rollback();
     }
@@ -109,7 +107,7 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
 
         {/* Cart Button */}
         <button
-          onClick={() => onCartClick(product)}
+          onClick={onCartClick}
           className={`absolute right-2 bottom-2 hidden cursor-pointer rounded-full bg-white p-1 shadow-md transition duration-150 hover:scale-110 active:scale-140 lg:right-3 lg:bottom-3 lg:hidden lg:group-hover:block`}
           aria-label="Add to cart"
         >
@@ -118,6 +116,8 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
           />
         </button>
       </div>
+
+      <ProductDetailsDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} product={product} />
     </div>
   );
 };

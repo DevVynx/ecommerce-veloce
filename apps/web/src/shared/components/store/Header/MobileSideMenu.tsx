@@ -15,12 +15,13 @@ import {
   SheetTrigger,
 } from "@/shared/components/shadcn-ui/sheet";
 import { useAuthState } from "@/shared/states/auth";
+import { clearAllStorages } from "@/shared/utils/store/state/clearAllStorages";
 
 import { sideMenuPersonalActionIcons, sideMenuStoreActionIcons } from "./MenuActions";
 import { MobileSideMenuItem } from "./MobileSideMenuItem";
 
 export const MobileSideMenu = () => {
-  const { user, clearUser } = useAuthState();
+  const { user } = useAuthState();
   const router = useRouter();
 
   const containerVariants = {
@@ -40,8 +41,8 @@ export const MobileSideMenu = () => {
   };
 
   const handleLogout = async () => {
+    clearAllStorages();
     await logout();
-    clearUser();
     router.push("/login");
   };
 

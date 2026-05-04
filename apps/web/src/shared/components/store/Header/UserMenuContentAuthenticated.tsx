@@ -7,14 +7,15 @@ import { logout } from "@/shared/actions/auth/logout";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { useAuthState } from "@/shared/states/auth";
+import { clearAllStorages } from "@/shared/utils/store/state/clearAllStorages";
 
 export const UserMenuContentAuthenticated = () => {
-  const { user, clearUser } = useAuthState();
+  const { user } = useAuthState();
   const router = useRouter();
 
   const handleLogout = async () => {
+    clearAllStorages();
     await logout();
-    clearUser();
     router.push("/login");
   };
 
