@@ -14,6 +14,7 @@ export type PublicVariantDto = {
   sku: string;
   price: number;
   salePrice: number;
+  isOnSale: boolean;
   isAvailable: boolean;
   optionValueIds: string[];
 };
