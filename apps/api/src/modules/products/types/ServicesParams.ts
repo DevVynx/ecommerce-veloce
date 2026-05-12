@@ -1,6 +1,6 @@
-import { FindAllProductsRequest } from "@repo/types/contracts";
+import { GetProductsRequest } from "@repo/types/contracts";
 
-export type FindAllProductsParams = FindAllProductsRequest & {
+export type FindAllProductsParams = GetProductsRequest & {
   onlyAvailable?: boolean;
 };
 

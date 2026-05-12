@@ -7,6 +7,7 @@ export const findManyProducts = async ({
   limit,
   offset,
   onlyAvailable,
+  onSale,
 }: FindAllProductsParams) => {
   const rawProducts = await productRepositories.findMany({
     categoryId,
@@ -41,6 +42,8 @@ export const findManyProducts = async ({
       };
     })
     .filter((p) => p !== null);
+
+  if (onSale) return { products: enrichedProducts.filter((p) => p.heroVariant.isOnSale) };
 
   return { products: enrichedProducts };
 };
