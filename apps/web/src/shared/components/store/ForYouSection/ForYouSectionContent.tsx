@@ -13,11 +13,11 @@ export const ForYouSectionContent = ({ products }: ForYouSectionContentProps) =>
       <div className="mx-auto lg:container">
         <h1 className="text-center text-xl font-bold">Para você!</h1>
 
-        <section className="grid grid-cols-2 gap-6 py-10 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 py-10 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} grid />
           ))}
-        </section>
+        </div>
       </div>
     </section>
   );

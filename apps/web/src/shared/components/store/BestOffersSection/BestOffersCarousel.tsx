@@ -13,11 +13,11 @@ import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 
 import { ProductsCarouselControls } from "./ProductsCarouselControls";
 
-type FlashSaleCarouselContentProps = {
+type BestOffersCarouselProps = {
   products: PublicProductDto[];
 };
 
-export const FlashSaleCarouselContent = ({ products }: FlashSaleCarouselContentProps) => {
+export const BestOffersCarousel = ({ products }: BestOffersCarouselProps) => {
   const { isMobile } = useScreenSize();
   const [api, setApi] = useState<CarouselApi>();
 

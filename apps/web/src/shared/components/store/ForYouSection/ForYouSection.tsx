@@ -1,12 +1,26 @@
-import { Suspense } from "react";
+import { getProducts } from "@/shared/actions/products/getProducts";
+import { SectionError } from "@/shared/components/SectionError";
 
-import { ForYouSectionLoader } from "@/shared/components/store/ForYouSection/ForYouSectionLoader";
-import { ForYouSectionSkeleton } from "@/shared/components/store/ForYouSection/ForYouSectionSkeleton";
+import { ForYouSectionContent } from "./ForYouSectionContent";
 
-export const ForYouSection = () => {
-  return (
-    <Suspense fallback={<ForYouSectionSkeleton />}>
-      <ForYouSectionLoader />
-    </Suspense>
-  );
+export const ForYouSection = async () => {
+  const { data, error } = await getProducts();
+
+  if (error) {
+    return (
+      <section id="forYouSection" className="px-2 py-12">
+        <div className="mx-auto lg:container">
+          <SectionError
+            title="Produtos indisponíveis"
+            description="Não foi possível carregar esta seção. Tente novamente mais tarde."
+            toastDuration={6000}
+          />
+        </div>
+      </section>
+    );
+  }
+
+  const products = data?.products ?? [];
+
+  return <ForYouSectionContent products={products} />;
 };
