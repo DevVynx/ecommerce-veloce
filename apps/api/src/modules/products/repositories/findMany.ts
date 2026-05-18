@@ -11,7 +11,7 @@ type findManyProductsProps = {
 
 export const findManyProducts = async ({
   categoryId,
-  limit = 10,
+  limit = 16,
   offset = 0,
   onlyAvailable = false,
 }: findManyProductsProps) => {

@@ -4,7 +4,7 @@ import { SectionError } from "@/shared/components/SectionError";
 import { ForYouSectionContent } from "./ForYouSectionContent";
 
 export const ForYouSection = async () => {
-  const { data, error } = await getProducts();
+  const { data, error } = await getProducts({ limit: 16 });
 
   if (error) {
     return (
