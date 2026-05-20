@@ -1,11 +1,13 @@
 import "./globals.css";
 
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Kotta_One } from "next/font/google";
 
 import { CartProvider } from "@/shared/providers/CartProvider";
 import { QueryProvider } from "@/shared/providers/QueryProvider";
 import { WishlistProvider } from "@/shared/providers/WishlistProvider";
+import { ENV } from "@/shared/utils/env";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,9 +43,11 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${kottaOne.variable} antialiased`}
       >
         <QueryProvider>
-          <CartProvider />
-          <WishlistProvider />
-          {children}
+          <GoogleOAuthProvider clientId={ENV.GOOGLE_CLIENT_ID}>
+            <CartProvider />
+            <WishlistProvider />
+            {children}
+          </GoogleOAuthProvider>
         </QueryProvider>
       </body>
     </html>

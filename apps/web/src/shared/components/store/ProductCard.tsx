@@ -8,6 +8,7 @@ import { removeFromWishlist } from "@/shared/actions/wishlist/removeFromWishlist
 import { ProductDetailsDialog } from "@/shared/components/store/ProductDetailsModal/ProductDetailsDialog";
 import { useWishlistState } from "@/shared/states/wishlist";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
+import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
 
 type ProductCardProps = {
   product: PublicProductDto;
@@ -20,7 +21,7 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
 
   const isWishlisted = hasHydrated && ids.includes(product.id);
   const percentDiscount = product.display.isOnSale
-    ? Math.round(100 - (product.display.salePrice / product.display.price) * 100)
+    ? calculateDiscountPercent(product.display.price, product.display.salePrice)
     : 0;
 
   const onCartClick = () => setIsDialogOpen(true);
@@ -94,13 +95,10 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
 
         {/* Price */}
         <div className="flex items-center gap-1">
-          <strong className="font-semibold">
-            R$
-            {(product.display.salePrice).toFixed(2)}
-          </strong>
+          <strong className="font-semibold">{formatPrice(product.display.salePrice)}</strong>
           {product.display.isOnSale && (
             <span className="text-sm text-red-500 line-through">
-              R${(product.display.price).toFixed(2)}
+              {formatPrice(product.display.price)}
             </span>
           )}
         </div>

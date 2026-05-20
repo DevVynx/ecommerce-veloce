@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
-import { ProductCardSkeleton } from "@/shared/components/store/Skeletons/ProductCardSkeleton";
+import { ProductCardSkeleton } from "@/shared/components/store/ProductCardSkeleton";
 
 export const BestOffersSkeleton = () => {
   return (

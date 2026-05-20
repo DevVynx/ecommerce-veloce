@@ -13,9 +13,11 @@ import { addItemToCart } from "@/shared/actions/cart/addItem";
 import { addToWishlist } from "@/shared/actions/wishlist/addToWishlist";
 import { removeFromWishlist } from "@/shared/actions/wishlist/removeFromWishlist";
 import { Rating, RatingItem } from "@/shared/components/shadcn-ui/rating";
+import { useAuthState } from "@/shared/states/auth";
 import { useCartState } from "@/shared/states/cart";
 import { useWishlistState } from "@/shared/states/wishlist";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
+import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
 
 import { ProductOptions } from "./ProductOptions";
 import { QuantitySelector } from "./QuantitySelector";
@@ -34,6 +36,7 @@ export const ProductDetails = ({
   options,
 }: ProductDetailsProps) => {
   const controls = useAnimation();
+  const { isAuthenticated } = useAuthState();
   const {
     addItem: optimisticAddItemToCart,
     rollback: optimisticRollbackCart,
@@ -74,18 +77,6 @@ export const ProductDetails = ({
     setQuantity(1);
     setShowError(false);
   }, [selectedProduct.id, variants, options]);
-
-  const handleToggleWishlist = async () => {
-    if (isWishlisted) {
-      optimisticRemoveFromWishlist(id);
-      const { error } = await authenticatedAction(removeFromWishlist, { productId: id });
-      if (error) optimisticRollbackWishlist();
-    } else {
-      optimisticAddToWishlist(id);
-      const { error } = await authenticatedAction(addToWishlist, { productId: id });
-      if (error) optimisticRollbackWishlist();
-    }
-  };
 
   const findSelectedVariant = (): PublicVariantDto | null => {
     if (options.length === 0) {
@@ -172,6 +163,12 @@ export const ProductDetails = ({
 
     optimisticAddItemToCart(optimisticCartItem);
 
+    if (!isAuthenticated) {
+      setIsAddingToCart(false);
+      onClose();
+      return;
+    }
+
     const { data, error } = await authenticatedAction(addItemToCart, payload);
 
     if (error) {
@@ -181,6 +178,20 @@ export const ProductDetails = ({
     }
 
     setIsAddingToCart(false);
+    onClose();
+  };
+
+  const handleToggleWishlist = async () => {
+    if (isWishlisted) {
+      optimisticRemoveFromWishlist(id);
+      const { error } = await authenticatedAction(removeFromWishlist, { productId: id });
+      if (error) optimisticRollbackWishlist();
+    } else {
+      optimisticAddToWishlist(id);
+      const { error } = await authenticatedAction(addToWishlist, { productId: id });
+      if (error) optimisticRollbackWishlist();
+    }
+
     onClose();
   };
 
@@ -203,7 +214,7 @@ export const ProductDetails = ({
   };
 
   const percentDiscount = displayIsOnSale
-    ? Math.round(100 - (displaySalePrice / displayPrice) * 100)
+    ? calculateDiscountPercent(displayPrice, displaySalePrice)
     : 0;
 
   return (
@@ -240,7 +251,7 @@ export const ProductDetails = ({
           {/* Price */}
           <div className="flex items-center gap-2 border-b border-zinc-300 pb-3">
             <strong className="text-2xl font-semibold text-gray-800">
-              R$ {displaySalePrice.toFixed(2)}
+              {formatPrice(displaySalePrice)}
             </strong>
             {displayIsOnSale && (
               <>
@@ -248,7 +259,7 @@ export const ProductDetails = ({
                   -{percentDiscount}%
                 </span>
                 <span className="text-sm text-red-500 line-through">
-                  R$ {displayPrice.toFixed(2)}
+                  {formatPrice(displayPrice)}
                 </span>
               </>
             )}

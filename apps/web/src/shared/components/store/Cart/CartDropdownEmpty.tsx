@@ -7,7 +7,7 @@ import { CartIcon } from "@/shared/assets/animatedIcons/cart";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { useAnimatedIcon } from "@/shared/hooks/ui/useAnimatedIcon";
 
-export const CartEmpty = () => {
+export const CartDropdownEmpty = () => {
   const { handleMouseEnter, handleMouseLeave, iconRef } = useAnimatedIcon();
 
   useEffect(() => {

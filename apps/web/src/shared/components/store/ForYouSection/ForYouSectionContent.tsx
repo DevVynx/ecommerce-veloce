@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { getProducts } from "@/shared/actions/products/getProducts";
 import { ProductCard } from "@/shared/components/store/ProductCard";
-import { ProductCardSkeleton } from "@/shared/components/store/Skeletons/ProductCardSkeleton";
+import { ProductCardSkeleton } from "@/shared/components/store/ProductCardSkeleton";
 import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 
 type ForYouSectionContentProps = {

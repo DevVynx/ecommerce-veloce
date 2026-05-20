@@ -18,7 +18,7 @@ export const CartProvider = () => {
       if (data?.cart) {
         hydrate({
           items: data.cart.items,
-          count: data.cart.summary.count,
+          summary: data.cart.summary,
         });
       }
     };

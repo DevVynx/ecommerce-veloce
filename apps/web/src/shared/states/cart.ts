@@ -1,17 +1,15 @@
-import type { CartItemDto } from "@repo/types/contracts";
+import type { CartDto, CartItemDto } from "@repo/types/contracts";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { calculateSummary } from "@/shared/utils/store/calculateSummary";
+
 type CartState = {
-  count: number;
-  ids: string[];
-  items: CartItemDto[];
-  previousCount: number;
-  previousIds: string[];
-  previousItems: CartItemDto[];
+  cart: Omit<CartDto, "id">;
+  previousCart: Omit<CartDto, "id">;
   hasHydrated: boolean;
 
-  hydrate: (cart: { items: CartItemDto[]; count: number }) => void;
+  hydrate: (cart: { items: CartItemDto[]; summary: CartDto["summary"] }) => void;
   setHasHydrated: (hydrated: boolean) => void;
   addItem: (item: CartItemDto) => void;
   removeItem: (cartItemId: string) => void;
@@ -21,125 +19,96 @@ type CartState = {
   rollback: () => void;
 };
 
+const emptyCart = {
+  items: [] as CartItemDto[],
+  summary: { count: 0, subtotal: 0, total: 0, discount: 0 },
+};
+
 export const useCartState = create<CartState>()(
   persist(
     (set, _get) => ({
-      count: 0,
-      ids: [],
-      items: [],
-      previousCount: 0,
-      previousIds: [],
-      previousItems: [],
+      cart: emptyCart,
+      previousCart: emptyCart,
       hasHydrated: false,
 
-      hydrate: (cart) => {
-        const ids = cart.items.map((item) => item.id);
+      hydrate: (freshCart) =>
         set({
-          count: cart.count,
-          ids,
-          items: cart.items,
-          previousCount: cart.count,
-          previousIds: ids,
-          previousItems: cart.items,
+          cart: freshCart,
+          previousCart: freshCart,
           hasHydrated: true,
-        });
-      },
+        }),
 
       setHasHydrated: (hydrated) => set({ hasHydrated: hydrated }),
 
       addItem: (newItem) =>
         set((state) => {
-          // Busca por variantId (product.variant.id) em vez de cart item id
-          const existingIndex = state.items.findIndex(
+          const existingIndex = state.cart.items.findIndex(
             (item) => item.product.variant.id === newItem.product.variant.id
           );
-          let updatedItems: CartItemDto[];
 
-          if (existingIndex >= 0 && state.items[existingIndex]) {
-            const existingItem = state.items[existingIndex];
-            updatedItems = [...state.items];
+          let updatedItems: CartItemDto[];
+          if (existingIndex >= 0 && state.cart.items[existingIndex]) {
+            const existingItem = state.cart.items[existingIndex];
+            updatedItems = [...state.cart.items];
             updatedItems[existingIndex] = {
               ...existingItem,
               quantity: existingItem.quantity + newItem.quantity,
             };
           } else {
-            updatedItems = [...state.items, newItem];
+            updatedItems = [...state.cart.items, newItem];
           }
 
-          const ids = updatedItems.map((item) => item.id);
           return {
-            previousCount: state.count,
-            previousIds: state.ids,
-            previousItems: state.items,
-            count: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
-            ids,
-            items: updatedItems,
+            previousCart: state.cart,
+            cart: { items: updatedItems, summary: calculateSummary(updatedItems) },
           };
         }),
 
       removeItem: (cartItemId) =>
         set((state) => {
-          const updatedItems = state.items.filter((item) => item.id !== cartItemId);
-          const ids = updatedItems.map((item) => item.id);
+          const updatedItems = state.cart.items.filter((item) => item.id !== cartItemId);
           return {
-            previousCount: state.count,
-            previousIds: state.ids,
-            previousItems: state.items,
-            count: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
-            ids,
-            items: updatedItems,
+            previousCart: state.cart,
+            cart: { items: updatedItems, summary: calculateSummary(updatedItems) },
           };
         }),
 
       updateQuantity: (cartItemId, quantity) =>
         set((state) => {
-          const updatedItems = state.items.map((item) =>
+          const updatedItems = state.cart.items.map((item) =>
             item.id === cartItemId ? { ...item, quantity } : item
           );
-          const ids = updatedItems.map((item) => item.id);
           return {
-            previousCount: state.count,
-            previousIds: state.ids,
-            previousItems: state.items,
-            count: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
-            ids,
-            items: updatedItems,
+            previousCart: state.cart,
+            cart: { items: updatedItems, summary: calculateSummary(updatedItems) },
           };
         }),
 
       clear: () =>
         set({
-          count: 0,
-          ids: [],
-          items: [],
-          previousCount: 0,
-          previousIds: [],
-          previousItems: [],
+          cart: emptyCart,
+          previousCart: emptyCart,
         }),
 
       updateItemId: (oldId, newId) =>
         set((state) => {
-          const index = state.items.findIndex((item) => item.id === oldId);
+          const index = state.cart.items.findIndex((item) => item.id === oldId);
           if (index === -1) return state;
 
-          const item = state.items[index];
+          const item = state.cart.items[index];
           if (!item) return state;
 
-          const updatedItems = [...state.items];
+          const updatedItems = [...state.cart.items];
           updatedItems[index] = { ...item, id: newId };
 
           return {
-            ...state,
-            items: updatedItems,
-            ids: updatedItems.map((item) => item.id),
+            cart: { items: updatedItems, summary: calculateSummary(updatedItems) },
           };
         }),
 
       rollback: () =>
         set((state) => ({
-          count: state.previousCount,
-          ids: state.previousIds,
-          items: state.previousItems,
+          cart: state.previousCart,
         })),
     }),
     {
@@ -148,9 +117,8 @@ export const useCartState = create<CartState>()(
         state?.setHasHydrated(true);
       },
       partialize: (state) => ({
-        count: state.count,
-        ids: state.ids,
-        items: state.items,
+        cart: state.cart,
+        previousCart: state.previousCart,
         hasHydrated: state.hasHydrated,
       }),
     }

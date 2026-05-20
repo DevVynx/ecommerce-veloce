@@ -5,7 +5,7 @@ import { BadgedIconButton } from "@/shared/components/BadgedIconButton";
 import { UserMenu } from "@/shared/components/store/Header/UserMenu";
 import { useWishlistState } from "@/shared/states/wishlist";
 
-import { CartDropdown } from "./CartDropdown";
+import { CartDropdown } from "../Cart/CartDropdown";
 import { HeaderLogo } from "./Logo";
 import { MobileSideMenu } from "./MobileSideMenu";
 import { SearchInput } from "./SearchInput";
