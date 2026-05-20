@@ -1,18 +1,27 @@
 # Project State
 
-**Last Updated**: 2026-04-09
+**Last Updated**: 2026-05-20
 **State Expiration**: N/A
 
 ---
 
 ## Current Task
 
-**Frontend Refactoring** - Major refactor of the web application:
+**[vyn-010] Cart Page Refactor** - Frontend
 
-- Migrating from TanStack Query to Next.js Server Actions
-- Implementing new Next.js caching strategies
-- UI/UX improvements
-- General code quality improvements
+- Componentized cart page (CartItemCard, CartItemQuantity, CartItemsList, CartSummary, CheckoutButton, CartPageSkeleton)
+- Created LoginModal component (vyn-036)
+- Desprotected /cart route (vyn-037)
+- CheckoutButton conditional: guest → LoginModal, auth → /checkout (vyn-038)
+- Added free shipping progress bar, coupon input (UI), discount breakdown
+- Removed inline 259-line monolith, now 7 clean components
+- **Added `decimal.js`** for precise monetary arithmetic on frontend
+- **Created `@/shared/utils/store/price.ts`** — `formatPrice`, `formatDiscount`, `asDecimal`, `calculateDiscountPercent`
+- **Fixed `calculateSummary` semantics** in Zustand cart store: `subtotal` = base price, `total` = effective price (matching API behavior)
+- **Fixed `updateItemId`** to calculate summary and remove redundant `...state` spread
+- **Refactored `CouponApplier.tsx`** to use `Decimal` arithmetic instead of `Math.round`
+- **Replaced all `toFixed(2)`** (23 occurrences in 11 components) with `formatPrice`/`formatDiscount`
+- **Replaced all `Math.round(100 - sale/price * 100)`** with `calculateDiscountPercent`
 
 ---
 
@@ -87,6 +96,24 @@
   - Seed generates all variant combinations automatically via `generateAllVariantCombinations()`
   - `totalStock` calculated automatically as sum of variant stocks
 - **Impact**: Correct API responses and proper test data generation
+
+### [Task] Decimal.js for Monetary Arithmetic
+
+- **Date**: 2026-05-20
+- **Decision**: Added `decimal.js` for all monetary calculations on the frontend
+- **Why**: JavaScript `number` (IEEE 754) causes precision errors (e.g., `19.99 * 3 = 59.970000000000006`). Money must never be calculated with floats.
+- **Created utility**: `@/shared/utils/store/price.ts` with `asDecimal()`, `formatPrice()`, `formatDiscount()`, `calculateDiscountPercent()`
+- **Impact**: All price displays now use `formatPrice()`, all arithmetic uses `Decimal` internally via `calculateSummary()` and `CouponApplier`
+
+### [Task] Fixed Cart Summary Semantics
+
+- **Date**: 2026-05-20
+- **Decision**: Fixed `calculateSummary` in Zustand cart store to match API behavior
+- **Semantics** (before → after):
+  - `subtotal`: was `Σ(salePrice)` (discounted) → now `Σ(price)` (base, matches API)
+  - `total`: was `subtotal` (copy) → now `Σ(salePrice)` (effective, matches API)
+  - `discount`: `retailPrice - effectivePrice` (same as before, now computed via `Decimal`)
+- **Impact**: `CartSummary.tsx`, `CartDropdown.tsx`, `CartMobileSummaryDrawer.tsx` all now show correct values. Free shipping threshold uses `total` (effective price).
 
 ---
 

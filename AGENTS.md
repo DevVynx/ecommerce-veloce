@@ -47,7 +47,7 @@ This repository has detailed guides in `@docs/guides/` for specific topics. You 
 Example:
 
 - User asks to add a new API endpoint → Load API-MODULES.md and API-SHARED.md
-- User asks to fix a CSS bug on a button → No guide needed, just fix the CSS
+- User asks to fix a CSS/styling bug on a component → Load DESIGN-TOKENS.md
 - User asks to add a new React Query mutation → Load WEB-DATA-LAYER.md
 
 ### How to Load Guides
@@ -153,6 +153,7 @@ For detailed patterns, see the guides in @docs/guides/. For code review, use the
 - **@docs/guides/WEB-COMPONENTS.md** - Radix UI, shadcn-ui, component patterns
 - **@docs/guides/WEB-DATA-LAYER.md** - React Query hooks, mutations, query keys
 - **@docs/guides/WEB-STATE.md** - Zustand stores, when to use vs React Query
+- **@docs/guides/DESIGN-TOKENS.md** - Color system, shadcn/ui tokens, when to use each
 
 ### Shared Guides
 
@@ -162,15 +163,15 @@ For detailed patterns, see the guides in @docs/guides/. For code review, use the
 
 ## Essential Reading by Task
 
-| Task                  | Load These Guides                       |
-| --------------------- | --------------------------------------- |
-| API development       | API-OVERVIEW, API-MODULES, DATABASE     |
-| Adding new API module | API-MODULES, API-SHARED, API-VALIDATION |
-| Database changes      | DATABASE, API-SHARED                    |
-| Web UI components     | WEB-OVERVIEW, WEB-COMPONENTS            |
-| Data fetching         | WEB-DATA-LAYER, WEB-STATE               |
+| Task                  | Load These Guides                               |
+| --------------------- | ----------------------------------------------- |
+| API development       | API-OVERVIEW, API-MODULES, DATABASE             |
+| Adding new API module | API-MODULES, API-SHARED, API-VALIDATION         |
+| Database changes      | DATABASE, API-SHARED                            |
+| Web UI / styling      | WEB-OVERVIEW, WEB-COMPONENTS, DESIGN-TOKENS     |
+| Data fetching         | WEB-DATA-LAYER, WEB-STATE                       |
 
-| API/Web integration | SHARED-TYPES, WEB-DATA-LAYER |
+| API/Web integration   | SHARED-TYPES, WEB-DATA-LAYER                    |
 
 ---
 

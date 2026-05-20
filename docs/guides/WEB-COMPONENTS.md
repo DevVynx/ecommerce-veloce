@@ -91,6 +91,7 @@ When creating new components:
 2. **Use `"use client"`** only when needed (interactivity, hooks, state)
 3. **Import types** from `@repo/types/contracts` if needed
 4. **Use shadcn-ui** for base components (Button, Dialog, Sheet, etc.)
+5. **Apply design tokens** from @docs/guides/DESIGN-TOKENS.md for all colors — never hardcode hex values
 5. **Prefer Server Components** unless interactivity is required
 
 ## Key Files

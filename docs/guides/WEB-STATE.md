@@ -68,6 +68,7 @@ For server-fetched data, use Server Actions or React Query instead.
 | --------------- | ---------------------------- |
 | `states/auth.ts` | Auth state with persistence |
 | `states/wishlist.ts` | Wishlist state with persistence |
+| `states/cart.ts` | Cart state with persistence (optimistic updates, Decimal-based summary) |
 
 ## Reference
 

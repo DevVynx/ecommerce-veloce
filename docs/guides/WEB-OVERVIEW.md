@@ -9,6 +9,7 @@ For detailed patterns, see the specific guides:
 - @docs/guides/WEB-COMPONENTS.md - Component architecture and UI patterns
 - @docs/guides/WEB-DATA-LAYER.md - Server Actions and React Query patterns
 - @docs/guides/WEB-STATE.md - Zustand state management
+- @docs/guides/DESIGN-TOKENS.md - Color system and shadcn/ui tokens
 - @docs/guides/SHARED-TYPES.md - Type contracts between API and Web
 
 ## Architecture Summary
