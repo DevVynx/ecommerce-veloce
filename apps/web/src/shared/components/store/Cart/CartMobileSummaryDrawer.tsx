@@ -1,6 +1,5 @@
 import type { CartDto } from "@repo/types/contracts";
-import { ChevronUp, ShoppingBag, Truck } from "lucide-react";
-import Link from "next/link";
+import { ChevronUp, Truck } from "lucide-react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
 import {
@@ -10,7 +9,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/shared/components/shadcn-ui/drawer";
-import { Input } from "@/shared/components/shadcn-ui/input";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { formatDiscount, formatPrice } from "@/shared/utils/store/price";
 
@@ -31,17 +29,17 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white px-4 py-3 shadow-lg lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white px-4 py-4 shadow-lg lg:hidden">
           <div className="mx-auto flex max-w-7xl items-center justify-between">
             <div className="flex flex-col">
-              <span className="text-muted-foreground text-xs">Total do pedido</span>
-              <span className="text-lg font-bold">{formatPrice(total)}</span>
+              <span className="text-muted-foreground text-sm">Total do pedido</span>
+              <span className="text-2xl font-bold">{formatPrice(total)}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-muted-foreground text-xs">
+            <div className="flex items-center gap-3">
+              <span className="text-muted-foreground text-sm">
                 {count} {count === 1 ? "item" : "itens"}
               </span>
-              <Button size="sm" className="cursor-pointer gap-1.5 rounded-full">
+              <Button className="cursor-pointer gap-1.5 rounded-full">
                 Ver resumo
                 <ChevronUp className="size-4" />
               </Button>
@@ -112,20 +110,7 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
             <span className="font-bold">{formatPrice(total)}</span>
           </div>
 
-          <div className="flex items-center gap-2 rounded-lg border p-3">
-            <Truck className="text-muted-foreground size-5 shrink-0" />
-            <Input placeholder="Calcular frete" className="h-9 text-sm" />
-          </div>
-
-          <div className="space-y-3 pt-2">
-            <CheckoutButton />
-            <Button variant="outline" className="w-full cursor-pointer" asChild>
-              <Link href="/">
-                <ShoppingBag className="size-4" />
-                Continuar Comprando
-              </Link>
-            </Button>
-          </div>
+          <CheckoutButton buttonClassname="w-full py-3" />
         </div>
       </DrawerContent>
     </Drawer>
