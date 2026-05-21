@@ -1,6 +1,6 @@
 # Project State
 
-**Last Updated**: 2026-05-20
+**Last Updated**: 2026-05-21
 **State Expiration**: N/A
 
 ---
@@ -22,6 +22,9 @@
 - **Refactored `CouponApplier.tsx`** to use `Decimal` arithmetic instead of `Math.round`
 - **Replaced all `toFixed(2)`** (23 occurrences in 11 components) with `formatPrice`/`formatDiscount`
 - **Replaced all `Math.round(100 - sale/price * 100)`** with `calculateDiscountPercent`
+- **Fixed header scroll animation** — `useScrollDirection` now accepts `hideThreshold` param (default 80px), preventing white-space gap on minimal scroll
+- **Fixed CartDropdown** — closes on cart icon link click, prevents staying open after navigation
+- **Fixed registration form** — resets step and clears fields before redirect on success
 
 ---
 
