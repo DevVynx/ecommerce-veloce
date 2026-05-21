@@ -1,20 +1,14 @@
-import type {
-  CartItemDto,
-  ProductOptionDto,
-  PublicProductDto,
-  PublicVariantDto,
-} from "@repo/types/contracts";
+import type { ProductOptionDto, PublicProductDto, PublicVariantDto } from "@repo/types/contracts";
 import { motion, useAnimation } from "framer-motion";
 import { Heart, Star } from "lucide-react";
 import { useEffect } from "react";
 import { useState } from "react";
 
-import { addItemToCart } from "@/shared/actions/cart/addItem";
 import { addToWishlist } from "@/shared/actions/wishlist/addToWishlist";
 import { removeFromWishlist } from "@/shared/actions/wishlist/removeFromWishlist";
 import { Rating, RatingItem } from "@/shared/components/shadcn-ui/rating";
-import { useAuthState } from "@/shared/states/auth";
-import { useCartState } from "@/shared/states/cart";
+import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
+import { useProductVariantSelection } from "@/shared/hooks/data/useProductVariantSelection";
 import { useWishlistState } from "@/shared/states/wishlist";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
 import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
@@ -35,13 +29,18 @@ export const ProductDetails = ({
   variants,
   options,
 }: ProductDetailsProps) => {
-  const controls = useAnimation();
-  const { isAuthenticated } = useAuthState();
-  const {
-    addItem: optimisticAddItemToCart,
-    rollback: optimisticRollbackCart,
-    updateItemId: optimisticUpdateCartItemId,
-  } = useCartState();
+  const { addItemToCart, isLoading: isAddingToCart } = useCartMutations();
+  const { selectedOptions, setSelectedOptions, selectedVariant } = useProductVariantSelection(
+    variants,
+    options,
+    {
+      variantId: selectedProduct.display.variantId,
+      price: selectedProduct.display.price,
+      salePrice: selectedProduct.display.salePrice,
+      isOnSale: selectedProduct.display.isOnSale,
+      isAvailable: selectedProduct.display.isAvailable,
+    }
+  );
   const {
     add: optimisticAddToWishlist,
     remove: optimisticRemoveFromWishlist,
@@ -49,64 +48,22 @@ export const ProductDetails = ({
     hasHydrated: hasHydratedWishlist,
     ids: wishlistIds,
   } = useWishlistState();
+  const controls = useAnimation();
 
   const [showError, setShowError] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
 
   const { id, title, ratingRate, ratingCount } = selectedProduct;
   const isWishlisted = hasHydratedWishlist && wishlistIds.includes(id);
 
   useEffect(() => {
-    const displayVariant = variants.find((v) => v.id === selectedProduct.display.variantId);
-    const initial: Record<string, string> = {};
-
-    if (displayVariant) {
-      for (const option of options) {
-        const valueId = displayVariant.optionValueIds.find((id) =>
-          option.values.some((v) => v.id === id)
-        );
-        if (valueId) {
-          initial[option.id] = valueId;
-        }
-      }
-    }
-
-    setSelectedOptions(initial);
     setQuantity(1);
     setShowError(false);
   }, [selectedProduct.id, variants, options]);
 
-  const findSelectedVariant = (): PublicVariantDto | null => {
-    if (options.length === 0) {
-      return {
-        id: selectedProduct.display.variantId,
-        sku: "",
-        price: selectedProduct.display.price,
-        salePrice: selectedProduct.display.salePrice,
-        isOnSale: selectedProduct.display.isOnSale,
-        isAvailable: selectedProduct.display.isAvailable,
-        optionValueIds: [],
-      };
-    }
-
-    // Verifica se todas as opções foram selecionadas
-    const selectedValueIds = Object.values(selectedOptions);
-    if (selectedValueIds.length !== options.length) return null;
-
-    return (
-      variants.find((variant) => {
-        if (variant.optionValueIds.length !== selectedValueIds.length) return false;
-        return variant.optionValueIds.every((id) => selectedValueIds.includes(id));
-      }) || null
-    );
-  };
-
-  const activeVariant = findSelectedVariant();
-  const displayPrice = activeVariant?.price ?? selectedProduct.display.price;
-  const displaySalePrice = activeVariant?.salePrice ?? selectedProduct.display.salePrice;
-  const displayIsOnSale = activeVariant?.isOnSale ?? selectedProduct.display.isOnSale;
+  const displayPrice = selectedVariant?.price ?? selectedProduct.display.price;
+  const displaySalePrice = selectedVariant?.salePrice ?? selectedProduct.display.salePrice;
+  const displayIsOnSale = selectedVariant?.isOnSale ?? selectedProduct.display.isOnSale;
 
   const buildSelectedOptionsForCart = (): Array<{ name: string; value: string }> => {
     return Object.entries(selectedOptions).map(([optionId, valueId]) => {
@@ -122,8 +79,6 @@ export const ProductDetails = ({
   const handleAddToCart = async () => {
     if (isAddingToCart) return;
 
-    const selectedVariant = findSelectedVariant();
-
     if (!selectedVariant) {
       setShowError(true);
       controls.start({
@@ -136,48 +91,20 @@ export const ProductDetails = ({
       return;
     }
 
-    setIsAddingToCart(true);
-
-    const payload = {
+    await addItemToCart({
       productVariantId: selectedVariant.id,
-      quantity: quantity,
-    };
-
-    const optimisticCartItem = {
-      id: `temp-${Date.now()}`,
-      quantity: payload.quantity,
-      product: {
-        id: selectedProduct.id,
-        title: selectedProduct.title,
-        variant: {
-          id: selectedVariant.id,
-          image: selectedProduct.display.image,
-          price: selectedVariant.price,
-          salePrice: selectedVariant.salePrice,
-          isOnSale: displayIsOnSale,
-          isAvailable: selectedVariant.isAvailable,
-        },
-      },
+      quantity,
+      productId: selectedProduct.id,
+      productTitle: selectedProduct.title,
+      variantId: selectedVariant.id,
+      image: selectedProduct.display.image,
+      price: selectedVariant.price,
+      salePrice: selectedVariant.salePrice,
+      isOnSale: displayIsOnSale,
+      isAvailable: selectedVariant.isAvailable,
       selectedOptions: buildSelectedOptionsForCart(),
-    } as CartItemDto;
+    });
 
-    optimisticAddItemToCart(optimisticCartItem);
-
-    if (!isAuthenticated) {
-      setIsAddingToCart(false);
-      onClose();
-      return;
-    }
-
-    const { data, error } = await authenticatedAction(addItemToCart, payload);
-
-    if (error) {
-      optimisticRollbackCart();
-    } else if (data?.cartItem) {
-      optimisticUpdateCartItemId(optimisticCartItem.id, data.cartItem.id);
-    }
-
-    setIsAddingToCart(false);
     onClose();
   };
 
@@ -203,10 +130,7 @@ export const ProductDetails = ({
   };
 
   const handleSelectOption = (optionId: string, valueId: string) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [optionId]: valueId,
-    }));
+    setSelectedOptions((prev) => ({ ...prev, [optionId]: valueId }));
 
     if (showError) {
       setShowError(false);

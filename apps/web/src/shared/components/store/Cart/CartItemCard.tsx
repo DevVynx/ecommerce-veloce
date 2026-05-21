@@ -1,15 +1,10 @@
 import type { CartItemDto } from "@repo/types/contracts";
 import { Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useState } from "react";
 
-import { removeItemFromCart } from "@/shared/actions/cart/removeItem";
-import { updateCartItemQuantity } from "@/shared/actions/cart/updateItem";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { CartItemQuantity } from "@/shared/components/store/Cart/CartItemQuantity";
-import { useAuthState } from "@/shared/states/auth";
-import { useCartState } from "@/shared/states/cart";
-import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
+import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
 import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
 
 type CartItemCardProps = {
@@ -17,46 +12,20 @@ type CartItemCardProps = {
 };
 
 export const CartItemCard = ({ item }: CartItemCardProps) => {
-  const { isAuthenticated } = useAuthState();
-  const { updateQuantity, removeItem, rollback } = useCartState();
-  const [isLoading, setIsLoading] = useState(false);
+  const { updateCartItemQuantity, removeItemFromCart, isLoading } = useCartMutations();
 
-  const handleQuantityChange = async (newQuantity: number) => {
+  const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity < 1) return;
-    const prevQuantity = item.quantity;
-    setIsLoading(true);
-
-    updateQuantity(item.id, newQuantity);
-    if (!isAuthenticated) {
-      setIsLoading(false);
-      return;
-    }
-    const { error } = await authenticatedAction(updateCartItemQuantity, {
-      cartItemId: item.id,
-      quantity: newQuantity,
-    });
-    if (error) updateQuantity(item.id, prevQuantity);
-
-    setIsLoading(false);
+    updateCartItemQuantity(item.id, newQuantity);
   };
 
-  const handleRemove = useCallback(async () => {
-    setIsLoading(true);
-    removeItem(item.id);
-    if (!isAuthenticated) {
-      setIsLoading(false);
-      return;
-    }
-    const { error } = await removeItemFromCart({ cartItemId: item.id });
-    if (error) rollback();
-    setIsLoading(false);
-  }, [item.id, removeItem, rollback]);
+  const handleRemove = () => {
+    removeItemFromCart(item.id);
+  };
 
   const { price, salePrice, isOnSale } = item.product.variant;
   const displayPrice = isOnSale ? salePrice : price;
-
   const percentDiscount = isOnSale ? calculateDiscountPercent(price, salePrice) : 0;
-
   const itemTotal = displayPrice * item.quantity;
 
   return (
