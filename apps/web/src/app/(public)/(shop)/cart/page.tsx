@@ -1,13 +1,13 @@
 "use client";
-import { CartEmpty } from "@/shared/components/store/Cart/CartEmpty";
-import { CartItemCard } from "@/shared/components/store/Cart/CartItemCard";
-import { CartItemSkeleton } from "@/shared/components/store/Cart/CartItemSkeleton";
-import { CartMobileSummaryDrawer } from "@/shared/components/store/Cart/CartMobileSummaryDrawer";
-import { CartShippingCalculator } from "@/shared/components/store/Cart/CartShippingCalculator";
-import { CartShippingSkeleton } from "@/shared/components/store/Cart/CartShippingSkeleton";
-import { CartSuggestions } from "@/shared/components/store/Cart/CartSuggestions";
-import { CartSummary } from "@/shared/components/store/Cart/CartSummary";
-import { CartSummarySkeleton } from "@/shared/components/store/Cart/CartSummarySkeleton";
+import { CartEmpty } from "@/shared/components/Cart/CartEmpty";
+import { CartItemCard } from "@/shared/components/Cart/CartItemCard";
+import { CartItemSkeleton } from "@/shared/components/Cart/CartItemSkeleton";
+import { CartMobileSummaryDrawer } from "@/shared/components/Cart/CartMobileSummaryDrawer";
+import { CartShippingCalculator } from "@/shared/components/Cart/CartShippingCalculator";
+import { CartShippingSkeleton } from "@/shared/components/Cart/CartShippingSkeleton";
+import { CartSuggestions } from "@/shared/components/Cart/CartSuggestions";
+import { CartSummary } from "@/shared/components/Cart/CartSummary";
+import { CartSummarySkeleton } from "@/shared/components/Cart/CartSummarySkeleton";
 import { useCartState } from "@/shared/states/cart";
 
 const CartPage = () => {

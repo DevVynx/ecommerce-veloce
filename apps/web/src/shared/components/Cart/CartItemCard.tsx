@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { addToWishlist } from "@/shared/actions/wishlist/addToWishlist";
 import { Button } from "@/shared/components/shadcn-ui/button";
-import { CartItemQuantity } from "@/shared/components/store/Cart/CartItemQuantity";
+import { CartItemQuantity } from "@/shared/components/Cart/CartItemQuantity";
 import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
 import { useWishlistState } from "@/shared/states/wishlist";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";

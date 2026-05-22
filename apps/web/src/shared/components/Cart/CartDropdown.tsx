@@ -7,9 +7,9 @@ import { useCallback, useRef, useState } from "react";
 import { Badge } from "@/shared/components/shadcn-ui/badge";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
-import { CartDropdownEmpty } from "@/shared/components/store/Cart/CartDropdownEmpty";
-import { CartDropdownItemCard } from "@/shared/components/store/Cart/CartDropdownItemCard";
-import { CartDropdownSummary } from "@/shared/components/store/Cart/CartDropdownSummary";
+import { CartDropdownEmpty } from "@/shared/components/Cart/CartDropdownEmpty";
+import { CartDropdownItemCard } from "@/shared/components/Cart/CartDropdownItemCard";
+import { CartDropdownSummary } from "@/shared/components/Cart/CartDropdownSummary";
 import { useCartState } from "@/shared/states/cart";
 
 export const CartDropdown = () => {
