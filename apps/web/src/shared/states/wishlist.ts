@@ -5,13 +5,15 @@ import { persist } from "zustand/middleware";
 type WishlistState = {
   count: number;
   ids: string[];
+  items: WishlistItemDto[];
   previousCount: number;
   previousIds: string[];
+  previousItems: WishlistItemDto[];
   hasHydrated: boolean;
 
   hydrate: (items: WishlistItemDto[]) => void;
   setHasHydrated: (hydrated: boolean) => void;
-  add: (productId: string) => void;
+  addItem: (item: WishlistItemDto) => void;
   remove: (productId: string) => void;
   clear: () => void;
   has: (productId: string) => boolean;
@@ -23,8 +25,10 @@ export const useWishlistState = create<WishlistState>()(
     (set, get) => ({
       count: 0,
       ids: [],
+      items: [],
       previousCount: 0,
       previousIds: [],
+      previousItems: [],
       hasHydrated: false,
 
       hydrate: (items) => {
@@ -32,22 +36,26 @@ export const useWishlistState = create<WishlistState>()(
         set({
           count: items.length,
           ids,
+          items,
           previousCount: items.length,
           previousIds: ids,
+          previousItems: items,
           hasHydrated: true,
         });
       },
 
       setHasHydrated: (hydrated) => set({ hasHydrated: hydrated }),
 
-      add: (productId) =>
+      addItem: (item) =>
         set((state) => {
-          if (state.ids.includes(productId)) return state;
+          if (state.ids.includes(item.product.id)) return state;
           return {
             previousCount: state.count,
             previousIds: state.ids,
+            previousItems: state.items,
             count: state.count + 1,
-            ids: [...state.ids, productId],
+            ids: [...state.ids, item.product.id],
+            items: [...state.items, item],
           };
         }),
 
@@ -57,8 +65,10 @@ export const useWishlistState = create<WishlistState>()(
           return {
             previousCount: state.count,
             previousIds: state.ids,
+            previousItems: state.items,
             count: state.count - 1,
             ids: state.ids.filter((id) => id !== productId),
+            items: state.items.filter((item) => item.product.id !== productId),
           };
         }),
 
@@ -66,8 +76,10 @@ export const useWishlistState = create<WishlistState>()(
         set({
           count: 0,
           ids: [],
+          items: [],
           previousCount: 0,
           previousIds: [],
+          previousItems: [],
         }),
 
       has: (productId) => get().ids.includes(productId),
@@ -76,6 +88,7 @@ export const useWishlistState = create<WishlistState>()(
         set((state) => ({
           count: state.previousCount,
           ids: state.previousIds,
+          items: state.previousItems,
         })),
     }),
     {

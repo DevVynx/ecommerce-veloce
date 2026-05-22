@@ -1,5 +1,5 @@
 "use client";
-import type { PublicProductDto } from "@repo/types/contracts";
+import type { PublicProductDto, WishlistItemDto } from "@repo/types/contracts";
 import { HeartIcon, ShoppingCartIcon, StarIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -17,7 +17,7 @@ type ProductCardProps = {
 
 export const ProductCard = ({ product, grid }: ProductCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { add, remove, rollback, hasHydrated, ids } = useWishlistState();
+  const { addItem, remove, rollback, hasHydrated, ids } = useWishlistState();
 
   const isWishlisted = hasHydrated && ids.includes(product.id);
   const percentDiscount = product.display.isOnSale
@@ -36,7 +36,18 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
       return;
     }
 
-    add(product.id);
+    const wishlistItem: WishlistItemDto = {
+      id: product.id,
+      product: {
+        id: product.id,
+        title: product.title,
+        ratingRate: product.ratingRate,
+        ratingCount: product.ratingCount,
+        display: { ...product.display },
+      },
+    };
+
+    addItem(wishlistItem);
     const { error } = await authenticatedAction(addToWishlist, { productId: product.id });
     if (error) {
       rollback();

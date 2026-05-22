@@ -1,4 +1,4 @@
-import type { ProductOptionDto, PublicProductDto, PublicVariantDto } from "@repo/types/contracts";
+import type { ProductOptionDto, PublicProductDto, PublicVariantDto, WishlistItemDto } from "@repo/types/contracts";
 import { motion, useAnimation } from "framer-motion";
 import { Heart, Star } from "lucide-react";
 import { useEffect } from "react";
@@ -42,7 +42,7 @@ export const ProductDetails = ({
     }
   );
   const {
-    add: optimisticAddToWishlist,
+    addItem: optimisticAddToWishlist,
     remove: optimisticRemoveFromWishlist,
     rollback: optimisticRollbackWishlist,
     hasHydrated: hasHydratedWishlist,
@@ -114,7 +114,18 @@ export const ProductDetails = ({
       const { error } = await authenticatedAction(removeFromWishlist, { productId: id });
       if (error) optimisticRollbackWishlist();
     } else {
-      optimisticAddToWishlist(id);
+      const wishlistItem: WishlistItemDto = {
+        id,
+        product: {
+          id,
+          title: selectedProduct.title,
+          ratingRate: selectedProduct.ratingRate,
+          ratingCount: selectedProduct.ratingCount,
+          display: { ...selectedProduct.display },
+        },
+      };
+
+      optimisticAddToWishlist(wishlistItem);
       const { error } = await authenticatedAction(addToWishlist, { productId: id });
       if (error) optimisticRollbackWishlist();
     }
