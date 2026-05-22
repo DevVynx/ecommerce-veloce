@@ -5,27 +5,30 @@ import { Button } from "@/shared/components/shadcn-ui/button";
 import { Input } from "@/shared/components/shadcn-ui/input";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { Spinner } from "@/shared/components/shadcn-ui/spinner";
+import { cepSchema } from "@/shared/schemas/cep";
+import { formatCep } from "@/shared/utils/store/checkout/formatCep";
 import { formatPrice } from "@/shared/utils/store/price";
 
 export const CartShippingCalculator = () => {
   const [cep, setCep] = useState("");
+  const [cepError, setCepError] = useState<string | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [result, setResult] = useState<{ method: string; price: number; days: number }[] | null>(
     null
   );
 
   const handleCepChange = (value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 8);
-    if (digits.length <= 5) {
-      setCep(digits);
-    } else {
-      setCep(`${digits.slice(0, 5)}-${digits.slice(5)}`);
-    }
+    setCep(formatCep(value));
+    if (cepError) setCepError(null);
   };
 
   const handleCalculate = () => {
-    const digits = cep.replace(/\D/g, "");
-    if (digits.length !== 8) return;
+    const parsed = cepSchema.safeParse({ cep });
+    if (!parsed.success) {
+      setCepError(parsed.error.issues[0]?.message ?? "Insira um CEP válido");
+      return;
+    }
+    setCepError(null);
 
     setIsCalculating(true);
     setResult(null);
@@ -59,12 +62,14 @@ export const CartShippingCalculator = () => {
           size="sm"
           className="h-9 cursor-pointer"
           onClick={handleCalculate}
-          disabled={cep.replace(/\D/g, "").length !== 8 || isCalculating}
+          disabled={!cepSchema.safeParse({ cep }).success || isCalculating}
         >
           {isCalculating ? <Spinner className="size-4" /> : <Search className="size-4" />}
           Calcular
         </Button>
       </div>
+
+      {cepError && <p className="mt-2 text-sm text-red-500">{cepError}</p>}
 
       {result && (
         <>

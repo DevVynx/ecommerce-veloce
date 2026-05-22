@@ -6,12 +6,18 @@ import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { formatDiscount, formatPrice } from "@/shared/utils/store/price";
 
 type CartDropdownSummaryProps = {
+  onNavigateToCart: (open: boolean) => void;
   subtotal: number;
   discount: number;
   total: number;
 };
 
-export const CartDropdownSummary = ({ subtotal, discount, total }: CartDropdownSummaryProps) => {
+export const CartDropdownSummary = ({
+  onNavigateToCart,
+  subtotal,
+  discount,
+  total,
+}: CartDropdownSummaryProps) => {
   return (
     <div className="space-y-2 p-4 pt-3">
       <div className="flex items-center justify-between text-sm">
@@ -30,7 +36,7 @@ export const CartDropdownSummary = ({ subtotal, discount, total }: CartDropdownS
         <span className="font-bold">{formatPrice(total)}</span>
       </div>
       <Button asChild className="w-full">
-        <Link href="/cart">
+        <Link href="/cart" onClick={() => onNavigateToCart(false)}>
           <ShoppingCart className="size-4" />
           Ver carrinho
         </Link>

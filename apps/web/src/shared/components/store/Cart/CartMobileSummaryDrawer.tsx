@@ -1,5 +1,6 @@
 import type { CartDto } from "@repo/types/contracts";
 import { ChevronUp, Truck } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
 import {
@@ -13,6 +14,8 @@ import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { formatDiscount, formatPrice } from "@/shared/utils/store/price";
 
 import { CheckoutButton } from "./CheckoutButton";
+import type { AppliedCoupon } from "./CouponApplier";
+import { CouponApplier } from "./CouponApplier";
 
 const FREE_SHIPPING_THRESHOLD = 200;
 
@@ -22,6 +25,10 @@ type CartMobileSummaryDrawerProps = {
 
 export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProps) => {
   const { count, subtotal, total, discount } = summary;
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+
+  const couponDiscount = appliedCoupon?.discount ?? 0;
+  const finalTotal = total - couponDiscount;
 
   const remainingForFreeShipping = FREE_SHIPPING_THRESHOLD - total;
   const freeShippingProgress = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
@@ -33,7 +40,7 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
           <div className="mx-auto flex max-w-7xl items-center justify-between">
             <div className="flex flex-col">
               <span className="text-muted-foreground text-sm">Total do pedido</span>
-              <span className="text-2xl font-bold">{formatPrice(total)}</span>
+              <span className="text-2xl font-bold">{formatPrice(finalTotal)}</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-muted-foreground text-sm">
@@ -101,13 +108,29 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
                 <span className="font-medium text-green-600">Grátis</span>
               </div>
             )}
+
+            {appliedCoupon && (
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Cupom ({appliedCoupon.code})</span>
+                <span className="font-medium text-red-500">
+                  {formatDiscount(appliedCoupon.discount)}
+                </span>
+              </div>
+            )}
           </div>
+
+          <CouponApplier
+            subtotal={total}
+            appliedCoupon={appliedCoupon}
+            onApply={setAppliedCoupon}
+            onClear={() => setAppliedCoupon(null)}
+          />
 
           <Separator />
 
           <div className="flex items-center justify-between text-base">
             <span className="font-bold">Total</span>
-            <span className="font-bold">{formatPrice(total)}</span>
+            <span className="font-bold">{formatPrice(finalTotal)}</span>
           </div>
 
           <CheckoutButton buttonClassname="w-full py-3" />

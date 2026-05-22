@@ -83,7 +83,12 @@ export const CartDropdown = () => {
 
                 <Separator />
 
-                <CartDropdownSummary subtotal={subtotal} discount={discount} total={total} />
+                <CartDropdownSummary
+                  onNavigateToCart={setIsOpen}
+                  subtotal={subtotal}
+                  discount={discount}
+                  total={total}
+                />
               </div>
             )}
           </motion.div>

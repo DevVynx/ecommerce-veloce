@@ -15,7 +15,7 @@ const CartPage = () => {
 
   if (hasHydrated && cart.items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-16 md:px-0">
         <CartEmpty />
       </div>
     );
@@ -23,12 +23,9 @@ const CartPage = () => {
 
   return (
     <>
-      <div className="container mx-auto mt-10 px-2 py-8">
+      <div className="container mx-auto mt-10 px-2 py-8 md:px-0">
         <h1 className="mb-6 text-2xl font-bold">
-          Meu Carrinho{" "}
-          {!hasHydrated
-            ? "..."
-            : `(${cart.summary.count} ${cart.summary.count === 1 ? "item" : "itens"})`}
+          Meu Carrinho {!hasHydrated ? "..." : `(${cart.summary.count})`}
         </h1>
 
         <div className="lg:grid lg:grid-cols-3 lg:gap-6">
