@@ -1,5 +1,5 @@
 import { productRepositories } from "@/modules/products/repositories";
-import type { FindAllProductsParams } from "@/modules/products/types/ServicesParams";
+import type { FindAllProductsParams } from "@/modules/products/types/ServiceParams";
 import { productLogic } from "@/shared/utils/productLogic";
 
 export const findManyProducts = async ({

@@ -1,5 +1,5 @@
 import { productRepositories } from "@/modules/products/repositories";
-import type { FindProductByIdParams } from "@/modules/products/types/ServicesParams";
+import type { FindProductByIdParams } from "@/modules/products/types/ServiceParams";
 import { NotFoundError } from "@/shared/utils/HttpErrors";
 import { productLogic } from "@/shared/utils/productLogic";
 

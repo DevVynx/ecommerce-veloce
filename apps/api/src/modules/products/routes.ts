@@ -1,9 +1,8 @@
 import { Router } from "express";
 
-import { getProductDetails } from "@/modules/products/controllers/getProductDetails";
 import v from "@/modules/products/helpers/validators";
 
-import { getAllProducts } from "./controllers";
+import { getAllProducts, getProductDetails } from "./controllers";
 
 const productRouter: Router = Router();
 

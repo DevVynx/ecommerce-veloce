@@ -7,3 +7,7 @@ export type FindAllProductsParams = GetProductsRequest & {
 export type FindProductByIdParams = {
   productId: string;
 };
+
+export type FindVariantByIdParams = {
+  variantId: string;
+};
