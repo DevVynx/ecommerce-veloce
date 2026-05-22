@@ -14,7 +14,7 @@ This is a TypeScript monorepo (pnpm workspace + Turbo) containing:
 - **apps/web**: Next.js 16 (App Router) frontend
 - **packages/**: Shared configs and types (@repo/types)
 
-**Stack**: TypeScript, Express, Next.js 16, Prisma, PostgreSQL, React Query, Zustand, Tailwind CSS
+**Stack**: TypeScript, Express, Next.js 16, Prisma, PostgreSQL, Zustand, Tailwind CSS
 
 For more details about the project, see @docs/project/PROJECT-OVERVIEW.md
 
@@ -48,7 +48,7 @@ Example:
 
 - User asks to add a new API endpoint → Load API-MODULES.md and API-SHARED.md
 - User asks to fix a CSS/styling bug on a component → Load DESIGN-TOKENS.md
-- User asks to add a new React Query mutation → Load WEB-DATA-LAYER.md
+- User asks to add a new data fetching endpoint → Load WEB-DATA-LAYER.md
 
 ### How to Load Guides
 
@@ -66,33 +66,33 @@ If a loaded guide references another guide for deeper details, load that guide t
 
 ## CRITICAL: Always Ask Before Making Decisions
 
-**STOP AND WAIT** - Não execute ações automaticamente, sempre confirme antes.
+**STOP AND WAIT** — Never execute actions automatically, always confirm first.
 
-### Quando SEMPRE Perguntar
+### When to ALWAYS Ask
 
-Se em qualquer momento você precisar fazer algo que não foi explicitamente solicitado, **PARE e PERGUNTE**:
+If at any point you need to do something that was not explicitly requested, **STOP and ASK**:
 
-- Adicionar arquivos em um commit que não foram mencionados
-- Modificar código que não estava no escopo da solicitação
-- Fazer operações de git (reset, stash, commit) sem confirmação explícita
-- Alterar descrições de commits além do solicitado
-- Reverter código antes de confirmar o escopo
+- Adding files to a commit that were not mentioned
+- Modifying code that was not in the scope of the request
+- Performing git operations (reset, stash, commit) without explicit confirmation
+- Changing commit descriptions beyond what was requested
+- Reverting code before confirming the scope
 
-### Exemplos de O que NÃO Fazer
+### What NOT to Do (Examples)
 
-- ❌ Usuário pede "ajustar commit" → Você adiciona mais arquivos sem perguntar quais
-- ❌ Usuário pede para "voltar atrás" → Você modifica código enquanto faz o reset
-- ❌ Usuário pergunta algo → Você responde sem verificar se entendeu corretamente
+- ❌ User asks "adjust commit" → You add more files without asking which ones
+- ❌ User asks "go back" → You modify code while doing the reset
+- ❌ User asks something → You answer without verifying you understood correctly
 
-### Exemplos de O que FAZER
+### What TO Do (Examples)
 
-- ✅ "Posso incluir o arquivo X no commit também?"
-- ✅ "Quer que eu reverte apenas o arquivo Y ou todos?"
-- ✅ "Entendi corretamente que você quer fazer X com Y?"
+- ✅ "Can I include file X in the commit as well?"
+- ✅ "Do you want me to revert only file Y or all of them?"
+- ✅ "Did I understand correctly that you want to do X with Y?"
 
-### Regra de Ouro
+### Golden Rule
 
-> É melhor perguntar 10 vezes do que fazer 1 mudança errada.
+> Better to ask 10 times than to make 1 wrong change.
 
 ---
 
@@ -115,25 +115,47 @@ pnpm --filter api db:seed
 
 ---
 
-## Essential Principles
+## Code Quality Principles
 
-These principles **MUST** be followed in every task, regardless of context:
+Quality is always more important than delivery speed. These principles **MUST** be followed in every task.
 
-1. **No `any`** - Never use `any`. If really need it, use `unknown` and narrow appropriately.
-2. **Strict Mode** - Always follow TypeScript strict mode rules.
-3. **`type` over `interface`** - Prefer `type` for object shapes, except when interface is required.
-4. **Zod validation** - Validate all inputs with Zod on both API and Web.
+### Net Positive Over Perfection
+- Prioritize code quality, but do not block progress on minor imperfections
+- A net improvement is better than perfect code that never ships
+- Every commit should leave the codebase cleaner than you found it
 
-### Code Quality Standards
+### Grounded in Principles, Not Opinions
+- Base every decision on established engineering principles (SOLID, DRY, KISS, YAGNI)
+- If you are unsure about something, **ASK** — do not rely on assumptions or gut feelings
+- Every architecture decision must have a clear rationale
 
-When writing code, follow these standards:
+### Security is Non-Negotiable
+- Validate all inputs with Zod on both API and Web
+- Authenticate and authorize all protected resources
+- Never hardcode secrets, credentials, or tokens
+- Never expose sensitive data in logs, error messages, or API responses
 
-- **Security**: Never hardcode secrets, validate all inputs, enforce auth on protected routes.
-- **Error Handling**: Use HttpError classes on API, proper error states on Web.
-- **Patterns**: Follow the module/controller/service/repository pattern for API. Follow Server Actions + React Query pattern for Web.
-- **Readability**: Clear naming, single responsibility, minimal nesting.
+### Maintainability First
+- Code is read far more often than it is written — prioritize clarity over cleverness
+- Names must reveal intent; single responsibility per function/module
+- Comments explain **"why"** (trade-offs, decisions), not **"what"** (mechanics)
+- Minimal nesting depth; favor early returns and guard clauses
 
-For detailed patterns, see the guides in @docs/guides/. For code review, use the `@pragmatic-code-review` skill.
+### TypeScript Strictness
+- **No `any`** — use `unknown` and narrow appropriately
+- **Strict Mode** — always follow TypeScript strict mode rules
+- **`type` over `interface`** — prefer `type` for object shapes, except when interface is required
+
+### Testing & Robustness
+- Cover failure modes, edge cases, and error paths — not just happy paths
+- Prefer meaningful tests that validate behavior, not implementation details
+
+### Patterns
+- **API**: Follow the module/controller/service/repository pattern
+- **Web**: Use Next.js Server Actions for data fetching and mutations
+- **Error Handling**: Use HttpError classes on API, proper error states on Web
+
+For detailed patterns, see the guides in @docs/guides/. For code reviews, use the `@pragmatic-code-review` skill.
 
 ---
 
@@ -151,8 +173,8 @@ For detailed patterns, see the guides in @docs/guides/. For code review, use the
 
 - **@docs/guides/WEB-OVERVIEW.md** - Next.js structure, routing, layouts
 - **@docs/guides/WEB-COMPONENTS.md** - Radix UI, shadcn-ui, component patterns
-- **@docs/guides/WEB-DATA-LAYER.md** - React Query hooks, mutations, query keys
-- **@docs/guides/WEB-STATE.md** - Zustand stores, when to use vs React Query
+- **@docs/guides/WEB-DATA-LAYER.md** - Server Actions, data fetching patterns
+- **@docs/guides/WEB-STATE.md** - Zustand stores, when to use vs Server Actions
 - **@docs/guides/DESIGN-TOKENS.md** - Color system, shadcn/ui tokens, when to use each
 
 ### Shared Guides
@@ -200,7 +222,7 @@ apps/web/src/
     ├── components/         # React components (by feature)
     │   └── shadcn-ui/      # Base UI components
     ├── hooks/              # React hooks
-    │   └── data/           # React Query hooks
+    │   └── data/           # Data hooks (server actions, mutations)
     ├── schemas/             # Zod schemas (by feature)
     ├── states/              # Zustand stores
     ├── providers/          # Context providers
@@ -211,11 +233,11 @@ packages/types/src/Contracts/  # Shared API types
 
 ---
 
-## Regras para Todoist
+## Todoist Rules
 
-- **Idioma**: Todas as tasks devem ser criadas em português.
-- **Seções**: O projeto possui 3 seções — "feat" (novas funcionalidades), "refactor" (refatorações e melhorias) e "fix" (correções de bugs). Adicione cada task na seção correspondente ao tipo de mudança.
-- **IDs Únicos**: Usar padrão `[vyn-XXX]` onde XXX é um número crescente e nunca repete.
-- **Contador**: O arquivo `.opencode/task-counter.json` armazena o último número usado.
-- **Fluxo ao criar**: Ler o JSON, incrementar `last`, criar task com prefixo `[vyn-XXX]`, atualizar o JSON.
+- **Language**: All tasks must be created in Portuguese.
+- **Sections**: The project has 3 sections — "feat" (new features), "refactor" (refactoring and improvements) and "fix" (bug fixes). Add each task to the corresponding section based on change type.
+- **Unique IDs**: Use the pattern `[vyn-XXX]` where XXX is an incrementing number that never repeats.
+- **Counter**: The file `.opencode/task-counter.json` stores the last used number.
+- **Creation flow**: Read the JSON, increment `last`, create task with prefix `[vyn-XXX]`, update the JSON.
 ```
