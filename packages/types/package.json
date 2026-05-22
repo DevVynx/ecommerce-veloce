@@ -3,6 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./contracts": "./src/Contracts/index.ts"
+    "./contracts": "./Contracts/index.ts"
   }
 }
