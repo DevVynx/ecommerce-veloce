@@ -1,6 +1,6 @@
 # Project State
 
-**Last Updated**: 2026-05-21
+**Last Updated**: 2026-05-22
 **State Expiration**: N/A
 
 ---
@@ -8,23 +8,6 @@
 ## Current Task
 
 **[vyn-010] Cart Page Refactor** - Frontend
-
-- Componentized cart page (CartItemCard, CartItemQuantity, CartItemsList, CartSummary, CheckoutButton, CartPageSkeleton)
-- Created LoginModal component (vyn-036)
-- Desprotected /cart route (vyn-037)
-- CheckoutButton conditional: guest → LoginModal, auth → /checkout (vyn-038)
-- Added free shipping progress bar, coupon input (UI), discount breakdown
-- Removed inline 259-line monolith, now 7 clean components
-- **Added `decimal.js`** for precise monetary arithmetic on frontend
-- **Created `@/shared/utils/store/price.ts`** — `formatPrice`, `formatDiscount`, `asDecimal`, `calculateDiscountPercent`
-- **Fixed `calculateSummary` semantics** in Zustand cart store: `subtotal` = base price, `total` = effective price (matching API behavior)
-- **Fixed `updateItemId`** to calculate summary and remove redundant `...state` spread
-- **Refactored `CouponApplier.tsx`** to use `Decimal` arithmetic instead of `Math.round`
-- **Replaced all `toFixed(2)`** (23 occurrences in 11 components) with `formatPrice`/`formatDiscount`
-- **Replaced all `Math.round(100 - sale/price * 100)`** with `calculateDiscountPercent`
-- **Fixed header scroll animation** — `useScrollDirection` now accepts `hideThreshold` param (default 80px), preventing white-space gap on minimal scroll
-- **Fixed CartDropdown** — closes on cart icon link click, prevents staying open after navigation
-- **Fixed registration form** — resets step and clears fields before redirect on success
 
 ---
 
