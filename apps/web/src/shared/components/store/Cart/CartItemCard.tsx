@@ -1,10 +1,13 @@
-import type { CartItemDto } from "@repo/types/contracts";
-import { Trash2 } from "lucide-react";
+import type { CartItemDto, WishlistItemDto } from "@repo/types/contracts";
+import { Heart, Trash2 } from "lucide-react";
 import Link from "next/link";
 
+import { addToWishlist } from "@/shared/actions/wishlist/addToWishlist";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { CartItemQuantity } from "@/shared/components/store/Cart/CartItemQuantity";
 import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
+import { useWishlistState } from "@/shared/states/wishlist";
+import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
 import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
 
 type CartItemCardProps = {
@@ -13,6 +16,7 @@ type CartItemCardProps = {
 
 export const CartItemCard = ({ item }: CartItemCardProps) => {
   const { updateCartItemQuantity, removeItemFromCart, isLoading } = useCartMutations();
+  const { addItem, rollback } = useWishlistState();
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -20,6 +24,36 @@ export const CartItemCard = ({ item }: CartItemCardProps) => {
   };
 
   const handleRemove = () => {
+    removeItemFromCart(item.id);
+  };
+
+  const handleMoveToWishlist = async () => {
+    const wishlistItem: WishlistItemDto = {
+      id: item.product.id,
+      product: {
+        id: item.product.id,
+        title: item.product.title,
+        ratingRate: 0,
+        ratingCount: 0,
+        display: {
+          variantId: item.product.variant.id,
+          image: item.product.variant.image,
+          price: item.product.variant.price,
+          salePrice: item.product.variant.salePrice,
+          isOnSale: item.product.variant.isOnSale,
+          isAvailable: item.product.variant.isAvailable,
+        },
+      },
+    };
+
+    addItem(wishlistItem);
+
+    const { error } = await authenticatedAction(addToWishlist, { productId: item.product.id });
+    if (error) {
+      rollback();
+      return;
+    }
+
     removeItemFromCart(item.id);
   };
 
@@ -57,15 +91,26 @@ export const CartItemCard = ({ item }: CartItemCardProps) => {
             >
               {item.product.title}
             </Link>
-            <Button
-              variant="ghost"
-              onClick={handleRemove}
-              disabled={isLoading}
-              className="text-muted-foreground -mt-1.5 -mr-2 cursor-pointer p-1.5 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
-              aria-label="Remover item"
-            >
-              <Trash2 className="size-5" />
-            </Button>
+            <div className="-mt-1.5 -mr-2 flex items-center gap-3">
+              <Button
+                variant="ghost"
+                onClick={handleMoveToWishlist}
+                disabled={isLoading}
+                className="text-muted-foreground cursor-pointer p-1.5 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                aria-label="Mover para lista de desejos"
+              >
+                <Heart className="size-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={handleRemove}
+                disabled={isLoading}
+                className="text-muted-foreground cursor-pointer p-1.5 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                aria-label="Remover item"
+              >
+                <Trash2 className="size-5" />
+              </Button>
+            </div>
           </div>
 
           {item.selectedOptions[0] && (
