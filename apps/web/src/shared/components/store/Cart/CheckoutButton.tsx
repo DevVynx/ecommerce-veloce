@@ -2,7 +2,7 @@ import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { LoginModal } from "@/shared/components/auth/login/LoginModal";
+import { AuthModal } from "@/shared/components/auth/AuthModal";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { useAuthState } from "@/shared/states/auth";
 
@@ -12,7 +12,7 @@ type CheckoutButtonProps = {
 
 export const CheckoutButton = ({ buttonClassname }: CheckoutButtonProps) => {
   const { isAuthenticated } = useAuthState();
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   if (isAuthenticated) {
     return (
@@ -27,12 +27,12 @@ export const CheckoutButton = ({ buttonClassname }: CheckoutButtonProps) => {
 
   return (
     <>
-      <Button className={buttonClassname} onClick={() => setLoginModalOpen(true)}>
+      <Button className={buttonClassname} onClick={() => setAuthModalOpen(true)}>
         <ShoppingCart className="size-5" />
         Finalizar Compra
       </Button>
 
-      <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} redirectTo="/checkout" />
+      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} redirectTo="/checkout" />
     </>
   );
 };

@@ -95,9 +95,27 @@ export const RegisterForm = ({ redirectTo = "/" }: RegisterFormProps) => {
     }
   };
 
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+
+    if (step === "account") {
+      const stepData = registerSteps.find((s) => s.value === step);
+      if (!stepData) return;
+      const isValid = await form.trigger(stepData.fields);
+      if (!isValid) {
+        setAuthError("Preencha todos os campos antes de prosseguir");
+        return;
+      }
+      setStep("security");
+    } else {
+      form.handleSubmit(onSubmit)();
+    }
+  };
+
   return (
     <>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} onKeyDown={handleKeyDown} className="flex w-full flex-col gap-4">
         <Stepper value={step} onValueChange={setStep} onValidate={onValidate}>
           <StepperList>
             {registerSteps.map((stepItem) => (

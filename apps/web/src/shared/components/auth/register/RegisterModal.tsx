@@ -7,27 +7,31 @@ import {
   DialogTitle,
 } from "@/shared/components/shadcn-ui/dialog";
 
-import { LoginForm } from "./LoginForm";
+import { RegisterForm } from "./RegisterForm";
 
-type LoginModalProps = {
+type RegisterModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   redirectTo?: string;
 };
 
-export const LoginModal = ({ open, onOpenChange, redirectTo = "/checkout" }: LoginModalProps) => {
+export const RegisterModal = ({
+  open,
+  onOpenChange,
+  redirectTo = "/checkout",
+}: RegisterModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold">Login</DialogTitle>
+          <DialogTitle className="text-center text-2xl font-bold">Criar Conta</DialogTitle>
           <p className="text-muted-foreground text-center text-sm">
-            Faça login para finalizar sua compra
+            Crie sua conta para finalizar sua compra
           </p>
         </DialogHeader>
 
         <div className="flex flex-col items-center gap-4">
-          <LoginForm redirectTo={redirectTo} />
+          <RegisterForm redirectTo={redirectTo} />
 
           <div className="w-full">
             <OrDivider />

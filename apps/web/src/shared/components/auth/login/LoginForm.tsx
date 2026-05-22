@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { LoginRequest } from "@repo/types/contracts";
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useState } from "react";
@@ -137,12 +136,13 @@ export const LoginForm = ({ redirectTo = "/" }: LoginFormProps) => {
           <Label htmlFor="remember-me-checkbox">Lembre-me</Label>
         </Field>
 
-        <Link
-          href="/register"
-          className="text-card-foreground hover:text-muted-foreground text-sm font-bold underline"
+        <Button
+          variant={"link"}
+          onClick={() => router.push("/forgot-password")}
+          className="text-card-foreground hover:text-muted-foreground p-0 font-bold"
         >
           Esqueceu a senha?
-        </Link>
+        </Button>
       </div>
 
       <Button
