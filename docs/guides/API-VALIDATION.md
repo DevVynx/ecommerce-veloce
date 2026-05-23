@@ -131,7 +131,7 @@ z.object({
 ### Arrays
 
 ```typescript
-z.array(z.string().uuid()).min(1, "Pelo menos um item.");
+z.array(z.uuid()).min(1, "Pelo menos um item.");
 ```
 
 ### Custom validation

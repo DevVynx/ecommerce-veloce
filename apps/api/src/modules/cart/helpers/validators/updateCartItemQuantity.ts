@@ -7,7 +7,7 @@ const params = z.object({
 });
 
 const body = z.object({
-  quantity: z.coerce.number("Valor inválido.").min(1, "A quantidade mínima é 1."),
+  quantity: z.number("Valor inválido.").min(1, "A quantidade mínima é 1."),
 });
 
 export const updateCartItemQuantity = validation({ params, body });

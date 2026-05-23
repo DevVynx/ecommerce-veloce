@@ -18,7 +18,7 @@ export const updateCartItemQuantity = async ({
     throw new ForbiddenError("Item do carrinho não pertence ao usuário.");
   }
 
-  const variant = await productServices.findVariantById({ variantId: item.productVariantId });
+  const { variant } = await productServices.findVariantById({ variantId: item.productVariantId });
 
   if (!variant) {
     throw new NotFoundError("Variante do produto não encontrada.");

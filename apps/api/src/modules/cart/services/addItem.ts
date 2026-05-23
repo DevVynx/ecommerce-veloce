@@ -4,12 +4,8 @@ import type { CreateCartItemParams } from "@/modules/cart/types/ServiceParams";
 import { productServices } from "@/modules/products/services";
 import { NotFoundError, UnprocessableEntityError } from "@/shared/utils/HttpErrors";
 
-export const addCartItem = async ({
-  userId,
-  productVariantId,
-  quantity,
-}: CreateCartItemParams) => {
-  const variant = await productServices.findVariantById({ variantId: productVariantId });
+export const addCartItem = async ({ userId, productVariantId, quantity }: CreateCartItemParams) => {
+  const { variant } = await productServices.findVariantById({ variantId: productVariantId });
 
   if (!variant) {
     throw new NotFoundError("Variante do produto não encontrada.");
@@ -19,8 +15,12 @@ export const addCartItem = async ({
     throw new UnprocessableEntityError("Esta variante do produto não está ativa.");
   }
 
-  if (variant.stock < quantity) {
-    throw new UnprocessableEntityError("Estoque insuficiente para esta variante.");
+  if (variant.stock === 0) {
+    throw new UnprocessableEntityError("Esta variante do produto está sem estoque.");
+  }
+
+  if (quantity > variant.stock) {
+    quantity = variant.stock;
   }
 
   let cart = await cartRepositories.existsByUserId({ userId });
