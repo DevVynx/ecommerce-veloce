@@ -9,7 +9,7 @@ export const syncCart: RequestHandler = async (req, res: Response<SyncCartRespon
   const { userId } = res.locals.user;
   const { items } = v.syncCart.getValidatedValues(req).body;
 
-  const { cart, results } = await cartServices.sync({ userId, items });
+  const { cart, results } = await cartServices.syncCart({ userId, items });
 
   const { cart: formattedCart } = cartMappers.toUserCart(cart);
 

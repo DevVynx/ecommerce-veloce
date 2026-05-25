@@ -35,6 +35,7 @@ export function ProductMapperToProductDetails(
     sku: variant.sku,
     price: Number(variant.price),
     salePrice: Number(variant.offer.salePrice),
+    stock: variant.stock,
     isOnSale: variant.offer.isOnSale,
     isAvailable: variant.offer.isAvailable,
     optionValueIds: variant.productVariantOptions.map((vOpt) => vOpt.productOptionValueId),

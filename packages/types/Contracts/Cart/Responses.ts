@@ -8,6 +8,7 @@ export type CartItemDto = {
       id: string;
       image: string;
       price: number;
+      stock: number;
       salePrice: number;
       isOnSale: boolean;
       isAvailable: boolean;
@@ -54,9 +55,10 @@ export type GetCartItemsResponse = {
 export type AddItemToCartResponse = {
   cartItem: {
     id: string;
-    quantity: number;
     cartId: string;
+    quantity: number;
     productVariantId: string;
+    stock: number;
   };
 };
 
@@ -72,8 +74,9 @@ export type UpdateCartItemQuantityResponse = {
   cartItem: {
     id: string;
     cartId: string;
-    productVariantId: string;
     quantity: number;
+    productVariantId: string;
+    stock: number;
   };
 };
 

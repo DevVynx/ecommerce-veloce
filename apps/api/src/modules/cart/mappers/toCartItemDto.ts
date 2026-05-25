@@ -16,6 +16,7 @@ export function toCartItemDto(item: EnrichedCartItem): CartItemDto {
         id: variant.id,
         image: product.image,
         price: Number(variant.price),
+        stock: variant.stock,
         salePrice: Number(variant.offer.salePrice),
         isOnSale: variant.offer.isOnSale,
         isAvailable: variant.offer.isAvailable,

@@ -44,11 +44,15 @@ export const addCartItem = async ({ userId, productVariantId, quantity }: Create
     return { cartItem };
   }
 
-  const cartItem = await cartRepositories.addItem({
+  const rawCartItem = await cartRepositories.addItem({
     cartId: cart.id,
     productVariantId,
     quantity,
   });
+  const cartItem = {
+    ...rawCartItem,
+    stock: variant.stock,
+  };
 
   return { cartItem };
 };

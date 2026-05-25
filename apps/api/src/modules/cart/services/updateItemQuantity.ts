@@ -35,15 +35,23 @@ export const updateCartItemQuantity = async ({
   }
 
   if (quantity > variant.stock) {
-    const cartItem = await cartRepositories.updateItemQuantity({
+    const rawCartItem = await cartRepositories.updateItemQuantity({
       cartItemId,
       quantity: variant.stock,
     });
+    const cartItem = {
+      ...rawCartItem,
+      stock: variant.stock,
+    };
 
     return { cartItem };
   }
 
-  const cartItem = await cartRepositories.updateItemQuantity({ cartItemId, quantity });
+  const rawCartItem = await cartRepositories.updateItemQuantity({ cartItemId, quantity });
+  const cartItem = {
+    ...rawCartItem,
+    stock: variant.stock,
+  };
 
   return { cartItem };
 };
