@@ -6,6 +6,7 @@ type DisplayVariant = {
   variantId: string;
   price: number;
   salePrice: number;
+  stock: number;
   isOnSale: boolean;
   isAvailable: boolean;
 };
@@ -42,10 +43,11 @@ export function useProductVariantSelection(
         sku: "",
         price: displayVariant.price,
         salePrice: displayVariant.salePrice,
+        stock: displayVariant.stock,
         isOnSale: displayVariant.isOnSale,
         isAvailable: displayVariant.isAvailable,
         optionValueIds: [],
-      } as PublicVariantDto;
+      };
     }
 
     const selectedValueIds = Object.values(selectedOptions);

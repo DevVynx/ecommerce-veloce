@@ -1,4 +1,9 @@
-import type { ProductOptionDto, PublicProductDto, PublicVariantDto, WishlistItemDto } from "@repo/types/contracts";
+import type {
+  ProductOptionDto,
+  PublicProductDto,
+  PublicVariantDto,
+  WishlistItemDto,
+} from "@repo/types/contracts";
 import { motion, useAnimation } from "framer-motion";
 import { Heart, Star } from "lucide-react";
 import { useEffect } from "react";
@@ -15,6 +20,7 @@ import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/pric
 
 import { ProductOptions } from "./ProductOptions";
 import { QuantitySelector } from "./QuantitySelector";
+import { StockBadge } from "./StockBadge";
 
 type ProductDetailsProps = {
   onClose: () => void;
@@ -30,6 +36,8 @@ export const ProductDetails = ({
   options,
 }: ProductDetailsProps) => {
   const { addItemToCart, isLoading: isAddingToCart } = useCartMutations();
+  const displayVariantStock =
+    variants.find((v) => v.id === selectedProduct.display.variantId)?.stock ?? 0;
   const { selectedOptions, setSelectedOptions, selectedVariant } = useProductVariantSelection(
     variants,
     options,
@@ -37,6 +45,7 @@ export const ProductDetails = ({
       variantId: selectedProduct.display.variantId,
       price: selectedProduct.display.price,
       salePrice: selectedProduct.display.salePrice,
+      stock: displayVariantStock,
       isOnSale: selectedProduct.display.isOnSale,
       isAvailable: selectedProduct.display.isAvailable,
     }
@@ -51,15 +60,18 @@ export const ProductDetails = ({
   const controls = useAnimation();
 
   const [showError, setShowError] = useState(false);
+  const [stockFeedback, setStockFeedback] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
 
   const { id, title, ratingRate, ratingCount } = selectedProduct;
+  const isOutOfStock = !!selectedVariant && !selectedVariant.isAvailable;
   const isWishlisted = hasHydratedWishlist && wishlistIds.includes(id);
 
   useEffect(() => {
     setQuantity(1);
     setShowError(false);
-  }, [selectedProduct.id, variants, options]);
+    setStockFeedback(null);
+  }, [selectedProduct.id, selectedOptions, variants, options]);
 
   const displayPrice = selectedVariant?.price ?? selectedProduct.display.price;
   const displaySalePrice = selectedVariant?.salePrice ?? selectedProduct.display.salePrice;
@@ -91,9 +103,10 @@ export const ProductDetails = ({
       return;
     }
 
-    await addItemToCart({
+    const result = await addItemToCart({
       productVariantId: selectedVariant.id,
       quantity,
+      stock: selectedVariant.stock,
       productId: selectedProduct.id,
       productTitle: selectedProduct.title,
       variantId: selectedVariant.id,
@@ -104,6 +117,15 @@ export const ProductDetails = ({
       isAvailable: selectedVariant.isAvailable,
       selectedOptions: buildSelectedOptionsForCart(),
     });
+
+    if (result?.error) {
+      const message =
+        typeof result.error.message === "string"
+          ? result.error.message
+          : "Erro ao adicionar ao carrinho.";
+      setStockFeedback(message);
+      return;
+    }
 
     onClose();
   };
@@ -133,11 +155,9 @@ export const ProductDetails = ({
     onClose();
   };
 
-  const handleIncrement = () => setQuantity(quantity + 1);
-
-  const handleDecrement = () => {
-    if (quantity <= 1) return;
-    setQuantity(quantity - 1);
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity < 1 || newQuantity > (selectedVariant?.stock ?? 99)) return;
+    setQuantity(newQuantity);
   };
 
   const handleSelectOption = (optionId: string, valueId: string) => {
@@ -155,8 +175,13 @@ export const ProductDetails = ({
   return (
     <div className="flex h-125 gap-10">
       {/* Imagem - lado esquerdo */}
-      <div className="flex-1 overflow-hidden">
+      <div className="relative flex-1 overflow-hidden">
         <div className="flex h-full items-center justify-center bg-black/10 p-4">
+          {displayIsOnSale && (
+            <span className="absolute top-2 right-2 rounded-sm bg-red-500 px-2 py-1 font-bold text-white shadow-sm">
+              -{percentDiscount}%
+            </span>
+          )}
           <img
             src={selectedProduct.display.image}
             alt={title}
@@ -183,21 +208,15 @@ export const ProductDetails = ({
             <span className="text-sm text-zinc-400">({ratingCount} Avaliações)</span>
           </div>
 
-          {/* Price */}
-          <div className="flex items-center gap-2 border-b border-zinc-300 pb-3">
+          {/* Price + Stock */}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-zinc-300 pb-3">
             <strong className="text-2xl font-semibold text-gray-800">
               {formatPrice(displaySalePrice)}
             </strong>
             {displayIsOnSale && (
-              <>
-                <span className="rounded-sm bg-red-500 px-1.5 py-0.5 text-sm font-bold text-white">
-                  -{percentDiscount}%
-                </span>
-                <span className="text-sm text-red-500 line-through">
-                  {formatPrice(displayPrice)}
-                </span>
-              </>
+              <span className="text-sm text-red-500 line-through">{formatPrice(displayPrice)}</span>
             )}
+            {selectedVariant && <StockBadge isAvailable={selectedVariant.isAvailable} />}
           </div>
         </div>
 
@@ -226,10 +245,21 @@ export const ProductDetails = ({
 
           {/* Quantity Selector */}
           <QuantitySelector
+            max={selectedVariant?.stock}
             quantity={quantity}
-            onDecrement={handleDecrement}
-            onIncrement={handleIncrement}
+            disabled={isOutOfStock || isAddingToCart}
+            onChange={handleQuantityChange}
           />
+
+          {stockFeedback && (
+            <motion.p
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-3 text-sm text-red-500"
+            >
+              {stockFeedback}
+            </motion.p>
+          )}
         </div>
 
         {/* ========== SEÇÃO INFERIOR ========== */}
@@ -237,10 +267,16 @@ export const ProductDetails = ({
           <div className="flex items-center justify-center gap-4">
             <button
               onClick={handleAddToCart}
-              disabled={isAddingToCart}
-              className="flex-1 cursor-pointer bg-black px-8 py-4 font-bold text-white uppercase transition-colors hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isAddingToCart || !selectedVariant || isOutOfStock}
+              className={`flex-1 cursor-pointer px-8 py-4 font-bold text-white uppercase transition-colors disabled:cursor-not-allowed ${
+                isOutOfStock ? "bg-gray-400" : "bg-black hover:bg-black/80 disabled:opacity-50"
+              }`}
             >
-              {isAddingToCart ? "Adicionando..." : "Adicionar ao Carrinho"}
+              {isAddingToCart
+                ? "Adicionando..."
+                : isOutOfStock
+                  ? "Indisponível"
+                  : "Adicionar ao Carrinho"}
             </button>
 
             <button
