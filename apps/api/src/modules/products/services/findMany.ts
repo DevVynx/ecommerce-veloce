@@ -43,7 +43,7 @@ export const findManyProducts = async ({
     })
     .filter((p) => p !== null);
 
-  if (onSale) return { products: enrichedProducts.filter((p) => p.heroVariant.offer.isOnSale) };
+  if (onSale) return { enrichedProducts: enrichedProducts.filter((p) => p.heroVariant.offer.isOnSale) };
 
-  return { products: enrichedProducts };
+  return { enrichedProducts };
 };

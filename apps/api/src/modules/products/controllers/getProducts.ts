@@ -10,14 +10,14 @@ export const getAllProducts: RequestHandler = async (req, res: Response<GetProdu
   const { query } = v.getAll.getValidatedValues(req);
   const { categoryId, limit, offset, onSale } = query;
 
-  const { products: rawProducts } = await productServices.findMany({
+  const { enrichedProducts } = await productServices.findMany({
     categoryId,
     offset,
     limit,
     onSale,
   });
 
-  const { products } = ProductMapper.toCatalogSummary(rawProducts);
+  const { products } = ProductMapper.toCatalogSummary(enrichedProducts);
 
   return res.json({ products });
 };
