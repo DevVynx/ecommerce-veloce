@@ -1,13 +1,10 @@
 "use client";
-import type { PublicProductDto, WishlistItemDto } from "@repo/types/contracts";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
 import { removeFromWishlist } from "@/shared/actions/wishlist/removeFromWishlist";
 import { PlusIcon } from "@/shared/assets/animatedIcons/plus";
-import { ProductDetailsDialog } from "@/shared/components/Store/ProductDetailsModal/ProductDetailsDialog";
 import { WishlistCard } from "@/shared/components/Wishlist/WishlistCard";
 import { WishlistEmpty } from "@/shared/components/Wishlist/WishlistEmpty";
 import { WishlistSkeleton } from "@/shared/components/Wishlist/WishlistSkeleton";
@@ -16,30 +13,14 @@ import { useWishlistState } from "@/shared/states/wishlist";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
 
 const WishlistPage = () => {
-  const [selectedProduct, setSelectedProduct] = useState<PublicProductDto | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { items, hasHydrated, remove, rollback } = useWishlistState();
   const { handleMouseEnter, handleMouseLeave, iconRef } = useAnimatedIcon();
 
   const handleRemove = async (productId: string) => {
     remove(productId);
 
-    const { error: apiError } = await authenticatedAction(removeFromWishlist, { productId });
-    if (apiError) {
-      rollback();
-    }
-  };
-
-  const handleCardClick = (item: WishlistItemDto) => {
-    setSelectedProduct({
-      id: item.product.id,
-      title: item.product.title,
-      description: "",
-      ratingRate: item.product.ratingRate,
-      ratingCount: item.product.ratingCount,
-      display: { ...item.product.display },
-    });
-    setIsDialogOpen(true);
+    const { error } = await authenticatedAction(removeFromWishlist, { productId });
+    if (error) rollback();
   };
 
   if (!hasHydrated) {
@@ -74,7 +55,7 @@ const WishlistPage = () => {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
-              <WishlistCard item={item} onRemove={handleRemove} onCardClick={handleCardClick} />
+              <WishlistCard item={item} onRemove={handleRemove} />
             </motion.div>
           ))}
         </AnimatePresence>
@@ -101,12 +82,6 @@ const WishlistPage = () => {
           </div>
         </div>
       </Link>
-
-      <ProductDetailsDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        product={selectedProduct}
-      />
     </div>
   );
 };

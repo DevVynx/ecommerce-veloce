@@ -32,6 +32,7 @@ export const CartItemCard = ({ item }: CartItemCardProps) => {
       id: item.product.id,
       product: {
         id: item.product.id,
+        slug: item.product.slug,
         title: item.product.title,
         ratingRate: 0,
         ratingCount: 0,
@@ -67,7 +68,7 @@ export const CartItemCard = ({ item }: CartItemCardProps) => {
       <div className="flex h-full w-28 cursor-pointer items-center justify-center sm:h-35 sm:w-35">
         {item.product.variant.image ? (
           <Link
-            href={"#"}
+            href={`/product/${item.product.slug}`}
             className="bg-muted relative flex h-28 w-28 overflow-hidden rounded-lg sm:h-35 sm:w-35"
           >
             <img
@@ -86,7 +87,7 @@ export const CartItemCard = ({ item }: CartItemCardProps) => {
         <div>
           <div className="flex items-start justify-between gap-2">
             <Link
-              href={`/product/${item.product.id}`}
+              href={`/product/${item.product.slug}`}
               className="truncate text-sm leading-tight font-semibold hover:underline sm:text-base"
             >
               {item.product.title}

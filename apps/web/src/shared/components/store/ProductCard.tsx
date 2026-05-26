@@ -1,6 +1,7 @@
 "use client";
 import type { PublicProductDto, WishlistItemDto } from "@repo/types/contracts";
 import { HeartIcon, ShoppingCartIcon, StarIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 import { addToWishlist } from "@/shared/actions/wishlist/addToWishlist";
@@ -40,6 +41,7 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
       id: product.id,
       product: {
         id: product.id,
+        slug: product.slug,
         title: product.title,
         ratingRate: product.ratingRate,
         ratingCount: product.ratingCount,
@@ -63,11 +65,13 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
       {/* Image + Percent + Wish Button */}
       <div className="relative bg-black/10 p-4">
         {/* Image */}
-        <img
-          src={product.display.image}
-          alt={product.title}
-          className="aspect-square w-full object-contain"
-        />
+        <Link href={`product/${product.slug}`}>
+          <img
+            src={product.display.image}
+            alt={product.title}
+            className="aspect-square w-full object-contain"
+          />
+        </Link>
 
         {/* Percent */}
         {product.display.isOnSale && (
@@ -92,9 +96,11 @@ export const ProductCard = ({ product, grid }: ProductCardProps) => {
 
       {/* Product Info */}
       <div className="relative p-2">
-        <h1 className="mb-1 line-clamp-2 h-8.75 text-sm leading-tight font-semibold">
-          {product.title}
-        </h1>
+        <Link href={`product/${product.slug}`}>
+          <h1 className="mb-1 line-clamp-2 h-8.75 text-sm leading-tight font-semibold">
+            {product.title}
+          </h1>
+        </Link>
 
         {/* Rating */}
         <div className="mb-1 flex items-center text-xs text-gray-500">
