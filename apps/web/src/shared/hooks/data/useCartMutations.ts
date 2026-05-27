@@ -13,6 +13,7 @@ export type AddItemParams = {
   productVariantId: string;
   quantity: number;
   productId: string;
+  productSlug: string;
   productTitle: string;
   variantId: string;
   image: string;
@@ -55,6 +56,7 @@ export function useCartMutations() {
           quantity: adjustedQty,
           product: {
             id: params.productId,
+            slug: params.productSlug,
             title: params.productTitle,
             variant: {
               id: params.variantId,

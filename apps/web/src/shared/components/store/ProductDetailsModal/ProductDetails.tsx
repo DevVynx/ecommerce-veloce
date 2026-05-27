@@ -6,12 +6,12 @@ import type {
 } from "@repo/types/contracts";
 import { motion, useAnimation } from "framer-motion";
 import { Heart, Star } from "lucide-react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { addToWishlist } from "@/shared/actions/wishlist/addToWishlist";
 import { removeFromWishlist } from "@/shared/actions/wishlist/removeFromWishlist";
 import { Rating, RatingItem } from "@/shared/components/shadcn-ui/rating";
+import { showNotification } from "@/shared/components/showNotification";
 import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
 import { useProductVariantSelection } from "@/shared/hooks/data/useProductVariantSelection";
 import { useWishlistState } from "@/shared/states/wishlist";
@@ -108,6 +108,7 @@ export const ProductDetails = ({
       quantity,
       stock: selectedVariant.stock,
       productId: selectedProduct.id,
+      productSlug: selectedProduct.slug,
       productTitle: selectedProduct.title,
       variantId: selectedVariant.id,
       image: selectedProduct.display.image,
@@ -127,6 +128,12 @@ export const ProductDetails = ({
       return;
     }
 
+    showNotification({
+      type: "success",
+      title: "Adicionado ao carrinho",
+      message: "O seu item foi adicionado ao carrinho.",
+    });
+
     onClose();
   };
 
@@ -140,6 +147,7 @@ export const ProductDetails = ({
         id,
         product: {
           id,
+          slug: selectedProduct.slug,
           title: selectedProduct.title,
           ratingRate: selectedProduct.ratingRate,
           ratingCount: selectedProduct.ratingCount,
