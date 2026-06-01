@@ -1,29 +1,27 @@
 # Project State
 
-**Last Updated**: 2026-05-22
+**Last Updated**: 2026-06-01
 **State Expiration**: N/A
 
 ---
 
 ## Current Task
 
-**[vyn-010] Cart Page Refactor** — Backend enrichment refactoring
+**[vyn-011] Product Details Refactor — Server/Client Split** — Completed
 
-### Frontend (done)
-- Componentized cart page (CartItemCard, CartItemQuantity, CartSummary, etc.)
-- LoginModal, coupon input, free shipping progress bar, discount breakdown
-- Replaced all `toFixed(2)` with `formatPrice`/`formatDiscount`
-- Added `decimal.js` for monetary arithmetic, fixed `calculateSummary` semantics
+### Changes
+- **`ProductInfoSection.tsx` deleted** — Monolithic client component (261 lines) split into focused modules
+- **`shared/context/ProductVariantContext.tsx` created** — Page-level React Context (thin provider + hook) for variant selection state
+- **New client components**: `SkuDisplay`, `PriceDisplay`, `StockWarning` — each consumes context independently
+- **`VariantSelector.tsx`** — Now reads from context instead of receiving props
+- **`ProductActions.tsx`** — Self-contained: consumes context, manages own state (quantity, errors, feedback), handles cart/wishlist logic
+- **`ProductDetailsServer.tsx`** — Owns the full layout: inline RSC content (h1, description, rating) + `ProductVariantProvider` wrapping interactive parts
+- **`ProductInteractionBar.tsx`** — Became true RSC (was client by proxy before)
 
-### Backend (current) — Product Enrichment Refactoring
-- **`offer` value object**: Sale price calculations now grouped under `variant.offer` instead of spreading fields. Adding new computed fields (installments, freeShipping, etc.) now only requires touching `PricingInfo` + 1 helper, not N services.
-- **Types by domain**: Each module now has a single type file per domain instead of split `Persistence.ts`/`Enriched.ts`:
-  - `products/types/ProductList.ts` — Raw + Enriched for catalog listing
-  - `products/types/ProductDetail.ts` — Raw + Enriched for product detail
-  - `cart/types/Cart.ts` — Raw + Enriched for cart
-  - `wishlist/types/Wishlist.ts` — Raw + Enriched for wishlist
-- **Consistent NonNullable**: All raw types use `NonNullable` wrapper, no more guessing nullability at import site
-- **PascalCase naming**: All type files use PascalCase convention
+### Motivation
+- Reduce client bundle: static content (h1, description, rating) no longer needs JS hydration
+- Separate concerns: interactive state (variant selection, cart, wishlist) isolated from display
+- Better maintainability: 261-line monolith → 6 focused files under 85 lines each
 
 ---
 
@@ -78,15 +76,19 @@
   - Project no longer uses React Query anywhere
 - **Impact**: Major architectural change in data fetching strategy
 
-### [Task] Zustand Over React Context Pattern
+### [Task] Zustand Over React Context Pattern (with exception)
 
 - **Date**: 2026-05-04
-- **Decision**: Use Zustand for all state management, completely replace React Context
+- **Decision**: Use Zustand for all state management, replaced React Context with Zustand
 - **Implementation**:
   - Cart store follows Wishlist pattern (both use Zustand)
   - No more React Context in the project
   - Reactive counters in header for both Wishlist and Cart using Zustand stores
-- **Impact**: State management standardization across features
+- **Exception (2026-06-01)**: Product variant selection uses React Context (`ProductVariantContext`) instead of Zustand, because:
+  - Variant selection is **page-level ephemeral state**, not global — naturally scoped to the product detail page
+  - Using Zustand would require manual cleanup on unmount, violating YAGNI
+  - Context is the idiomatic React solution for component-scoped state passing
+- **Impact**: Zustand remains the global state standard; Context is reserved for page-level scope where lifecycle matches the component tree
 
 ### [Task] Optimistic Updates Pattern
 
