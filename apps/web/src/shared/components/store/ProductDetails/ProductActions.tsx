@@ -1,51 +1,123 @@
-import { motion, useAnimation } from "framer-motion";
+"use client";
 import { Heart, Minus, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 
+import { addToWishlist } from "@/shared/actions/wishlist/addToWishlist";
+import { removeFromWishlist } from "@/shared/actions/wishlist/removeFromWishlist";
 import { Button } from "@/shared/components/shadcn-ui/button";
+import { showNotification } from "@/shared/components/showNotification";
+import { useProductVariantContext } from "@/shared/context/ProductVariantContext";
+import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
+import { useWishlistState } from "@/shared/states/wishlist";
+import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
+import { buildSelectedOptionsForCart } from "@/shared/utils/store/buildSelectedOptions";
 
-type ProductActionsProps = {
-  selectedVariant: { stock: number; isAvailable: boolean } | null;
-  quantity: number;
-  onQuantityChange: (n: number) => void;
-  onAddToCart: () => void;
-  isAddingToCart: boolean;
-  isOutOfStock: boolean;
-  isWishlisted: boolean;
-  onToggleWishlist: () => void;
-  showError: boolean;
-  controls: ReturnType<typeof useAnimation>;
-  stockFeedback: string | null;
-};
+export const ProductActions = () => {
+  const {
+    product,
+    variants,
+    options,
+    selectedOptions,
+    selectedVariant,
+    isOutOfStock,
+  } = useProductVariantContext();
 
-export const ProductActions = ({
-  selectedVariant,
-  quantity,
-  onQuantityChange,
-  onAddToCart,
-  isAddingToCart,
-  isOutOfStock,
-  isWishlisted,
-  onToggleWishlist,
-  showError,
-  controls,
-  stockFeedback,
-}: ProductActionsProps) => {
+  const { addItemToCart, isLoading: isAddingToCart } = useCartMutations();
+  const {
+    addItem: optimisticAddToWishlist,
+    remove: optimisticRemoveFromWishlist,
+    rollback: optimisticRollbackWishlist,
+    hasHydrated: hasHydratedWishlist,
+    ids: wishlistIds,
+  } = useWishlistState();
+
+  const [stockFeedback, setStockFeedback] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
+
+  const isWishlisted = hasHydratedWishlist && wishlistIds.includes(product.id);
+  const displayIsOnSale = selectedVariant?.isOnSale ?? product.display.isOnSale;
+
+  useEffect(() => {
+    setQuantity(1);
+    setStockFeedback(null);
+  }, [product.id, selectedOptions, variants, options]);
+
+  const handleAddToCart = async () => {
+    if (isAddingToCart || !selectedVariant) return;
+
+    const result = await addItemToCart({
+      productVariantId: selectedVariant.id,
+      quantity,
+      stock: selectedVariant.stock,
+      productId: product.id,
+      productSlug: product.slug,
+      productTitle: product.title,
+      variantId: selectedVariant.id,
+      image: product.display.image,
+      price: selectedVariant.price,
+      salePrice: selectedVariant.salePrice,
+      isOnSale: displayIsOnSale,
+      isAvailable: selectedVariant.isAvailable,
+      selectedOptions: buildSelectedOptionsForCart(options, selectedOptions),
+    });
+
+    if (result?.error) {
+      const message =
+        typeof result.error.message === "string"
+          ? result.error.message
+          : "Erro ao adicionar ao carrinho.";
+      setStockFeedback(message);
+      return;
+    }
+
+    showNotification({
+      type: "success",
+      title: "Adicionado ao carrinho",
+      message: "O seu item foi adicionado ao carrinho.",
+    });
+  };
+
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity < 1 || newQuantity > (selectedVariant?.stock ?? 99)) return;
+    setQuantity(newQuantity);
+  };
+
+  const handleToggleWishlist = async () => {
+    if (isWishlisted) {
+      optimisticRemoveFromWishlist(product.id);
+      const { error } = await authenticatedAction(removeFromWishlist, {
+        productId: product.id,
+      });
+      if (error) optimisticRollbackWishlist();
+    } else {
+      optimisticAddToWishlist({
+        id: product.id,
+        product: {
+          id: product.id,
+          slug: product.slug,
+          title: product.title,
+          ratingRate: product.ratingRate,
+          ratingCount: product.ratingCount,
+          display: { ...product.display },
+        },
+      });
+      const { error } = await authenticatedAction(addToWishlist, {
+        productId: product.id,
+      });
+      if (error) optimisticRollbackWishlist();
+    }
+  };
+
   return (
     <div className="space-y-3">
-      {showError && (
-        <motion.p animate={controls} className="text-destructive text-sm">
-          Por favor, selecione todas as opções antes de adicionar ao carrinho.
-        </motion.p>
-      )}
-
       {selectedVariant && (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 my-8">
           <span className="text-muted-foreground text-sm font-medium">Quantidade:</span>
           <div className="border-border flex items-center rounded-md border">
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => onQuantityChange(quantity - 1)}
+              onClick={() => handleQuantityChange(quantity - 1)}
               disabled={quantity <= 1 || isAddingToCart}
               className="text-muted-foreground size-8"
               aria-label="Diminuir quantidade"
@@ -58,7 +130,7 @@ export const ProductActions = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => onQuantityChange(quantity + 1)}
+              onClick={() => handleQuantityChange(quantity + 1)}
               disabled={quantity >= (selectedVariant?.stock ?? 99) || isAddingToCart}
               className="text-muted-foreground size-8"
               aria-label="Aumentar quantidade"
@@ -71,9 +143,9 @@ export const ProductActions = ({
 
       <div className="flex items-center gap-3">
         <Button
-          onClick={onAddToCart}
+          onClick={handleAddToCart}
           disabled={isAddingToCart || !selectedVariant || isOutOfStock}
-          className="flex-1 rounded-lg py-4 font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase shadow-lg shadow-black/10"
+          className="flex-1 rounded-lg py-4 font-mono text-xs font-bold tracking-[0.2em] uppercase shadow-lg shadow-black/10 sm:text-sm"
         >
           {isAddingToCart
             ? "Adicionando..."
@@ -84,7 +156,7 @@ export const ProductActions = ({
 
         <Button
           variant="outline"
-          onClick={onToggleWishlist}
+          onClick={handleToggleWishlist}
           className="rounded-lg px-8 py-4"
           aria-label={isWishlisted ? "Remover dos favoritos" : "Adicionar aos favoritos"}
         >
@@ -93,13 +165,7 @@ export const ProductActions = ({
       </div>
 
       {stockFeedback && (
-        <motion.p
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-destructive text-sm"
-        >
-          {stockFeedback}
-        </motion.p>
+        <p className="text-destructive text-sm">{stockFeedback}</p>
       )}
     </div>
   );

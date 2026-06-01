@@ -43,10 +43,10 @@ export const ProductGallery = ({ images, title }: ProductGalleryProps) => {
   };
 
   return (
-    <div className="flex flex-col-reverse gap-3 lg:flex-row">
+    <div className="flex h-full flex-col-reverse gap-3 lg:flex-row">
       {images.length > 1 && (
         <div className="flex w-full overflow-y-auto lg:w-auto">
-          <div className="flex w-22 gap-3 p-0.5 lg:flex-col">
+          <div className="flex w-26 gap-3 p-2 lg:flex-col">
             {images.map((img, i) => (
               <Button
                 key={i}
@@ -63,7 +63,7 @@ export const ProductGallery = ({ images, title }: ProductGalleryProps) => {
         </div>
       )}
 
-      <div className="bg-muted relative flex-1 overflow-hidden rounded-lg">
+      <div className="bg-muted relative flex flex-1 items-center overflow-hidden rounded-lg">
         <Carousel setApi={setApi}>
           <CarouselContent>
             {images.map((img, i) => (

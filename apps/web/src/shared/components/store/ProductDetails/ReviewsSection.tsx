@@ -1,8 +1,18 @@
-import { Star } from "lucide-react";
+import { BadgeCheck, CheckCircle2, MessageSquare } from "lucide-react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/shadcn-ui/select";
+import { ReviewCard } from "@/shared/components/Store/ProductDetails/ReviewCard";
+import { ReviewsSummary } from "@/shared/components/Store/ProductDetails/ReviewsSummary";
 
-type Review = {
+export type Review = {
   id: string;
   author: string;
   location: string;
@@ -16,83 +26,107 @@ type ReviewsSectionProps = {
   reviews: Review[];
 };
 
-const ReviewCard = ({ review }: { review: Review }) => {
-  return (
-    <div className="border-border rounded-lg border p-5">
-      <div className="mb-3 flex items-center justify-between">
-        <div>
-          <p className="text-sm font-bold tracking-tight uppercase">{review.author}</p>
-          <p className="text-muted-foreground font-mono text-[10px]">{review.location}</p>
-        </div>
-        <div className="flex">
-          {Array.from({ length: 5 }, (_, i) => (
-            <Star
-              key={i}
-              className={`size-3.5 ${
-                i < review.rating ? "fill-yellow-400 stroke-yellow-400" : "text-muted-foreground"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-      <p className="text-muted-foreground text-sm leading-relaxed">{review.comment}</p>
-    </div>
-  );
-};
-
 export const ReviewsSection = ({ ratingRate, ratingCount, reviews }: ReviewsSectionProps) => {
-  const fullStars = Math.floor(ratingRate);
-  const hasHalfStar = ratingRate - fullStars >= 0.5;
-
   return (
     <section className="mb-32">
-      <div className="border-border mb-10 flex flex-col gap-4 border-b pb-8">
-        <h2 className="text-3xl font-black tracking-tighter">Avaliações</h2>
-        <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:gap-10">
-          <div className="flex flex-col items-start gap-1">
-            <span className="font-mono text-5xl font-black tracking-tighter">
-              {ratingRate.toFixed(1)}
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="flex">
-                {Array.from({ length: 5 }, (_, i) => {
-                  const isFilled = i < fullStars;
-                  const isHalf = !isFilled && hasHalfStar && i === fullStars;
-                  return (
-                    <Star
-                      key={i}
-                      className={`size-4 ${
-                        isFilled
-                          ? "fill-yellow-400 stroke-yellow-400"
-                          : isHalf
-                            ? "fill-yellow-400/50 stroke-yellow-400"
-                            : "text-muted-foreground"
-                      }`}
-                    />
-                  );
-                })}
+      <div className="mb-10 flex flex-col justify-between gap-4 border-b py-6 lg:flex-row">
+        {/* Coluna da Esquerda: Informações */}
+        <div className="flex-1">
+          <div className="flex h-full max-w-xl flex-col justify-between gap-4 lg:gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <BadgeCheck className="size-8 shrink-0 text-emerald-600" />
+                <h2 className="text-xl font-bold lg:text-2xl">Avaliações Verificadas</h2>
               </div>
-              <span className="text-muted-foreground font-mono text-xs">
-                {ratingCount} avaliações
-              </span>
+              <p className="text-muted-foreground text-sm leading-relaxed lg:text-base">
+                Todas as avaliações são de clientes que compraram o produto. Compre com confiança.
+              </p>
+            </div>
+
+            <div className="border-border bg-muted/30 mt-2 hidden rounded-lg border p-5 lg:block">
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 className="size-5 shrink-0 text-emerald-600" />
+                  <span className="text-sm font-medium lg:text-base">
+                    Compras verificadas pelo sistema
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <MessageSquare className="size-5 shrink-0 text-emerald-600" />
+                  <span className="text-sm font-medium lg:text-base">
+                    Depoimentos de compradores reais
+                  </span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
+
+        {/* Coluna da Direita: Sumário das Avaliações */}
+        <div className="w-full flex-1">
+          <ReviewsSummary ratingRate={ratingRate} />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {reviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
-      </div>
+      {/* Área das Avaliações */}
+      <div className="space-y-6">
+        <div className="flex justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold">Avaliações</h1>
+            <span className="text-muted-foreground text-sm">
+              Mostrando 10 avaliações de {ratingCount}
+            </span>
+          </div>
+          {/* Área dos Selects (Filtro de Notas e Ordenação) */}
+          <div className="flex items-center gap-4">
+            {/* Select de Notas */}
+            <Select defaultValue="todas">
+              <SelectTrigger className="h-8 w-35 py-5">
+                <SelectValue placeholder="Filtrar por nota" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="todas">Todas as notas</SelectItem>
+                  <SelectItem value="5">5 estrelas</SelectItem>
+                  <SelectItem value="4">4 estrelas</SelectItem>
+                  <SelectItem value="3">3 estrelas</SelectItem>
+                  <SelectItem value="2">2 estrelas</SelectItem>
+                  <SelectItem value="1">1 estrela</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
-      <div className="mt-8 text-center">
-        <Button
-          variant="outline"
-          className="rounded-lg px-6 py-3 font-mono text-sm font-bold tracking-widest uppercase"
-        >
-          Ver todas as avaliações
-        </Button>
+            {/* Select de Ordenação */}
+            <Select defaultValue="recentes">
+              <SelectTrigger className="h-8 w-37 py-5">
+                <SelectValue placeholder="Ordenar por" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="recentes">Mais recentes</SelectItem>
+                  <SelectItem value="uteis">Mais relevantes</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {reviews.map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <Button
+              variant="outline"
+              className="rounded-lg px-6 py-3 font-mono text-sm font-bold tracking-widest uppercase"
+            >
+              Ver mais avaliações
+            </Button>
+          </div>
+        </div>
       </div>
     </section>
   );

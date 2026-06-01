@@ -4,7 +4,6 @@ import type {
   PublicVariantDto,
   WishlistItemDto,
 } from "@repo/types/contracts";
-import { motion, useAnimation } from "framer-motion";
 import { Heart, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -16,6 +15,7 @@ import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
 import { useProductVariantSelection } from "@/shared/hooks/data/useProductVariantSelection";
 import { useWishlistState } from "@/shared/states/wishlist";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
+import { buildSelectedOptionsForCart } from "@/shared/utils/store/buildSelectedOptions";
 import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
 
 import { ProductOptions } from "./ProductOptions";
@@ -57,9 +57,7 @@ export const ProductDetails = ({
     hasHydrated: hasHydratedWishlist,
     ids: wishlistIds,
   } = useWishlistState();
-  const controls = useAnimation();
 
-  const [showError, setShowError] = useState(false);
   const [stockFeedback, setStockFeedback] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
 
@@ -69,7 +67,6 @@ export const ProductDetails = ({
 
   useEffect(() => {
     setQuantity(1);
-    setShowError(false);
     setStockFeedback(null);
   }, [selectedProduct.id, selectedOptions, variants, options]);
 
@@ -77,31 +74,8 @@ export const ProductDetails = ({
   const displaySalePrice = selectedVariant?.salePrice ?? selectedProduct.display.salePrice;
   const displayIsOnSale = selectedVariant?.isOnSale ?? selectedProduct.display.isOnSale;
 
-  const buildSelectedOptionsForCart = (): Array<{ name: string; value: string }> => {
-    return Object.entries(selectedOptions).map(([optionId, valueId]) => {
-      const option = options.find((opt) => opt.id === optionId);
-      const value = option?.values.find((val) => val.id === valueId);
-      return {
-        name: option?.name ?? "Unknown",
-        value: value?.value ?? "Unknown",
-      };
-    });
-  };
-
   const handleAddToCart = async () => {
-    if (isAddingToCart) return;
-
-    if (!selectedVariant) {
-      setShowError(true);
-      controls.start({
-        x: [0, -8, 8, -8, 8, -8, 8, -6, 6, 0],
-        transition: {
-          duration: 0.8,
-          ease: "easeInOut",
-        },
-      });
-      return;
-    }
+    if (isAddingToCart || !selectedVariant) return;
 
     const result = await addItemToCart({
       productVariantId: selectedVariant.id,
@@ -116,7 +90,7 @@ export const ProductDetails = ({
       salePrice: selectedVariant.salePrice,
       isOnSale: displayIsOnSale,
       isAvailable: selectedVariant.isAvailable,
-      selectedOptions: buildSelectedOptionsForCart(),
+      selectedOptions: buildSelectedOptionsForCart(options, selectedOptions),
     });
 
     if (result?.error) {
@@ -170,10 +144,6 @@ export const ProductDetails = ({
 
   const handleSelectOption = (optionId: string, valueId: string) => {
     setSelectedOptions((prev) => ({ ...prev, [optionId]: valueId }));
-
-    if (showError) {
-      setShowError(false);
-    }
   };
 
   const percentDiscount = displayIsOnSale
@@ -231,25 +201,16 @@ export const ProductDetails = ({
         {/* ========== SEÇÃO DO MEIO (scroll) ========== */}
         <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-2 pl-2">
           {/* Product Options */}
-          <motion.div animate={controls}>
-            {options.length > 0 && (
-              <div className="mb-6">
-                <ProductOptions
-                  key={id}
-                  productOptions={options}
-                  onSelectOption={handleSelectOption}
-                  selectedOptions={selectedOptions}
-                />
-
-                {/* Mensagem de erro */}
-                {showError && (
-                  <p className="mt-2 text-sm text-red-500">
-                    Por favor, selecione todas as opções antes de adicionar ao carrinho.
-                  </p>
-                )}
-              </div>
-            )}
-          </motion.div>
+          {options.length > 0 && (
+            <div className="mb-6">
+              <ProductOptions
+                key={id}
+                productOptions={options}
+                onSelectOption={handleSelectOption}
+                selectedOptions={selectedOptions}
+              />
+            </div>
+          )}
 
           {/* Quantity Selector */}
           <QuantitySelector
@@ -260,13 +221,7 @@ export const ProductDetails = ({
           />
 
           {stockFeedback && (
-            <motion.p
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-3 text-sm text-red-500"
-            >
-              {stockFeedback}
-            </motion.p>
+            <p className="mt-3 text-sm text-red-500">{stockFeedback}</p>
           )}
         </div>
 
