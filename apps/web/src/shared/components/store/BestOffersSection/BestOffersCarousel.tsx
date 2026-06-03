@@ -1,5 +1,5 @@
 "use client";
-import type { PublicProductDto } from "@repo/types/contracts";
+import type { CatalogProductDto } from "@repo/types/contracts";
 import { useState } from "react";
 
 import {
@@ -14,7 +14,7 @@ import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 import { ProductsCarouselControls } from "./ProductsCarouselControls";
 
 type BestOffersCarouselProps = {
-  products: PublicProductDto[];
+  products: CatalogProductDto[];
 };
 
 export const BestOffersCarousel = ({ products }: BestOffersCarouselProps) => {

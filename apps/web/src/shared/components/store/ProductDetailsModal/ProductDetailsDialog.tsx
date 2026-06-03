@@ -1,4 +1,4 @@
-import type { GetProductDetailsResponse, PublicProductDto } from "@repo/types/contracts";
+import type { CatalogProductDto, GetProductDetailsResponse } from "@repo/types/contracts";
 import { useEffect, useState } from "react";
 
 import { getProductById } from "@/shared/actions/products/getProductById";
@@ -10,7 +10,7 @@ import { ProductDetailsSkeleton } from "./ProductDetailsSkeleton";
 type ProductDetailsDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  product: PublicProductDto | null;
+  product: CatalogProductDto | null;
 };
 
 export const ProductDetailsDialog = ({

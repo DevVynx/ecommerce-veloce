@@ -9,7 +9,7 @@ export type ProductOptionDto = {
   values: ProductValueDto[];
 };
 
-export type PublicVariantDto = {
+export type VariantDto = {
   id: string;
   sku: string;
   price: number;
@@ -20,7 +20,7 @@ export type PublicVariantDto = {
   optionValueIds: string[];
 };
 
-export type PublicProductDto = {
+export type CatalogProductDto = {
   id: string;
   slug: string;
   title: string;
@@ -37,12 +37,33 @@ export type PublicProductDto = {
   };
 };
 
+export type DetailedProductDto = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  ratingRate: number;
+  ratingCount: number;
+  display: {
+    image: string;
+    price: number;
+    salePrice: number;
+    isOnSale: boolean;
+    variantId: string;
+    isAvailable: boolean;
+  };
+  category: {
+    id: string;
+    name: string;
+  };
+};
+
 export type GetProductsResponse = {
-  products: PublicProductDto[];
+  products: CatalogProductDto[];
 };
 
 export type GetProductDetailsResponse = {
-  product: PublicProductDto;
+  product: DetailedProductDto;
   options: ProductOptionDto[];
-  variants: PublicVariantDto[];
+  variants: VariantDto[];
 };

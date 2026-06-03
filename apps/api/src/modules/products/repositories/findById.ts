@@ -26,6 +26,8 @@ export const findProductById = async ({ productId }: findProductByIdProps) => {
       },
       category: {
         select: {
+          id: true,
+          name: true,
           promotions: { where: { isActive: true, startsAt: { lte: now }, endsAt: { gte: now } } },
         },
       },

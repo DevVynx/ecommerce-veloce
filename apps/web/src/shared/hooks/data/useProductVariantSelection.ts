@@ -1,5 +1,5 @@
 "use client";
-import type { ProductOptionDto, PublicVariantDto } from "@repo/types/contracts";
+import type { ProductOptionDto, VariantDto } from "@repo/types/contracts";
 import { useEffect, useMemo, useState } from "react";
 
 type DisplayVariant = {
@@ -12,7 +12,7 @@ type DisplayVariant = {
 };
 
 export function useProductVariantSelection(
-  variants: PublicVariantDto[],
+  variants: VariantDto[],
   options: ProductOptionDto[],
   displayVariant: DisplayVariant
 ) {
@@ -36,7 +36,7 @@ export function useProductVariantSelection(
     setSelectedOptions(initial);
   }, [displayVariant.variantId, options, variants]);
 
-  const selectedVariant = useMemo((): PublicVariantDto | null => {
+  const selectedVariant = useMemo((): VariantDto | null => {
     if (options.length === 0) {
       return {
         id: displayVariant.variantId,

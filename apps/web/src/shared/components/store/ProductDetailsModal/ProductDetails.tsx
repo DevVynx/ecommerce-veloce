@@ -1,7 +1,7 @@
 import type {
+  CatalogProductDto,
   ProductOptionDto,
-  PublicProductDto,
-  PublicVariantDto,
+  VariantDto,
   WishlistItemDto,
 } from "@repo/types/contracts";
 import { Heart, Star } from "lucide-react";
@@ -25,8 +25,8 @@ import { QuantitySelector } from "./QuantitySelector";
 
 type ProductDetailsProps = {
   onClose: () => void;
-  selectedProduct: PublicProductDto;
-  variants: PublicVariantDto[];
+  selectedProduct: CatalogProductDto;
+  variants: VariantDto[];
   options: ProductOptionDto[];
 };
 

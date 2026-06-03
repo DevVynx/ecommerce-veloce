@@ -1,5 +1,5 @@
 "use client";
-import type { PublicProductDto } from "@repo/types/contracts";
+import type { CatalogProductDto } from "@repo/types/contracts";
 import { useRef, useState } from "react";
 
 import { getProducts } from "@/shared/actions/products/getProducts";
@@ -9,13 +9,13 @@ import { useInfiniteScroll } from "@/shared/hooks/ui/useInfiniteScroll";
 import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 
 type ForYouSectionContentProps = {
-  products: PublicProductDto[];
+  products: CatalogProductDto[];
 };
 
 export const ForYouSectionContent = ({ products }: ForYouSectionContentProps) => {
   const { isMobile } = useScreenSize();
 
-  const [productsList, setProductsList] = useState<PublicProductDto[]>(products);
+  const [productsList, setProductsList] = useState<CatalogProductDto[]>(products);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 

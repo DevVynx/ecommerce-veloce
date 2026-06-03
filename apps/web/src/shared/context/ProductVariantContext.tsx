@@ -1,16 +1,20 @@
 "use client";
-import type { GetProductDetailsResponse, ProductOptionDto, PublicVariantDto } from "@repo/types/contracts";
+import type {
+  GetProductDetailsResponse,
+  ProductOptionDto,
+  VariantDto,
+} from "@repo/types/contracts";
 import { createContext, useContext } from "react";
 
 import { useProductVariantSelection } from "@/shared/hooks/data/useProductVariantSelection";
 
 type VariantContextType = {
   product: GetProductDetailsResponse["product"];
-  variants: PublicVariantDto[];
+  variants: VariantDto[];
   options: ProductOptionDto[];
   selectedOptions: Record<string, string>;
   setSelectedOptions: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  selectedVariant: PublicVariantDto | null;
+  selectedVariant: VariantDto | null;
   currentSku: string;
   currentStock: number;
   isLowStock: boolean;
@@ -68,11 +72,7 @@ export const ProductVariantProvider = ({ data, children }: ProductVariantProvide
     isOutOfStock,
   };
 
-  return (
-    <VariantContext.Provider value={value}>
-      {children}
-    </VariantContext.Provider>
-  );
+  return <VariantContext.Provider value={value}>{children}</VariantContext.Provider>;
 };
 
 export const useProductVariantContext = (): VariantContextType => {

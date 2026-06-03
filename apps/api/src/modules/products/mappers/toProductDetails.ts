@@ -20,6 +20,10 @@ export function ProductMapperToProductDetails(
       isOnSale: enrichedProduct.heroVariant.offer.isOnSale,
       isAvailable: enrichedProduct.heroVariant.offer.isAvailable,
     },
+    category: {
+      id: enrichedProduct.category.id,
+      name: enrichedProduct.category.name,
+    },
   };
 
   const formattedOptions = enrichedProduct.productOptions.map((option) => ({

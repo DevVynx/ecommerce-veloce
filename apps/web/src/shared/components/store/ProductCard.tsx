@@ -1,5 +1,5 @@
 "use client";
-import type { PublicProductDto, WishlistItemDto } from "@repo/types/contracts";
+import type { CatalogProductDto, WishlistItemDto } from "@repo/types/contracts";
 import { HeartIcon, ShoppingCartIcon, StarIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -12,7 +12,7 @@ import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
 import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
 
 type ProductCardProps = {
-  product: PublicProductDto;
+  product: CatalogProductDto;
   grid?: boolean;
 };
 
