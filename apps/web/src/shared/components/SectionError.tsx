@@ -1,5 +1,5 @@
 "use client";
-import { AlertTriangle, RefreshCw } from "lucide-react";
+import { CloudOff, RefreshCw } from "lucide-react";
 import { useEffect } from "react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
@@ -31,8 +31,8 @@ export const SectionError = ({
   return (
     <>
       <div className={cn("flex flex-col items-center justify-center px-4 py-12", className)}>
-        <div className="bg-muted mb-4 rounded-full p-3">
-          <AlertTriangle className="text-muted-foreground h-8 w-8" />
+        <div className="bg-muted-foreground/10 mb-4 rounded-full p-4">
+          <CloudOff className="text-muted-foreground h-15 w-15" />
         </div>
         <h3 className="mb-2 text-lg font-semibold">{title}</h3>
         <p className="text-muted-foreground mb-6 max-w-sm text-center text-sm">{description}</p>
