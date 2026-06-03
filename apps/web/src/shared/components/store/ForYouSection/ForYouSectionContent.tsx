@@ -1,10 +1,11 @@
 "use client";
 import type { PublicProductDto } from "@repo/types/contracts";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { getProducts } from "@/shared/actions/products/getProducts";
 import { ProductCard } from "@/shared/components/Store/ProductCard";
 import { ProductCardSkeleton } from "@/shared/components/Store/ProductCardSkeleton";
+import { useInfiniteScroll } from "@/shared/hooks/ui/useInfiniteScroll";
 import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 
 type ForYouSectionContentProps = {
@@ -14,65 +15,31 @@ type ForYouSectionContentProps = {
 export const ForYouSectionContent = ({ products }: ForYouSectionContentProps) => {
   const { isMobile } = useScreenSize();
 
-  const sentinelRef = useRef<HTMLDivElement>(null);
   const [productsList, setProductsList] = useState<PublicProductDto[]>(products);
-
-  const offsetRef = useRef(products.length);
-  const isLoadingRef = useRef(false);
-  const hasMoreRef = useRef(true);
-  const limitRef = useRef(isMobile ? 9 : 16);
-
+  const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    limitRef.current = isMobile ? 9 : 16;
-  }, [isMobile]);
+  const offsetRef = useRef(products.length);
+  const limit = isMobile ? 9 : 16;
 
-  useEffect(() => {
-    let active = true;
-
-    const fetchMore = async () => {
-      isLoadingRef.current = true;
+  const [sentinelRef] = useInfiniteScroll({
+    loading: isLoading,
+    hasNextPage: hasMore,
+    rootMargin: "600px",
+    onLoadMore: async () => {
       setIsLoading(true);
-
-      const { data, error } = await getProducts({
-        limit: limitRef.current,
-        offset: offsetRef.current,
-      });
-
-      if (!active) return;
-      if (!data || error) {
-        isLoadingRef.current = false;
-        setIsLoading(false);
-        return;
-      }
+      const { data, error } = await getProducts({ limit, offset: offsetRef.current });
+      setIsLoading(false);
+      if (!data || error) return;
 
       setProductsList((prev) => [...prev, ...data.products]);
-      offsetRef.current += limitRef.current;
-      if (data.products.length < limitRef.current) {
-        hasMoreRef.current = false;
+      offsetRef.current += limit;
+
+      if (data.products.length < limit) {
+        setHasMore(false);
       }
-      isLoadingRef.current = false;
-      setIsLoading(false);
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting && hasMoreRef.current && !isLoadingRef.current) {
-          fetchMore();
-        }
-      },
-      { rootMargin: "600px" }
-    );
-
-    const sentinel = sentinelRef.current;
-    if (sentinel) observer.observe(sentinel);
-
-    return () => {
-      active = false;
-      observer.disconnect();
-    };
-  }, []);
+    },
+  });
 
   return (
     <section id="forYouSection" className="px-2 py-12">
@@ -84,10 +51,12 @@ export const ForYouSectionContent = ({ products }: ForYouSectionContentProps) =>
             <ProductCard key={product.id} product={product} grid />
           ))}
         </div>
-        <div ref={sentinelRef} />
+
+        {hasMore && <div ref={sentinelRef} />}
+
         {isLoading && (
           <div className="grid grid-cols-2 gap-6 py-10 md:grid-cols-3 lg:grid-cols-4">
-            {Array.from({ length: limitRef.current }).map((_, index) => (
+            {Array.from({ length: limit }).map((_, index) => (
               <ProductCardSkeleton key={index} grid />
             ))}
           </div>
