@@ -8,3 +8,5 @@ export * from "./Wishlist/Requests";
 export * from "./Wishlist/Responses";
 export * from "./Shipping/Responses";
 export * from "./Shipping/Requests";
+export * from "./Reviews/Requests";
+export * from "./Reviews/Responses";
