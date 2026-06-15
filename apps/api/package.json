@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsup",
+    "start": "dotenv -e .env -- node dist/server.js",
     "lint": "eslint .",
     "check-types": "tsc --noEmit",
     "prisma:migrate": "dotenv -e .env -- prisma migrate dev",
