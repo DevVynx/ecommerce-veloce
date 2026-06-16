@@ -1,8 +1,14 @@
+import type { SearchProductsRequest } from "@repo/types/contracts";
 import { GetProductsRequest } from "@repo/types/contracts";
 
 export type FindAllProductsParams = GetProductsRequest & {
   onlyAvailable?: boolean;
+  limit: number;
+  offset: number;
 };
+
+export type SearchProductsParams = Required<Pick<SearchProductsRequest, "offset" | "limit">> &
+  Pick<SearchProductsRequest, "q" | "categoryId" | "minPrice" | "maxPrice" | "sortBy">;
 
 export type FindProductByIdParams = {
   productId: string;
