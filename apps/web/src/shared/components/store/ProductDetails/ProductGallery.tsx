@@ -1,5 +1,4 @@
 "use client";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
@@ -18,16 +17,12 @@ type ProductGalleryProps = {
 export const ProductGallery = ({ images, title }: ProductGalleryProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [api, setApi] = useState<CarouselApi>();
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
 
   useEffect(() => {
     if (!api) return;
 
     const onSelect = () => {
       setSelectedIndex(api.selectedScrollSnap());
-      setCanScrollPrev(api.canScrollPrev());
-      setCanScrollNext(api.canScrollNext());
     };
 
     onSelect();
@@ -46,17 +41,17 @@ export const ProductGallery = ({ images, title }: ProductGalleryProps) => {
     <div className="flex h-full flex-col-reverse gap-3 lg:flex-row">
       {images.length > 1 && (
         <div className="flex w-full overflow-y-auto lg:w-auto">
-          <div className="flex w-26 gap-3 p-2 lg:flex-col">
+          <div className="my-1 mr-2 ml-1 flex w-26 gap-3 lg:flex-col">
             {images.map((img, i) => (
               <Button
                 key={i}
                 variant="ghost"
                 onClick={() => handleThumbnailClick(i)}
-                className={`bg-muted aspect-square w-full rounded-lg p-1 ${
+                className={`bg-muted aspect-square w-full overflow-hidden rounded-lg p-0 ${
                   i === selectedIndex ? "ring-1 ring-black" : "opacity-50 hover:opacity-100"
                 }`}
               >
-                <img src={img} alt="" className="aspect-square w-full object-contain" />
+                <img src={img} alt="" className="h-full w-full object-cover" />
               </Button>
             ))}
           </div>
@@ -64,43 +59,18 @@ export const ProductGallery = ({ images, title }: ProductGalleryProps) => {
       )}
 
       <div className="bg-muted relative flex flex-1 rounded-lg">
-        <Carousel setApi={setApi} className="w-full">
+        <Carousel setApi={setApi} opts={{ duration: 0 }} className="h-full w-full">
           <CarouselContent className="h-full">
             {images.map((img, i) => (
-              <CarouselItem key={i} className="basis-full">
-                <div className="flex h-full min-h-90 items-center justify-center">
-                  <img
-                    src={img}
-                    alt={`${title} - ${i + 1}`}
-                    className="block max-h-full max-w-full object-contain object-center"
-                  />
-                </div>
+              <CarouselItem key={i} className="h-full">
+                <img
+                  src={img}
+                  alt={`${title} - ${i + 1}`}
+                  className="h-full w-full rounded-lg object-cover"
+                />
               </CarouselItem>
             ))}
           </CarouselContent>
-
-          {images.length > 1 && (
-            <>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute top-1/2 left-2 z-10 hidden -translate-y-1/2 rounded-full bg-white/80 backdrop-blur-sm lg:flex"
-                disabled={!canScrollPrev}
-                onClick={() => api?.scrollPrev()}
-              >
-                <ArrowLeft className="size-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute top-1/2 right-2 z-10 hidden -translate-y-1/2 rounded-full bg-white/80 backdrop-blur-sm lg:flex"
-                disabled={!canScrollNext}
-                onClick={() => api?.scrollNext()}
-              >
-                <ArrowRight className="size-4" />
-              </Button>
-            </>
-          )}
         </Carousel>
 
         {images.length > 1 && (

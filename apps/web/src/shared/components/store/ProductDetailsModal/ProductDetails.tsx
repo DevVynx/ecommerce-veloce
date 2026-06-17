@@ -12,13 +12,14 @@ import { removeFromWishlist } from "@/shared/actions/wishlist/removeFromWishlist
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Rating, RatingItem } from "@/shared/components/shadcn-ui/rating";
 import { showNotification } from "@/shared/components/showNotification";
+import { ProductGallery } from "@/shared/components/Store/ProductDetails/ProductGallery";
 import { StockBadge } from "@/shared/components/Store/StockBadge";
 import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
 import { useProductVariantSelection } from "@/shared/hooks/data/useProductVariantSelection";
 import { useWishlistState } from "@/shared/states/wishlist";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
 import { buildSelectedOptionsForCart } from "@/shared/utils/store/buildSelectedOptions";
-import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
+import { formatPrice } from "@/shared/utils/store/price";
 
 import { ProductOptions } from "./ProductOptions";
 import { QuantitySelector } from "./QuantitySelector";
@@ -62,18 +63,18 @@ export const ProductDetails = ({
   const [stockFeedback, setStockFeedback] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
 
-  const { id, title, ratingRate, ratingCount } = selectedProduct;
+  const { id, title, ratingRate, ratingCount, description, display, slug } = selectedProduct;
   const isOutOfStock = !!selectedVariant && !selectedVariant.isAvailable;
   const isWishlisted = hasHydratedWishlist && wishlistIds.includes(id);
 
   useEffect(() => {
     setQuantity(1);
     setStockFeedback(null);
-  }, [selectedProduct.id, selectedOptions, variants, options]);
+  }, [id, selectedOptions, variants, options]);
 
-  const displayPrice = selectedVariant?.price ?? selectedProduct.display.price;
-  const displaySalePrice = selectedVariant?.salePrice ?? selectedProduct.display.salePrice;
-  const displayIsOnSale = selectedVariant?.isOnSale ?? selectedProduct.display.isOnSale;
+  const displayPrice = selectedVariant?.price ?? display.price;
+  const displaySalePrice = selectedVariant?.salePrice ?? display.salePrice;
+  const displayIsOnSale = selectedVariant?.isOnSale ?? display.isOnSale;
 
   const handleAddToCart = async () => {
     if (isAddingToCart || !selectedVariant) return;
@@ -82,11 +83,11 @@ export const ProductDetails = ({
       productVariantId: selectedVariant.id,
       quantity,
       stock: selectedVariant.stock,
-      productId: selectedProduct.id,
-      productSlug: selectedProduct.slug,
-      productTitle: selectedProduct.title,
+      productId: id,
+      productSlug: slug,
+      productTitle: title,
       variantId: selectedVariant.id,
-      image: selectedProduct.display.image,
+      image: display.image,
       price: selectedVariant.price,
       salePrice: selectedVariant.salePrice,
       isOnSale: displayIsOnSale,
@@ -122,11 +123,11 @@ export const ProductDetails = ({
         id,
         product: {
           id,
-          slug: selectedProduct.slug,
-          title: selectedProduct.title,
-          ratingRate: selectedProduct.ratingRate,
-          ratingCount: selectedProduct.ratingCount,
-          display: { ...selectedProduct.display },
+          slug: slug,
+          title: title,
+          ratingRate: ratingRate,
+          ratingCount: ratingCount,
+          display: { ...display },
         },
       };
 
@@ -147,33 +148,29 @@ export const ProductDetails = ({
     setSelectedOptions((prev) => ({ ...prev, [optionId]: valueId }));
   };
 
-  const percentDiscount = displayIsOnSale
-    ? calculateDiscountPercent(displayPrice, displaySalePrice)
-    : 0;
-
   return (
     <div className="flex h-125 gap-10">
       {/* Imagem - lado esquerdo */}
-      <div className="relative flex-1 overflow-hidden">
-        <div className="flex h-full items-center justify-center bg-black/10 p-4">
-          {displayIsOnSale && (
-            <span className="absolute top-2 right-2 rounded-sm bg-red-500 px-2 py-1 font-bold text-white shadow-sm">
-              -{percentDiscount}%
-            </span>
-          )}
-          <img
-            src={selectedProduct.display.image}
-            alt={title}
-            className="max-h-full w-full object-contain"
-          />
-        </div>
-      </div>
+      <ProductGallery
+        title={title}
+        images={[
+          display.image,
+          display.image,
+          display.image,
+          display.image,
+          display.image,
+          display.image,
+          display.image,
+          display.image,
+        ]}
+      />
 
       {/* Detalhes - lado direito */}
-      <div className="flex h-full flex-1 flex-col">
+      <div className="flex h-full w-160 flex-col">
         {/* ========== SEÇÃO SUPERIOR ========== */}
         <div className="shrink-0">
-          <h1 className="text-2xl font-bold">{title}</h1>
+          <h1 className="text-2xl leading-tight font-bold">{title}</h1>
+          <p className="line-clamp-3 text-sm leading-5">{description}</p>
 
           {/* Rating */}
           <div className="my-3 flex items-center gap-2 text-yellow-500">
@@ -200,7 +197,9 @@ export const ProductDetails = ({
         </div>
 
         {/* ========== SEÇÃO DO MEIO (scroll) ========== */}
-        <div className="min-h-0 flex-1 overflow-y-auto py-2 pr-2 pl-2">
+        <div
+          className={`flex min-h-0 flex-1 flex-col overflow-y-auto pt-2 pb-4 ${options.length > 0 ? "justify-between" : "justify-end"}`}
+        >
           {/* Product Options */}
           {options.length > 0 && (
             <div className="mb-6">

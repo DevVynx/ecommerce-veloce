@@ -37,7 +37,7 @@ export const ProductDetailsServer = async ({ params }: ProductDetailsServerProps
   return (
     <div className="container mx-auto mt-10 px-2 py-8 md:px-0">
       <section className="mb-10 flex flex-col gap-8 lg:flex-row lg:gap-10">
-        <div className="w-full lg:sticky lg:top-24 lg:max-h-150 lg:flex-2 lg:overflow-hidden xl:max-w-220">
+        <div className="w-full lg:sticky lg:top-24 lg:max-h-150 lg:max-w-155 lg:flex-2 lg:overflow-hidden xl:max-w-200">
           <ProductGallery
             images={[
               product.display.image,
