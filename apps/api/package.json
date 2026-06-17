@@ -13,6 +13,7 @@
     "prisma:migrate": "dotenv -e .env -- prisma migrate dev",
     "prisma:studio": "dotenv -e .env -- prisma studio",
     "db:seed": "dotenv -e .env -- tsx prisma/seed.ts",
+    "db:seed-many": "dotenv -e .env -- tsx prisma/seed-many.ts",
     "db:reset": "dotenv -e .env -- prisma migrate reset --force && pnpm db:seed",
     "db:sync-search": "dotenv -e .env -- tsx prisma/sync-search.ts"
   },

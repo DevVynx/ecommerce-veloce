@@ -82,12 +82,12 @@ function generateSku(title: string, variantIndex: number = 0): string {
 // DADOS BASE
 // ==========================================
 
-const categories = ["men's clothing", "jewelery", "electronics", "women's clothing"];
+const categories = ["Masculino", "Joias", "Eletrônicos", "Feminino"];
 
 // Promoções de categoria
 const categoryPromotions = [
   {
-    categoryName: "electronics",
+    categoryName: "Eletrônicos",
     name: "Semana do Consumidor - Eletrônicos",
     type: "PERCENTAGE" as const,
     discountValue: 15,
@@ -96,7 +96,7 @@ const categoryPromotions = [
     isActive: true,
   },
   {
-    categoryName: "women's clothing",
+    categoryName: "Feminino",
     name: "Dia das Mulheres - Roupas Femininas",
     type: "PERCENTAGE" as const,
     discountValue: 20,
@@ -114,7 +114,7 @@ const productsData: ProductData[] = [
     totalStock: 45,
     ratingRate: 3.9,
     ratingCount: 120,
-    category: "men's clothing",
+    category: "Masculino",
     variants: [
       { price: 109.95, stock: 15, weight: 1.2, isActive: true, options: { Cor: "Azul Marinho" } },
       { price: 109.95, stock: 15, weight: 1.2, isActive: true, options: { Cor: "Verde Oliva" } },
@@ -139,7 +139,7 @@ const productsData: ProductData[] = [
     totalStock: 95,
     ratingRate: 4.1,
     ratingCount: 259,
-    category: "men's clothing",
+    category: "Masculino",
     variants: [
       {
         price: 22.3,
@@ -248,7 +248,7 @@ const productsData: ProductData[] = [
     totalStock: 30,
     ratingRate: 4.7,
     ratingCount: 500,
-    category: "men's clothing",
+    category: "Masculino",
     variants: [
       {
         price: 55.99,
@@ -327,7 +327,7 @@ const productsData: ProductData[] = [
     totalStock: 200,
     ratingRate: 2.1,
     ratingCount: 430,
-    category: "men's clothing",
+    category: "Masculino",
     variants: [
       {
         price: 15.99,
@@ -399,7 +399,7 @@ const productsData: ProductData[] = [
     totalStock: 8,
     ratingRate: 4.6,
     ratingCount: 400,
-    category: "jewelery",
+    category: "Joias",
     variants: [
       { price: 695, stock: 5, weight: 0.2, isActive: true, options: { Material: "Prata" } },
       { price: 695, stock: 3, weight: 0.2, isActive: true, options: { Material: "Ouro Amarelo" } },
@@ -423,7 +423,7 @@ const productsData: ProductData[] = [
     totalStock: 19,
     ratingRate: 3.9,
     ratingCount: 70,
-    category: "jewelery",
+    category: "Joias",
     variants: [
       { price: 168, stock: 6, weight: 0.05, isActive: true, options: { "Tamanho do Anel": "14" } },
       { price: 168, stock: 0, weight: 0.05, isActive: false, options: { "Tamanho do Anel": "16" } },
@@ -449,7 +449,7 @@ const productsData: ProductData[] = [
     totalStock: 150,
     ratingRate: 3.0,
     ratingCount: 400,
-    category: "jewelery",
+    category: "Joias",
     variants: [{ price: 9.99, stock: 150, weight: 0.04, isActive: true }],
     productOptions: [],
     promotions: [
@@ -470,7 +470,7 @@ const productsData: ProductData[] = [
     totalStock: 300,
     ratingRate: 1.9,
     ratingCount: 100,
-    category: "jewelery",
+    category: "Joias",
     variants: [{ price: 10.99, stock: 300, weight: 0.03, isActive: true }],
     productOptions: [],
   },
@@ -481,7 +481,7 @@ const productsData: ProductData[] = [
     totalStock: 80,
     ratingRate: 3.3,
     ratingCount: 203,
-    category: "electronics",
+    category: "Eletrônicos",
     variants: [
       { price: 64, stock: 27, weight: 0.25, isActive: true, options: { Capacidade: "1TB" } },
       { price: 64, stock: 27, weight: 0.25, isActive: true, options: { Capacidade: "2TB" } },
@@ -510,7 +510,7 @@ const productsData: ProductData[] = [
     totalStock: 50,
     ratingRate: 2.9,
     ratingCount: 470,
-    category: "electronics",
+    category: "Eletrônicos",
     variants: [
       { price: 69, stock: 17, weight: 0.1, isActive: true, options: { Capacidade: "256GB" } },
       { price: 89, stock: 17, weight: 0.1, isActive: true, options: { Capacidade: "500GB" } },
@@ -535,7 +535,7 @@ const productsData: ProductData[] = [
     totalStock: 60,
     ratingRate: 4.8,
     ratingCount: 319,
-    category: "electronics",
+    category: "Eletrônicos",
     variants: [
       { price: 109, stock: 20, weight: 0.12, isActive: true, options: { Capacidade: "256GB" } },
       { price: 129, stock: 20, weight: 0.12, isActive: true, options: { Capacidade: "512GB" } },
@@ -550,7 +550,7 @@ const productsData: ProductData[] = [
     totalStock: 35,
     ratingRate: 4.8,
     ratingCount: 400,
-    category: "electronics",
+    category: "Eletrônicos",
     variants: [
       { price: 114, stock: 20, weight: 0.3, isActive: true, options: { Compatibilidade: "PS4" } },
       { price: 114, stock: 15, weight: 0.3, isActive: true, options: { Compatibilidade: "PC" } },
@@ -574,7 +574,7 @@ const productsData: ProductData[] = [
     totalStock: 15,
     ratingRate: 2.9,
     ratingCount: 250,
-    category: "electronics",
+    category: "Eletrônicos",
     variants: [
       { price: 599, stock: 8, weight: 1.5, isActive: true, options: { Tamanho: '21.5"' } },
       { price: 699, stock: 7, weight: 1.8, isActive: true, options: { Tamanho: '24"' } },
@@ -588,7 +588,7 @@ const productsData: ProductData[] = [
     totalStock: 8,
     ratingRate: 2.2,
     ratingCount: 140,
-    category: "electronics",
+    category: "Eletrônicos",
     variants: [
       { price: 899.99, stock: 5, weight: 1.6, isActive: true, options: { Tamanho: '34"' } },
       { price: 999.99, stock: 3, weight: 2.0, isActive: true, options: { Tamanho: '49"' } },
@@ -612,7 +612,7 @@ const productsData: ProductData[] = [
     totalStock: 55,
     ratingRate: 2.6,
     ratingCount: 235,
-    category: "women's clothing",
+    category: "Feminino",
     variants: [
       {
         price: 56.99,
@@ -711,7 +711,7 @@ const productsData: ProductData[] = [
     totalStock: 65,
     ratingRate: 2.9,
     ratingCount: 340,
-    category: "women's clothing",
+    category: "Feminino",
     variants: [
       {
         price: 29.95,
@@ -820,7 +820,7 @@ const productsData: ProductData[] = [
     totalStock: 40,
     ratingRate: 3.8,
     ratingCount: 679,
-    category: "women's clothing",
+    category: "Feminino",
     variants: [
       {
         price: 39.99,
@@ -891,7 +891,7 @@ const productsData: ProductData[] = [
     totalStock: 25,
     ratingRate: 4.7,
     ratingCount: 130,
-    category: "women's clothing",
+    category: "Feminino",
     variants: [
       {
         price: 9.85,
@@ -990,7 +990,7 @@ const productsData: ProductData[] = [
     totalStock: 70,
     ratingRate: 4.5,
     ratingCount: 146,
-    category: "women's clothing",
+    category: "Feminino",
     variants: [
       {
         price: 7.95,
@@ -1071,7 +1071,7 @@ const productsData: ProductData[] = [
     totalStock: 90,
     ratingRate: 3.6,
     ratingCount: 145,
-    category: "women's clothing",
+    category: "Feminino",
     variants: [
       {
         price: 12.99,
