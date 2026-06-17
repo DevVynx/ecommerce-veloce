@@ -64,20 +64,18 @@ export function toSearchRequest(
   return {
     q: get("q"),
     categoryId: get("categoryId"),
-    minPrice: has("minPrice") ? Number(get("minPrice")) : undefined,
-    maxPrice: has("maxPrice") ? Number(get("maxPrice")) : undefined,
     onSale: get("onSale") === "true" ? true : undefined,
     minRating: has("minRating") ? Number(get("minRating")) : undefined,
-    optionValueIds: get("optionValueIds"),
+    optionValues: get("optionValues"),
     sortBy:
       sortBy && ["price_asc", "price_desc", "rating_desc", "newest"].includes(sortBy)
         ? (sortBy as SearchProductsRequest["sortBy"])
         : "rating_desc",
-    limit: 16,
+    limit: 12,
   };
 }
 
-export function parseOptionValueIds(v: string | string[] | undefined): Set<string> {
+export function parseOptionValues(v: string | string[] | undefined): Set<string> {
   const value = Array.isArray(v) ? v[0] : v;
   if (!value) return new Set();
   return new Set(value.split(","));

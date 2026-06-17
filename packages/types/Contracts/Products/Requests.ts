@@ -16,11 +16,9 @@ export type GetProductBySlugRequest = {
 export type SearchProductsRequest = {
   q?: string;
   categoryId?: string;
-  minPrice?: number;
-  maxPrice?: number;
   onSale?: boolean;
   minRating?: number;
-  optionValueIds?: string;
+  optionValues?: string;
   sortBy?: "price_asc" | "price_desc" | "rating_desc" | "newest";
   offset?: number;
   limit?: number;

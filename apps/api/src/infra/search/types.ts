@@ -4,6 +4,7 @@ export type SearchParams = {
   sort?: string[];
   limit?: number;
   offset?: number;
+  facets?: string[];
 };
 
 export type SearchHit = Record<string, unknown>;
@@ -11,6 +12,8 @@ export type SearchHit = Record<string, unknown>;
 export type SearchResult = {
   hits: SearchHit[];
   totalHits: number;
+  facetDistribution?: Record<string, Record<string, number>>;
+  facetStats?: Record<string, { min: number; max: number }>;
 };
 
 export interface SearchEngine {

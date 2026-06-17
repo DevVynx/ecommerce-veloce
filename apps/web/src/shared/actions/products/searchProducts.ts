@@ -15,11 +15,9 @@ export async function searchProducts(params?: SearchProductsRequest) {
   if (params) {
     if (params.q) queryParams.q = params.q;
     if (params.categoryId) queryParams.categoryId = params.categoryId;
-    if (params.minPrice !== undefined) queryParams.minPrice = params.minPrice;
-    if (params.maxPrice !== undefined) queryParams.maxPrice = params.maxPrice;
     if (params.onSale) queryParams.onSale = String(params.onSale);
     if (params.minRating !== undefined) queryParams.minRating = params.minRating;
-    if (params.optionValueIds) queryParams.optionValueIds = params.optionValueIds;
+    if (params.optionValues) queryParams.optionValues = params.optionValues;
     if (params.sortBy) queryParams.sortBy = params.sortBy;
     if (params.offset !== undefined) queryParams.offset = params.offset;
     if (params.limit !== undefined) queryParams.limit = params.limit;

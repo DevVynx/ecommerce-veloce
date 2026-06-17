@@ -27,12 +27,14 @@ type MeiliProductDocument = {
   description: string;
   price: number;
   salePrice: number;
+  onSale: boolean;
   categoryId: string;
   categoryName: string;
   skus: string[];
   ratingRate: number;
   ratingCount: number;
   createdAt: string;
+  optionValues: string[];
 };
 
 async function main() {
@@ -66,6 +68,12 @@ async function main() {
           },
         },
       },
+      productOptions: {
+        select: {
+          name: true,
+          values: { select: { value: true } },
+        },
+      },
     },
   });
 
@@ -90,18 +98,24 @@ async function main() {
       continue;
     }
 
+    const optionValues = product.productOptions.flatMap((opt) =>
+      opt.values.map((v) => `${opt.name}::${v.value}`)
+    );
+
     documents.push({
       id: product.id,
       title: product.title,
       description: product.description,
       price: Number(heroVariant.price),
       salePrice: Number(heroVariant.offer.salePrice),
+      onSale: heroVariant.offer.isOnSale,
       categoryId: product.categoryId,
       categoryName: product.category.name,
       skus: product.productVariants.map((v) => v.sku),
       ratingRate: Number(product.ratingRate),
       ratingCount: product.ratingCount,
       createdAt: product.createdAt.toISOString(),
+      optionValues,
     });
   }
 
@@ -114,7 +128,7 @@ async function main() {
 
   const settings = {
     searchableAttributes: ["title", "description", "categoryName", "skus"],
-    filterableAttributes: ["categoryId", "price", "salePrice", "categoryName"],
+    filterableAttributes: ["categoryId", "price", "salePrice", "categoryName", "onSale", "ratingRate", "id", "optionValues"],
     sortableAttributes: ["salePrice", "ratingRate", "createdAt"],
   };
 

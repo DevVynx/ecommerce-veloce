@@ -17,11 +17,14 @@ export class MeilisearchAdapter implements SearchEngine {
       sort: params.sort,
       limit: params.limit,
       offset: params.offset,
+      facets: params.facets,
     });
 
     return {
       hits: response.hits as SearchResult["hits"],
       totalHits: response.estimatedTotalHits ?? 0,
+      facetDistribution: response.facetDistribution,
+      facetStats: response.facetStats,
     };
   }
 }

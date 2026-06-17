@@ -11,7 +11,7 @@ import { SearchEmpty } from "@/shared/components/Store/Search/SearchEmpty";
 import { SearchResults } from "@/shared/components/Store/Search/SearchResults";
 import { SearchPageSkeleton } from "@/shared/components/Store/Search/SearchResultsSkeleton";
 import { SortSelect } from "@/shared/components/Store/Search/SortSelect";
-import { parseOptionValueIds, toSearchRequest } from "@/shared/utils/store/search";
+import { parseOptionValues, toSearchRequest } from "@/shared/utils/store/search";
 
 type SearchPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -47,7 +47,7 @@ const SearchPageContent = async ({ searchParams }: SearchPageProps) => {
     );
   }
 
-  const selectedOptionValueIds = parseOptionValueIds(rawParams.optionValueIds);
+  const selectedOptionValues = parseOptionValues(rawParams.optionValues);
 
   if (data.pagination.total === 0) {
     return (
@@ -72,11 +72,7 @@ const SearchPageContent = async ({ searchParams }: SearchPageProps) => {
       )}
 
       <div className="mb-2">
-        <ActiveFilters
-          params={rawParams}
-          priceRangeMax={data.filters.priceRange.max}
-          categories={data.filters.categories}
-        />
+        <ActiveFilters params={rawParams} categories={data.filters.categories} />
       </div>
 
       <Separator className="mb-4" />
@@ -85,7 +81,7 @@ const SearchPageContent = async ({ searchParams }: SearchPageProps) => {
         <MobileFilters
           filters={data.filters}
           params={rawParams}
-          selectedOptionValueIds={selectedOptionValueIds}
+          selectedOptionValues={selectedOptionValues}
         />
         <SortSelect params={rawParams} />
       </div>
@@ -94,11 +90,15 @@ const SearchPageContent = async ({ searchParams }: SearchPageProps) => {
         <DesktopFilters
           filters={data.filters}
           params={rawParams}
-          selectedOptionValueIds={selectedOptionValueIds}
+          selectedOptionValues={selectedOptionValues}
         />
 
         <section className="min-w-0 flex-1">
-          <div className="mb-4 hidden items-center justify-end gap-4 lg:flex">
+          <div className="mb-4 hidden items-center justify-between gap-4 lg:flex">
+            <p className="text-sm text-gray-500">
+              {data.pagination.total} produto{data.pagination.total !== 1 ? "s" : ""} encontrado
+              {data.pagination.total !== 1 ? "s" : ""}
+            </p>
             <SortSelect params={rawParams} />
           </div>
 

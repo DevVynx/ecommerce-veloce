@@ -8,7 +8,10 @@ export type FindAllProductsParams = GetProductsRequest & {
 };
 
 export type SearchProductsParams = Required<Pick<SearchProductsRequest, "offset" | "limit">> &
-  Pick<SearchProductsRequest, "q" | "categoryId" | "minPrice" | "maxPrice" | "sortBy">;
+  Pick<
+    SearchProductsRequest,
+    "q" | "categoryId" | "onSale" | "minRating" | "optionValues" | "sortBy"
+  >;
 
 export type FindProductByIdParams = {
   productId: string;

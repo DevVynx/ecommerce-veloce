@@ -11,13 +11,14 @@ export const searchProducts: RequestHandler = async (
   res: Response<SearchProductsResponse>
 ) => {
   const { query } = v.searchProducts.getValidatedValues(req);
-  const { q, categoryId, minPrice, maxPrice, sortBy, offset, limit } = query;
+  const { q, categoryId, onSale, minRating, optionValues, sortBy, offset, limit } = query;
 
-  const { enrichedProducts, pagination } = await productServices.search({
+  const { enrichedProducts, pagination, filters } = await productServices.search({
     q,
     categoryId,
-    minPrice,
-    maxPrice,
+    onSale,
+    minRating,
+    optionValues,
     sortBy,
     offset,
     limit,
@@ -27,13 +28,7 @@ export const searchProducts: RequestHandler = async (
 
   return res.json({
     products,
-    filters: {
-      categories: [],
-      priceRange: { min: 0, max: 0, absoluteMin: 0, absoluteMax: 0 },
-      ratingOptions: [],
-      onSaleCount: 0,
-      options: [],
-    },
+    filters,
     pagination,
   });
 };

@@ -60,18 +60,12 @@ export type DetailedProductDto = {
 
 export type SearchFiltersDto = {
   categories: { id: string; name: string; count: number }[];
-  priceRange: {
-    min: number;
-    max: number;
-    absoluteMin: number;
-    absoluteMax: number;
-  };
   ratingOptions: { value: number; count: number }[];
   onSaleCount: number;
   options: {
     id: string;
     name: string;
-    values: { id: string; value: string }[];
+    values: { value: string; count: number }[];
   }[];
 };
 
