@@ -1,22 +1,64 @@
 "use client";
 import { Heart } from "lucide-react";
+import { Meilisearch } from "meilisearch";
+import { useRouter, useSearchParams } from "next/navigation";
 
+import { registerSearchAnalytics } from "@/shared/actions/search/registerAnalytics";
 import { BadgedIconButton } from "@/shared/components/BadgedIconButton";
+import { SearchBar } from "@/shared/components/SearchBar";
 import { UserMenu } from "@/shared/components/Store/Header/UserMenu";
 import { useWishlistState } from "@/shared/states/wishlist";
+import { ENV } from "@/shared/utils/env";
 
 import { CartDropdown } from "../../Cart/CartDropdown";
 import { HeaderLogo } from "./Logo";
 import { MobileSideMenu } from "./MobileSideMenu";
-import { SearchInput } from "./SearchInput";
+
+const meiliClient = new Meilisearch({
+  host: ENV.NEXT_PUBLIC_MEILI_HOST,
+  apiKey: ENV.NEXT_PUBLIC_MEILI_SEARCH_KEY,
+});
 
 export const NavBar = () => {
   const { count: wishlistCount } = useWishlistState();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const qFromUrl = searchParams.get("q") ?? "";
+
+  const fetchSuggestions = async (query: string) => {
+    const result = await meiliClient.index("suggestions").search(query, { limit: 10 });
+    return result.hits.map((hit) => ({ id: String(hit.id), term: String(hit.term) }));
+  };
+
+  const fetchTrending = async () => {
+    const result = await meiliClient.index("suggestions").search("", {
+      sort: ["searchCount:desc"],
+      limit: 5,
+    });
+    return result.hits.map((hit) => ({ id: String(hit.id), term: String(hit.term) }));
+  };
+
+  const handleSelect = async (term: string) => {
+    await registerSearchAnalytics({ term });
+    router.push(`/search?q=${encodeURIComponent(term.trim())}`);
+  };
 
   return (
     <nav className="flex h-12 items-center justify-center gap-3 lg:gap-6">
       <HeaderLogo />
-      <SearchInput />
+      <SearchBar
+        queryFromUrl={qFromUrl}
+        placeholder="Busque os seus produtos!"
+        fetchSuggestions={fetchSuggestions}
+        fetchTrending={fetchTrending}
+        onSelect={handleSelect}
+        classNames={{
+          root: "w-full",
+          input: "border-primary focus-visible:ring-0",
+          searchButton:
+            "w-12 text-primary-foreground bg-primary hover:bg-primary/90 hover:text-primary-foreground/90",
+        }}
+      />
       <div className="flex items-center gap-2 lg:gap-3">
         {/* User Menu - Desktop */}
         <UserMenu />

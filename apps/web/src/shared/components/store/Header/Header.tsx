@@ -1,5 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 
 import { useScrollDirection } from "@/shared/hooks/ui/useScrollDirection";
 
@@ -22,10 +23,12 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 right-0 left-0 z-5 bg-background p-2 inset-shadow-2xs transition-transform duration-300 ease-in-out ${translateYClass} `}
+      className={`bg-background fixed top-0 right-0 left-0 z-5 p-2 inset-shadow-2xs transition-transform duration-300 ease-in-out ${translateYClass} `}
     >
       <div className="mx-auto lg:container">
-        <NavBar />
+        <Suspense fallback={null}>
+          <NavBar />
+        </Suspense>
       </div>
     </header>
   );
