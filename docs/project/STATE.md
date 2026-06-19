@@ -1,16 +1,20 @@
 # Project State
 
-**Last Updated**: 2026-06-17
+**Last Updated**: 2026-06-18
 **State Expiration**: N/A
 
 ---
 
 ## Current Task
 
-**[vyn-050] Corrigir ratings: API retorna valores individuais em vez de únicos** — Completed
+**[vyn-051] Criar módulo de sugestões de busca populares** — Completed
 
 ### Changes
-- **`facetProcessor.ts`**: RatingOptions agora agrupa por `Math.floor(value)` antes de cumular. Ex: valores 1.9, 2.1, 2.2, 2.6 viram {1, 2, 2, 2} e são somados por grupo.
+- **`prisma/schema.prisma`**: Modelo `SearchSuggestion` com `term` (unique) e `searchCount`, mapeado pra `search_suggestions`
+- **Novo módulo `modules/search/`**: Rota `POST /api/search/analytics` com validação, service, repository
+- **`infra/search/`**: Método `addDocuments()` adicionado à interface `SearchEngine` e implementado no `MeilisearchAdapter`
+- **`scripts/`**: Todos os scripts operacionais (seed, sync-search, setup-search) centralizados na pasta `scripts/` (movidos de `prisma/`)
+- **Contracts**: Types `RegisterAnalyticsRequest` e `RegisterAnalyticsResponse` em `Contracts/Search/`
 
 ---
 
@@ -18,24 +22,19 @@
 
 > Decisions older than 30 days are automatically expired and should be removed.
 
-### [Task] Meilisearch Full-Text Search
+### [Task] Popular Search Suggestions Module
 
-- **Date**: 2026-06-16
-- **Decision**: Implemented full-text search using Meilisearch with an abstraction layer (`SearchEngine` interface in `infra/search/`) so the engine can be swapped without changing module code.
+- **Date**: 2026-06-18
+- **Decision**: Created a separate `modules/search/` module for search analytics, distinct from the product search route (`GET /products/search` which stays in `modules/products/`).
 - **Architecture**:
-  - Hybrid approach: Meili returns IDs → Prisma fetches full data with runtime enrichment (promotions, stock)
-  - Only index fields needed for search + filtering — no `image`/`slug`/`totalStock` in index
-  - Search endpoint lives inside `modules/products/` (returns `CatalogProductDto`), not a separate module
-  - `searchableAttributes`: title, description, categoryName, skus
-  - `filterableAttributes`: categoryId, price, salePrice, categoryName
-  - `sortableAttributes`: salePrice, ratingRate, createdAt
-- **Pagination**: Response simplified to `{ total, hasMore }` (offset-based, frontend manages offset state)
-  - `hasMore` calculated in service layer, not controller
-  - `$transaction` in repository ensures atomic `findMany` + `count`
-  - Prisma `findMany` with `in: ids` does NOT preserve order — `findByIds` reorders via `Map` to match Meili relevance
-- **`onSale` filter**: Uses `salePrice < price` (both fields indexed)
-- **Sync**: `prisma/sync-search.ts` — manual script (idempotent: deletes all then re-adds), `pnpm --filter api db:sync-search`
-- **Key difference**: `MEILI_HOST` differs by context — API (Docker) uses `http://meilisearch:7700`, sync script (local) uses `http://localhost:7700`
+  - `POST /api/search/analytics` receives `{ term }`, upserts in Prisma, pushes to Meili index `suggestions`
+  - Prisma tracks the canonical `searchCount`, Meili uses `searchCount:desc` ranking rule for trending
+  - `addDocuments()` added to `SearchEngine` interface — adapter is the single point for writing to Meili
+  - Setup script `scripts/setup-search.ts` configures the `suggestions` index (ranking rules), run via `pnpm --filter api search:setup`
+- **Scripts**: All operational scripts moved from `prisma/` to `scripts/` for better organization:
+  - `scripts/seed.ts`, `scripts/seed-many.ts`, `scripts/sync-search.ts`, `scripts/setup-search.ts`
+
+### [Task] Meilisearch Full-Text Search
 
 ### [Task] Product Enrichment Refactoring — Offer Value Object
 
