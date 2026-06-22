@@ -5,6 +5,7 @@ import helmet from "helmet";
 
 import { authRouter } from "@/modules/auth/routes";
 import { cartRouter } from "@/modules/cart/routes";
+import { couponRouter } from "@/modules/coupons/routes";
 import { shippingRouter } from "@/modules/shipping/routes";
 import { wishlistRouter } from "@/modules/wishlist/routes";
 import { handleGlobalError } from "@/shared/middlewares/handleGlobalError";
@@ -37,6 +38,7 @@ app.use(
 app.use("/api", authRouter);
 app.use("/api", productRouter);
 app.use("/api", cartRouter);
+app.use("/api", couponRouter);
 app.use("/api", wishlistRouter);
 app.use("/api", shippingRouter);
 app.use("/api", searchRouter);

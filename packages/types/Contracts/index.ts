@@ -12,3 +12,5 @@ export * from "./Reviews/Requests";
 export * from "./Reviews/Responses";
 export * from "./Search/Requests";
 export * from "./Search/Responses";
+export * from "./Coupon/Requests";
+export * from "./Coupon/Responses";
