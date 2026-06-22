@@ -5,7 +5,7 @@ import {
   getUserWishlist,
   removeItemFromWishlist,
 } from "@/modules/wishlist/controllers";
-import v from "@/modules/wishlist/helpers/validators";
+import v from "@/modules/wishlist/validators";
 import { authMiddleware } from "@/shared/middlewares/auth";
 
 const wishlistRouter: Router = Router();

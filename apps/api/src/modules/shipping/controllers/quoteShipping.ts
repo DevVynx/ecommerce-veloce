@@ -1,7 +1,7 @@
 import { QuoteShippingResponse } from "@repo/types/contracts";
 import { RequestHandler, Response } from "express";
 
-import v from "@/modules/shipping/helpers/validators";
+import v from "@/modules/shipping/validators";
 import { shippingServices } from "@/modules/shipping/services";
 
 export const quoteShipping: RequestHandler = async (req, res: Response<QuoteShippingResponse>) => {

@@ -8,7 +8,7 @@ import {
   syncCart,
   updateCartItemQuantity,
 } from "@/modules/cart/controllers";
-import v from "@/modules/cart/helpers/validators";
+import v from "@/modules/cart/validators";
 import { authMiddleware } from "@/shared/middlewares/auth";
 
 const cartRouter: Router = Router();

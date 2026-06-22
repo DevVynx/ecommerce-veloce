@@ -1,7 +1,7 @@
 import { SyncCartResponse } from "@repo/types/contracts";
 import { RequestHandler, Response } from "express";
 
-import v from "@/modules/cart/helpers/validators";
+import v from "@/modules/cart/validators";
 import { cartMappers } from "@/modules/cart/mappers";
 import { cartServices } from "@/modules/cart/services";
 

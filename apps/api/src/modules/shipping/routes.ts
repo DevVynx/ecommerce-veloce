@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { quoteShipping } from "@/modules/shipping/controllers";
-import v from "@/modules/shipping/helpers/validators";
+import v from "@/modules/shipping/validators";
 import { authMiddleware } from "@/shared/middlewares/auth";
 
 const shippingRouter: Router = Router();

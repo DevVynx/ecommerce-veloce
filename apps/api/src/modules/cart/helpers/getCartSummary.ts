@@ -1,24 +1,24 @@
-import { Decimal } from "../../../../prisma/generated/client/internal/prismaNamespace";
+import { Prisma } from "../../../../prisma/generated/client/client";
 
 export interface CartItemSummaryInput {
   quantity: number;
   product: {
     variant: {
-      price: Decimal;
-      offer: { salePrice: Decimal };
+      price: Prisma.Decimal;
+      offer: { salePrice: Prisma.Decimal };
     };
   };
 }
 
 export type CartSummary = {
   count: number;
-  subtotal: Decimal;
-  total: Decimal;
-  discount: Decimal;
+  subtotal: Prisma.Decimal;
+  total: Prisma.Decimal;
+  discount: Prisma.Decimal;
 };
 
 export function getCartSummary(items: CartItemSummaryInput[]): CartSummary {
-  const zero = new Decimal(0);
+  const zero = new Prisma.Decimal(0);
 
   const count = items.reduce((acc, item) => acc + item.quantity, 0);
 

@@ -1,7 +1,7 @@
 import { RemoveWishlistItemResponse } from "@repo/types/contracts";
 import { RequestHandler, Response } from "express";
 
-import v from "@/modules/wishlist/helpers/validators";
+import v from "@/modules/wishlist/validators";
 import { wishlistServices } from "@/modules/wishlist/services";
 
 export const removeItemFromWishlist: RequestHandler = async (
