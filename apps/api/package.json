@@ -8,7 +8,7 @@
     "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsup",
     "start": "dotenv -e .env -- node dist/server.js",
-    "lint:fix": "eslint . --fix",
+    "lint:fix": "prettier --write . && eslint . --fix",
     "check-types": "tsc --noEmit",
     "prisma:migrate": "dotenv -e .env -- prisma migrate dev",
     "prisma:studio": "dotenv -e .env -- prisma studio",

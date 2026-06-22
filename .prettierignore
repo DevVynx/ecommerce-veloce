@@ -1,9 +1,0 @@
-.next
-dist
-build
-node_modules
-coverage
-.turbo
-.cache
-out
-pnpm-lock.yaml
