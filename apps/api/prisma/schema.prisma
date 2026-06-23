@@ -19,6 +19,7 @@ model User {
   updatedAt       DateTime @updatedAt @db.Timestamptz
 
   refreshTokens RefreshToken[]
+  addresses     Address[]
   cart          Cart?
   wishlist      Wishlist?
   orders        Order[]
@@ -38,6 +39,27 @@ model RefreshToken {
 
   @@index([userId])
   @@map("refresh_token")
+}
+
+model Address {
+  id           String   @id @default(uuid()) @db.Uuid
+  receiverName String
+  label        String?
+  cep          String
+  street       String
+  number       String
+  complement   String?
+  neighborhood String
+  city         String
+  state        String
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now()) @db.Timestamptz
+  updatedAt    DateTime @updatedAt @db.Timestamptz
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("addresses")
 }
 
 model Category {
@@ -186,13 +208,14 @@ model CartItem {
 }
 
 model Order {
-  id        String      @id @default(uuid()) @db.Uuid
-  total     Decimal     @db.Decimal(10, 2)
-  subtotal  Decimal     @db.Decimal(10, 2)
-  shipping  Decimal     @db.Decimal(10, 2)
-  status    OrderStatus @default(PENDING)
-  createdAt DateTime    @default(now()) @db.Timestamptz
-  updatedAt DateTime    @updatedAt @db.Timestamptz
+  id              String      @id @default(uuid()) @db.Uuid
+  total           Decimal     @db.Decimal(10, 2)
+  subtotal        Decimal     @db.Decimal(10, 2)
+  shipping        Decimal     @db.Decimal(10, 2)
+  status          OrderStatus @default(PENDING)
+  shippingAddress Json        @db.Json
+  createdAt       DateTime    @default(now()) @db.Timestamptz
+  updatedAt       DateTime    @updatedAt @db.Timestamptz
 
   orderItems OrderItem[]
 
