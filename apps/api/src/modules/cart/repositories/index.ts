@@ -1,4 +1,5 @@
 import { addCartItem } from "./addItem";
+import { clearCart } from "./clearCart";
 import { createCart } from "./createCart";
 import { deleteCartItem } from "./deleteItem";
 import { existsCartByUserId } from "./existsByUserId";
@@ -16,4 +17,5 @@ export const cartRepositories = {
   findItemById: findCartItemById,
   updateItemQuantity: updateCartItemQuantity,
   deleteItem: deleteCartItem,
+  clearCart,
 };

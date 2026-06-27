@@ -1,4 +1,5 @@
 import { addCartItem } from "./addItem";
+import { clearCart } from "./clearCart";
 import { deleteCartItem } from "./deleteCartItem";
 import { findCartByUserId } from "./findByUserId";
 import { getCartItems } from "./findItemsByUserId";
@@ -12,4 +13,5 @@ export const cartServices = {
   syncCart,
   updateCartItemQuantity,
   deleteCartItem,
+  clearCart,
 };

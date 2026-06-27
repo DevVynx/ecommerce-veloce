@@ -6,8 +6,10 @@ import helmet from "helmet";
 import { authRouter } from "@/modules/auth/routes";
 import { cartRouter } from "@/modules/cart/routes";
 import { couponRouter } from "@/modules/coupons/routes";
+import { orderRouter } from "@/modules/orders/routes";
 import { shippingRouter } from "@/modules/shipping/routes";
 import { addressRouter } from "@/modules/user/routes";
+import { stripeWebhook } from "@/modules/webhook/controllers/stripeWebhook";
 import { wishlistRouter } from "@/modules/wishlist/routes";
 import { handleGlobalError } from "@/shared/middlewares/handleGlobalError";
 import { notFoundHandler } from "@/shared/middlewares/notFoundHandler";
@@ -17,6 +19,9 @@ import { productRouter } from "./modules/products/routes";
 import { searchRouter } from "./modules/search/routes";
 
 export const app: Express = express();
+
+// Webhook route BEFORE json middleware (needs raw body for signature verification)
+app.post("/api/webhook/stripe", express.raw({ type: "application/json" }), stripeWebhook);
 
 // Configs -----------------------------------------------------------
 app.use(express.json());
@@ -30,7 +35,7 @@ app.use(
 );
 app.use(
   helmet({
-    contentSecurityPolicy: false, // evita quebrar tudo no começo
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
   })
 );
@@ -44,6 +49,7 @@ app.use("/api", addressRouter);
 app.use("/api", wishlistRouter);
 app.use("/api", shippingRouter);
 app.use("/api", searchRouter);
+app.use("/api", orderRouter);
 
 app.use(notFoundHandler);
 app.use(handleGlobalError);

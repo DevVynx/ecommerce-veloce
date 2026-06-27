@@ -28,3 +28,7 @@ export type UpdateCartItemQuantityParams = {
 export type RemoveItemFromCartParams = {
   userId: string;
 } & RemoveItemFromCartRequest;
+
+export type ClearCartParams = {
+  userId: string;
+};

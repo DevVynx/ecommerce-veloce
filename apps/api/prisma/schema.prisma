@@ -212,7 +212,10 @@ model Order {
   total           Decimal     @db.Decimal(10, 2)
   subtotal        Decimal     @db.Decimal(10, 2)
   shipping        Decimal     @db.Decimal(10, 2)
+  discount        Decimal     @default(0) @db.Decimal(10, 2)
+  contribution    Decimal     @default(0) @db.Decimal(10, 2)
   status          OrderStatus @default(PENDING)
+  paymentMethod   String
   shippingAddress Json        @db.Json
   createdAt       DateTime    @default(now()) @db.Timestamptz
   updatedAt       DateTime    @updatedAt @db.Timestamptz
