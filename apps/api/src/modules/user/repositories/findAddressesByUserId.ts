@@ -1,10 +1,10 @@
 import { db } from "@/shared/lib/db";
 
-type FindManyByUserIdProps = {
+type FindAddressesByUserIdProps = {
   userId: string;
 };
 
-export const findManyByUserId = async ({ userId }: FindManyByUserIdProps) => {
+export const findAddressesByUserId = async ({ userId }: FindAddressesByUserIdProps) => {
   const addresses = await db.address.findMany({
     where: { userId },
     orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],

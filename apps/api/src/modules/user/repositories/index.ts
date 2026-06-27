@@ -1,15 +1,17 @@
 import { createAddress } from "./createAddress";
 import { deleteAddress } from "./deleteAddress";
-import { findByAddressId } from "./findByAddressId";
-import { findManyByUserId } from "./findManyByUserId";
+import { findAddressById } from "./findAddressById";
+import { findAddressesByUserId } from "./findAddressesByUserId";
+import { findUserProfile } from "./findUserProfile";
 import { setDefaultAddress } from "./setDefaultAddress";
-import { update } from "./update";
+import { updateAddress } from "./updateAddress";
 
-export const addressRepositories = {
-  findManyByUserId,
-  findByAddressId,
+export const userRepositories = {
+  findAddressesByUserId,
+  findAddressById,
   createAddress,
-  update,
+  updateAddress,
   deleteAddress,
   setDefaultAddress,
+  findUserProfile,
 };

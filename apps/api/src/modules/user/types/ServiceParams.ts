@@ -1,6 +1,8 @@
 import type { CreateAddressRequest, UpdateAddressRequest } from "@repo/types/contracts";
 
-export type ListAddressesParams = { userId: string };
+export type FindAddressByIdParams = { addressId: string };
+
+export type FindAddressesParams = { userId: string };
 
 export type CreateAddressParams = { userId: string } & CreateAddressRequest;
 

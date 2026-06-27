@@ -1,7 +1,7 @@
 import type { DeleteAddressResponse } from "@repo/types/contracts";
 import type { RequestHandler, Response } from "express";
 
-import { addressServices } from "@/modules/user/services";
+import { userServices } from "@/modules/user/services";
 import v from "@/modules/user/validators";
 
 export const deleteAddress: RequestHandler = async (req, res: Response<DeleteAddressResponse>) => {
@@ -9,7 +9,7 @@ export const deleteAddress: RequestHandler = async (req, res: Response<DeleteAdd
 
   const { addressId } = v.deleteAddress.getValidatedValues(req).params;
 
-  await addressServices.deleteAddress({ userId, addressId });
+  await userServices.deleteAddress({ userId, addressId });
 
   return res.status(204).send();
 };

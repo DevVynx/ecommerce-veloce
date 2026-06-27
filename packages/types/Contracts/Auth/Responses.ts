@@ -1,31 +1,25 @@
 export type UserRole = "USER" | "ADMIN";
 
+export type UserProfile = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  isEmailVerified: boolean;
+};
+
 export type RegisterResponse = {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    isEmailVerified: boolean;
-    role: UserRole;
-  };
+  user: UserProfile;
 };
 
 export type GoogleAuthResponse = {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
+  user: UserProfile;
   accessToken: string;
   refreshToken: string;
 };
 
 export type LoginResponse = {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
+  user: UserProfile;
   accessToken: string;
   refreshToken: string;
 };
@@ -38,9 +32,5 @@ export type RefreshResponse = {
 };
 
 export type GetUserResponse = {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  } | null;
+  user: UserProfile | null;
 };
