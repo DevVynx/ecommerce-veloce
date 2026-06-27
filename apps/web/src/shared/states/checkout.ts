@@ -1,6 +1,8 @@
 import type { AddressDto, ShippingOptionDto } from "@repo/types/contracts";
 import { create } from "zustand";
 
+export type PaymentMethod = "card" | "pix";
+
 export type CheckoutStep = "address" | "shipping" | "payment" | "review";
 
 type CheckoutState = {
@@ -10,12 +12,14 @@ type CheckoutState = {
   selectedAddress: AddressDto | null;
   selectedShipping: ShippingOptionDto | null;
   shippingOptions: ShippingOptionDto[];
+  paymentMethod: PaymentMethod | null;
 
   setStep: (step: CheckoutStep) => void;
   setSelectedAddress: (addressId: string, address: AddressDto) => void;
   setSelectedShipping: (shipping: ShippingOptionDto) => void;
   setShippingOptions: (options: ShippingOptionDto[]) => void;
   clearSelectedShipping: () => void;
+  setPaymentMethod: (method: PaymentMethod) => void;
   reset: () => void;
 };
 
@@ -28,6 +32,7 @@ export const useCheckoutState = create<CheckoutState>()((set) => ({
   selectedAddress: null,
   selectedShipping: null,
   shippingOptions: [],
+  paymentMethod: null,
 
   setStep: (step) => set({ step, stepIndex: STEP_ORDER.indexOf(step) }),
 
@@ -40,6 +45,8 @@ export const useCheckoutState = create<CheckoutState>()((set) => ({
 
   clearSelectedShipping: () => set({ selectedShipping: null }),
 
+  setPaymentMethod: (method) => set({ paymentMethod: method }),
+
   reset: () =>
     set({
       step: "address",
@@ -48,5 +55,6 @@ export const useCheckoutState = create<CheckoutState>()((set) => ({
       selectedAddress: null,
       selectedShipping: null,
       shippingOptions: [],
+      paymentMethod: null,
     }),
 }));

@@ -28,7 +28,7 @@ export const ShippingOptions = ({
         <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
           {options.every((o) => o.price === 0)
             ? "Você atingiu o valor mínimo para frete grátis!"
-            : `Frete grátis a partir de R$ ${freeShippingMinValue.toFixed(2).replace(".", ",")}`}
+            : `Frete grátis a partir de R$ ${freeShippingMinValue.toFixed(2)}`}
         </div>
       )}
 

@@ -38,17 +38,12 @@ export const CouponApplier = ({ subtotal: _subtotal }: CouponApplierProps) => {
 
     const { data, error } = await authenticatedAction(validateCoupon, { code });
 
-    const errorMessage =
-      error && typeof error.message === "string"
-        ? error.message
-        : "Erro inesperado ao validar cupom.";
-
     if (error || !data) {
-      setError(errorMessage);
+      setError(error?.message as string);
       showNotification({
         type: "error",
         title: "Cupom inválido",
-        message: errorMessage,
+        message: error?.message as string,
       });
       setIsApplying(false);
       return;

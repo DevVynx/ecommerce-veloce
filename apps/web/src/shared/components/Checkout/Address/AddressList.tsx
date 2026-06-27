@@ -89,7 +89,7 @@ export const AddressList = ({
       {addresses.length === 0 ? (
         <p className="text-muted-foreground text-sm">Nenhum endereço salvo.</p>
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-2 pt-1">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-2 py-1">
           {addresses.map((address) => (
             <AddressCard
               key={address.id}

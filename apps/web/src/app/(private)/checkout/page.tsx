@@ -7,6 +7,8 @@ import { AddressForm } from "@/shared/components/Checkout/Address/AddressForm";
 import { AddressList } from "@/shared/components/Checkout/Address/AddressList";
 import { CheckoutStepper } from "@/shared/components/Checkout/CheckoutStepper";
 import { OrderSummary } from "@/shared/components/Checkout/OrderSummary";
+import { PaymentSelector } from "@/shared/components/Checkout/Payment/PaymentSelector";
+import { ReviewOrder } from "@/shared/components/Checkout/Review/ReviewOrder";
 import { ShippingSelector } from "@/shared/components/Checkout/Shipping/ShippingSelector";
 import { showNotification } from "@/shared/components/showNotification";
 import type { AddressFormValues } from "@/shared/schemas/checkout/address";
@@ -22,8 +24,10 @@ const CheckoutPage = () => {
     selectedAddress,
     selectedAddressId,
     selectedShipping,
+    paymentMethod,
     setSelectedAddress,
     setSelectedShipping,
+    setPaymentMethod,
   } = useCheckoutState();
 
   const [showForm, setShowForm] = useState(false);
@@ -115,6 +119,26 @@ const CheckoutPage = () => {
             onSelect={(option) => setSelectedShipping(option)}
             onPrevious={() => setStep("address")}
             onContinue={() => setStep("payment")}
+          />
+        )}
+
+        {step === "payment" && (
+          <PaymentSelector
+            selectedMethod={paymentMethod}
+            onSelect={(method) => setPaymentMethod(method)}
+            onPrevious={() => setStep("shipping")}
+            onContinue={() => setStep("review")}
+          />
+        )}
+
+        {step === "review" && selectedAddress && selectedShipping && paymentMethod && (
+          <ReviewOrder
+            address={selectedAddress}
+            shipping={selectedShipping}
+            paymentMethod={paymentMethod}
+            onEditAddress={() => setStep("address")}
+            onEditShipping={() => setStep("shipping")}
+            onEditPayment={() => setStep("payment")}
           />
         )}
       </div>
