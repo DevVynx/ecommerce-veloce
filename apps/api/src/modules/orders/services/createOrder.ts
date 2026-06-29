@@ -4,6 +4,7 @@ import { stripe } from "@/infra/payment/stripe";
 import { cartServices } from "@/modules/cart/services";
 import { orderRepositories } from "@/modules/orders/repositories";
 import type { CreateOrderParams } from "@/modules/orders/types/ServiceParams";
+import { shippingServices } from "@/modules/shipping/services";
 import { userServices } from "@/modules/user/services";
 import { ENV } from "@/shared/utils/env";
 import { BadRequestError, ForbiddenError, NotFoundError } from "@/shared/utils/HttpErrors";
@@ -15,7 +16,7 @@ export const createOrder = async ({
   addressId,
   shippingAddress,
   paymentMethod,
-  shippingPrice,
+  shippingService,
 }: CreateOrderParams) => {
   const { cart } = await cartServices.findCartByUserId({ userId });
 
@@ -45,8 +46,17 @@ export const createOrder = async ({
     };
   });
 
+  const destinyCep = addressData.cep;
+  const { shippingOptions } = await shippingServices.getShippingQuote({
+    userId,
+    destinyCep,
+  });
+
+  const selectedShipping = shippingOptions.find((opt) => opt.service === shippingService);
+  if (!selectedShipping) throw new BadRequestError("Serviço de frete inválido.");
+
   const subtotal = new Prisma.Decimal(cart.summary.subtotal);
-  const shipping = new Prisma.Decimal(shippingPrice);
+  const shipping = new Prisma.Decimal(selectedShipping.price);
   const discount = new Prisma.Decimal(cart.summary.discount);
   const contribution = new Prisma.Decimal(5);
   const total = Prisma.Decimal.sub(Prisma.Decimal.add(subtotal, shipping), discount);
@@ -103,8 +113,6 @@ export const createOrder = async ({
         order_id: order.id,
       },
     });
-
-    await cartServices.clearCart({ userId });
 
     const orderDto: OrderDto = {
       id: order.id,

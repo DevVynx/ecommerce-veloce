@@ -6,14 +6,14 @@ import v from "@/modules/orders/validators";
 
 export const createOrder: RequestHandler = async (req, res: Response<CreateOrderResponse>) => {
   const { userId } = res.locals.user;
-  const { addressId, shippingAddress, shippingPrice, paymentMethod } =
+  const { addressId, shippingAddress, shippingService, paymentMethod } =
     v.createOrder.getValidatedValues(req).body;
 
   const { order, paymentUrl } = await orderServices.createOrder({
     userId,
     addressId,
     shippingAddress,
-    shippingPrice,
+    shippingService,
     paymentMethod,
   });
 

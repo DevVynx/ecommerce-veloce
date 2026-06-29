@@ -85,7 +85,7 @@ export const ReviewOrder = ({
           state: address.state,
         },
       }),
-      shippingPrice: shipping.price,
+      shippingService: shipping.service,
       paymentMethod,
     };
 

@@ -35,7 +35,7 @@ const body = z
           .max(2, "Estado inválido."),
       })
       .optional(),
-    shippingPrice: z.number().min(0, "Preço do frete deve ser maior ou igual a 0"),
+    shippingService: z.string().min(1, "Selecione o frete."),
     paymentMethod: z.enum(["card", "pix"]),
   })
   .refine((data) => data.addressId || data.shippingAddress, {

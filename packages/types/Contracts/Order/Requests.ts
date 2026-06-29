@@ -10,6 +10,6 @@ export type CreateOrderRequest = {
     city: string;
     state: string;
   };
-  shippingPrice: number;
+  shippingService: string;
   paymentMethod: "card" | "pix";
 };
