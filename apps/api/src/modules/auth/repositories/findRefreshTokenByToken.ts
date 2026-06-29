@@ -5,7 +5,7 @@ type FindRefreshTokenByTokenProps = {
 };
 
 export const findRefreshTokenByToken = async ({ token }: FindRefreshTokenByTokenProps) => {
-  const refreshToken = db.refreshToken.findUnique({
+  const refreshToken = await db.refreshToken.findUnique({
     where: { token },
     select: {
       userId: true,
