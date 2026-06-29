@@ -7,3 +7,7 @@ export type CreateOrderParams = {
 export type ConfirmPaymentParams = {
   orderId: string;
 };
+
+export type CancelOrderParams = {
+  orderId: string;
+};

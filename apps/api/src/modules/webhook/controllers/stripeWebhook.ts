@@ -7,6 +7,10 @@ import { ENV } from "@/shared/utils/env";
 
 const stripe = new Stripe(ENV.STRIPE_SECRET_KEY);
 
+const successEvents = ["checkout.session.completed", "checkout.session.async_payment_succeeded"];
+
+const failureEvents = ["checkout.session.expired", "checkout.session.async_payment_failed"];
+
 export const stripeWebhook: RequestHandler = async (req, res) => {
   const sig = req.headers["stripe-signature"] as string;
   const payload = req.body;
@@ -20,19 +24,23 @@ export const stripeWebhook: RequestHandler = async (req, res) => {
     return;
   }
 
-  const succedEventTypes = [
-    "checkout.session.completed",
-    "checkout.session.async_payment_succeeded",
-  ];
+  const session = event.data.object as Stripe.Checkout.Session;
+  const orderId = session.metadata?.order_id;
 
-  if (succedEventTypes.includes(event.type)) {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const orderId = session.metadata?.order_id;
-    const paymentStatus = session.payment_status;
-    if (paymentStatus) {
-      if (orderId) await orderServices.confirmPayment({ orderId });
+  if (!orderId) {
+    res.status(200).json({ received: true });
+    return;
+  }
+
+  if (successEvents.includes(event.type)) {
+    if (session.payment_status === "paid") {
+      await orderServices.confirmPayment({ orderId });
     }
-  } 
+  }
+
+  if (failureEvents.includes(event.type)) {
+    await orderServices.cancelOrder({ orderId });
+  }
 
   res.status(200).json({ received: true });
 };

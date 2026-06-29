@@ -1,6 +1,6 @@
 import { db } from "@/shared/lib/db";
 
-import type { Prisma } from "../../../../prisma/generated/client/client";
+import type { PaymentMethod, Prisma } from "../../../../prisma/generated/client/client";
 
 type CreateOrderData = {
   userId: string;
@@ -9,7 +9,7 @@ type CreateOrderData = {
   shipping: Prisma.Decimal;
   discount: Prisma.Decimal;
   contribution: Prisma.Decimal;
-  paymentMethod: string;
+  paymentMethod: PaymentMethod;
   shippingAddress: Prisma.JsonObject;
 };
 
