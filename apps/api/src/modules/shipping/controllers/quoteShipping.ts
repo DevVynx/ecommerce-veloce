@@ -8,11 +8,10 @@ export const quoteShipping: RequestHandler = async (req, res: Response<QuoteShip
   const { userId } = res.locals.user;
   const { destinyCep } = v.quoteShipping.getValidatedValues(req).body;
 
-  const { items, shippingOptions, freeShippingMinValue } =
-    await shippingServices.getShippingQuote({
-      userId,
-      destinyCep,
-    });
+  const { items, shippingOptions, freeShippingMinValue } = await shippingServices.getShippingQuote({
+    userId,
+    destinyCep,
+  });
 
   return res.json({
     items,

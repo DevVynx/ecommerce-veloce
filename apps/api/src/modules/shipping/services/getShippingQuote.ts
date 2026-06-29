@@ -33,7 +33,9 @@ export const getShippingQuote = async ({ userId, destinyCep }: GetShippingQuoteP
   const freeShippingMinValue = Number(process.env.FREE_SHIPPING_MIN_VALUE) || 200;
 
   if (price >= freeShippingMinValue) {
-    shippingOptions.forEach((opt) => { opt.price = 0; });
+    shippingOptions.forEach((opt) => {
+      opt.price = 0;
+    });
   }
 
   return {
