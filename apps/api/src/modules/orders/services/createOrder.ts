@@ -1,3 +1,5 @@
+import type { OrderDto } from "@repo/types/contracts";
+
 import { stripe } from "@/infra/payment/stripe";
 import { cartServices } from "@/modules/cart/services";
 import { orderRepositories } from "@/modules/orders/repositories";
@@ -76,44 +78,50 @@ export const createOrder = async ({
 
   const { user } = await userServices.getProfile({ userId });
 
-  const paymentSession = await stripe.checkout.sessions.create({
-    mode: "payment",
-    success_url: `${ENV.FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${ENV.FRONTEND_URL}`,
-    payment_method_types: [paymentMethod],
-    line_items: [
-      {
-        price_data: {
-          product_data: {
-            name: "Contribuição BeliBeli",
-            description:
-              "Ambiente de demonstração. O valor de R$ 3,00 é simbólico e serve apenas para validar o fluxo de pagamento com Stripe.",
+  try {
+    const paymentSession = await stripe.checkout.sessions.create({
+      mode: "payment",
+      success_url: `${ENV.FRONTEND_URL}/checkout/success?order=${order.orderNumber}`,
+      cancel_url: `${ENV.FRONTEND_URL}/checkout/error`,
+      payment_method_types: [paymentMethod],
+      line_items: [
+        {
+          price_data: {
+            product_data: {
+              name: "Contribuição BeliBeli",
+              description:
+                "Ambiente de demonstração. O valor de R$ 3,00 é simbólico e serve apenas para validar o fluxo de pagamento com Stripe.",
+            },
+            currency: "BRL",
+            unit_amount: 300,
           },
-          currency: "BRL",
-          unit_amount: 300,
+          quantity: 1,
         },
-        quantity: 1,
+      ],
+      customer_email: user.email,
+      metadata: {
+        order_id: order.id,
       },
-    ],
-    customer_email: user.email,
-    metadata: {
-      order_id: order.id,
-    },
-  });
+    });
 
-  await cartServices.clearCart({ userId });
+    await cartServices.clearCart({ userId });
 
-  const orderDto = {
-    id: order.id,
-    total: Number(total),
-    subtotal: Number(subtotal),
-    shipping: Number(shipping),
-    discount: Number(discount),
-    contribution: Number(contribution),
-    status: "PENDING",
-    paymentMethod,
-    createdAt: order.createdAt.toISOString(),
-  };
+    const orderDto: OrderDto = {
+      id: order.id,
+      total: Number(total),
+      subtotal: Number(subtotal),
+      shipping: Number(shipping),
+      discount: Number(discount),
+      contribution: Number(contribution),
+      status: "PENDING",
+      paymentMethod,
+      createdAt: order.createdAt.toISOString(),
+    };
 
-  return { order: orderDto, paymentUrl: paymentSession.url! };
+    return { order: orderDto, paymentUrl: paymentSession.url! };
+  } catch (error) {
+    await orderRepositories.updateOrderStatus({ orderId: order.id, status: "CANCELED" });
+
+    throw error;
+  }
 };
