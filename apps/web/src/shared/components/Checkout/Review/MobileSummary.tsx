@@ -19,7 +19,7 @@ export const MobileSummary = ({ shippingPrice }: MobileSummaryProps) => {
 
   return (
     <div className="block rounded-lg border p-4 lg:hidden">
-      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide">Itens do Pedido</h3>
+      <h3 className="mb-3 text-sm font-semibold tracking-wide uppercase">Itens do Pedido</h3>
 
       <div className="flex flex-col gap-3">
         {items.map((item) => (

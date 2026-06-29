@@ -35,9 +35,7 @@ export const PaymentSelector = ({
               type="button"
               onClick={() => onSelect(value)}
               className={`flex cursor-pointer items-center gap-4 rounded-lg border p-4 text-left transition-colors ${
-                selected
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:bg-muted/50"
+                selected ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
               }`}
             >
               <div
@@ -45,9 +43,9 @@ export const PaymentSelector = ({
                   selected ? "border-primary" : "border-muted-foreground/30"
                 }`}
               >
-                {selected && <div className="size-2.5 rounded-full bg-primary" />}
+                {selected && <div className="bg-primary size-2.5 rounded-full" />}
               </div>
-              <Icon className="size-5 text-muted-foreground" />
+              <Icon className="text-muted-foreground size-5" />
               <span className="text-sm font-medium">{label}</span>
             </button>
           );
