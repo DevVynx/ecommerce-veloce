@@ -1,4 +1,4 @@
-import { Banknote, CreditCard } from "lucide-react";
+import { CreditCard } from "lucide-react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
 import type { PaymentMethod } from "@/shared/states/checkout";
@@ -13,7 +13,7 @@ type PaymentSelectorProps = {
 
 const OPTIONS: { value: PaymentMethod; label: string; Icon: typeof CreditCard }[] = [
   { value: "card", label: "Cartão de Crédito", Icon: CreditCard },
-  { value: "pix", label: "Pix", Icon: Banknote },
+  // { value: "pix", label: "Pix", Icon: Banknote },
 ];
 
 export const PaymentSelector = ({
