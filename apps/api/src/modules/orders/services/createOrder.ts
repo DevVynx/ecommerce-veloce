@@ -100,7 +100,7 @@ export const createOrder = async ({
             product_data: {
               name: "Contribuição BeliBeli",
               description:
-                "Ambiente de demonstração. O valor de R$ 3,00 é simbólico e serve apenas para validar o fluxo de pagamento com Stripe.",
+                "Ambiente de demonstração. O valor de R$ 3,00 é simbólico e serve apenas para validar o fluxo de pagamento com Stripe. Para testar o pagamento, utilize o cartão simulado do Stripe: 4242 4242 4242 4242 com qualquer validade futura.",
             },
             currency: "BRL",
             unit_amount: 300,
