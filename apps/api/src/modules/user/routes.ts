@@ -6,32 +6,34 @@ import {
   createAddress,
   deleteAddress,
   listAddresses,
+  profile,
   setDefault,
   updateAddress,
 } from "./controllers";
 import v from "./validators";
 
-const addressRouter: Router = Router();
+const userRouter: Router = Router();
 
-addressRouter.get("/users/addresses", authMiddleware, listAddresses);
-addressRouter.post("/users/addresses", authMiddleware, v.createAddress.middleware, createAddress);
-addressRouter.put(
+userRouter.get("/users/profile", authMiddleware, profile);
+userRouter.get("/users/addresses", authMiddleware, listAddresses);
+userRouter.post("/users/addresses", authMiddleware, v.createAddress.middleware, createAddress);
+userRouter.put(
   "/users/addresses/:addressId",
   authMiddleware,
   v.updateAddress.middleware,
   updateAddress
 );
-addressRouter.delete(
+userRouter.delete(
   "/users/addresses/:addressId",
   authMiddleware,
   v.deleteAddress.middleware,
   deleteAddress
 );
-addressRouter.put(
+userRouter.put(
   "/users/addresses/:addressId/default",
   authMiddleware,
   v.setDefault.middleware,
   setDefault
 );
 
-export { addressRouter };
+export { userRouter };

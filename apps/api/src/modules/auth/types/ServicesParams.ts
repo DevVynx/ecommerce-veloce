@@ -1,9 +1,5 @@
 import { LoginRequest, RegisterRequest } from "@repo/types/contracts";
 
-export type GetUserByIdParams = {
-  userId: string;
-};
-
 export type LoginParams = LoginRequest;
 
 export type LogoutParams = {

@@ -5,6 +5,7 @@ import { client } from "@/modules/auth/helpers/oAuth2ClientInstance";
 import { generateAccessToken, generateRefreshToken } from "@/modules/auth/helpers/tokenGenerator";
 import { authRepositories } from "@/modules/auth/repositories";
 import { GoogleAuthParams } from "@/modules/auth/types/ServicesParams";
+import { userServices } from "@/modules/user/services";
 import { ENV } from "@/shared/utils/env";
 import {
   BadRequestError,
@@ -31,10 +32,10 @@ export const googleAuth = async ({ code }: GoogleAuthParams) => {
     const { sub, email, name } = payload;
     if (!email) throw new InternalServerError("Payload sem e-mail.");
 
-    let user = await authRepositories.findUserByEmail({ email });
+    let user = await userServices.findUserByEmail({ email });
 
     if (!user) {
-      user = await authRepositories.createUser({
+      user = await userServices.createUser({
         data: {
           email,
           name: name ?? emailToName(email),
@@ -44,7 +45,7 @@ export const googleAuth = async ({ code }: GoogleAuthParams) => {
       });
     } else if (!user.googleId) {
       if (!user.isEmailVerified) {
-        user = await authRepositories.updateUserById({
+        user = await userServices.updateUserById({
           userId: user.id,
           data: {
             name: name || user.name,
@@ -54,7 +55,7 @@ export const googleAuth = async ({ code }: GoogleAuthParams) => {
           },
         });
       } else {
-        user = await authRepositories.updateUserById({
+        user = await userServices.updateUserById({
           userId: user.id,
           data: {
             name: name || user.name,

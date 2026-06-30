@@ -4,10 +4,11 @@ import { getTokenExpDate } from "@/modules/auth/helpers/getTokenExpDate";
 import { generateAccessToken, generateRefreshToken } from "@/modules/auth/helpers/tokenGenerator";
 import { authRepositories } from "@/modules/auth/repositories";
 import { LoginParams } from "@/modules/auth/types/ServicesParams";
+import { userServices } from "@/modules/user/services";
 import { BadRequestError } from "@/shared/utils/HttpErrors";
 
 export const login = async ({ email, password, rememberMe }: LoginParams) => {
-  const user = await authRepositories.findUserByEmailWithPassword({ email });
+  const user = await userServices.findUserByEmailWithPassword({ email });
 
   if (!user || !user.password) {
     throw new BadRequestError("E-mail ou senha incorretos.");

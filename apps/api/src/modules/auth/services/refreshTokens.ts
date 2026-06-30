@@ -2,6 +2,7 @@ import { getTokenExpDate } from "@/modules/auth/helpers/getTokenExpDate";
 import { generateAccessToken, generateRefreshToken } from "@/modules/auth/helpers/tokenGenerator";
 import { authRepositories } from "@/modules/auth/repositories";
 import { RefreshTokensParams } from "@/modules/auth/types/ServicesParams";
+import { userServices } from "@/modules/user/services";
 import { UnauthorizedError } from "@/shared/utils/HttpErrors";
 
 export const refreshTokens = async ({ refreshToken }: RefreshTokensParams) => {
@@ -11,7 +12,7 @@ export const refreshTokens = async ({ refreshToken }: RefreshTokensParams) => {
     throw new UnauthorizedError("Token inválido.");
   }
 
-  const user = await authRepositories.findUserById({ userId: existingToken.userId });
+  const user = await userServices.findUserById({ userId: existingToken.userId });
 
   if (!user) {
     throw new UnauthorizedError("O usuário pertencente ao token não existe.");
