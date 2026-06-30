@@ -5,8 +5,8 @@ import helmet from "helmet";
 
 import { authRouter } from "@/modules/auth/routes";
 import { cartRouter } from "@/modules/cart/routes";
-import { couponRouter } from "@/modules/coupons/routes";
-import { orderRouter } from "@/modules/orders/routes";
+import { couponRouter } from "@/modules/coupon/routes";
+import { orderRouter } from "@/modules/order/routes";
 import { shippingRouter } from "@/modules/shipping/routes";
 import { addressRouter } from "@/modules/user/routes";
 import { wishlistRouter } from "@/modules/wishlist/routes";
@@ -14,7 +14,7 @@ import { handleGlobalError } from "@/shared/middlewares/handleGlobalError";
 import { notFoundHandler } from "@/shared/middlewares/notFoundHandler";
 import { ENV } from "@/shared/utils/env";
 
-import { productRouter } from "./modules/products/routes";
+import { productRouter } from "./modules/product/routes";
 import { searchRouter } from "./modules/search/routes";
 
 export const app: Express = express();

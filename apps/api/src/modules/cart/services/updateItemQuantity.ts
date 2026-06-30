@@ -1,6 +1,6 @@
 import { cartRepositories } from "@/modules/cart/repositories";
 import type { UpdateCartItemQuantityParams } from "@/modules/cart/types/ServiceParams";
-import { productServices } from "@/modules/products/services";
+import { productServices } from "@/modules/product/services";
 import { ForbiddenError, NotFoundError, UnprocessableEntityError } from "@/shared/utils/HttpErrors";
 
 export const updateCartItemQuantity = async ({

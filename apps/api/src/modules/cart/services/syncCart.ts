@@ -2,7 +2,7 @@ import type { SyncCartResponse } from "@repo/types/contracts";
 
 import { cartServices } from "@/modules/cart/services";
 import type { SyncCartParams } from "@/modules/cart/types/ServiceParams";
-import { productServices } from "@/modules/products/services";
+import { productServices } from "@/modules/product/services";
 import { HttpError } from "@/shared/utils/HttpErrors";
 
 export const syncCart = async ({ userId, items }: SyncCartParams) => {

@@ -1,4 +1,4 @@
-import { productServices } from "@/modules/products/services";
+import { productServices } from "@/modules/product/services";
 import { wishlistRepositories } from "@/modules/wishlist/repositories";
 import type { CreateWishlistItemParams } from "@/modules/wishlist/types/ServiceParams";
 import { ConflictError, NotFoundError } from "@/shared/utils/HttpErrors";

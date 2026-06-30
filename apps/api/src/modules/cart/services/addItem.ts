@@ -1,7 +1,7 @@
 import { cartRepositories } from "@/modules/cart/repositories";
 import { cartServices } from "@/modules/cart/services";
 import type { CreateCartItemParams } from "@/modules/cart/types/ServiceParams";
-import { productServices } from "@/modules/products/services";
+import { productServices } from "@/modules/product/services";
 import { NotFoundError, UnprocessableEntityError } from "@/shared/utils/HttpErrors";
 
 export const addCartItem = async ({ userId, productVariantId, quantity }: CreateCartItemParams) => {

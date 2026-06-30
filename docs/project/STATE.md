@@ -10,7 +10,7 @@
 **[vyn-052] Implementar fluxo de checkout com pagamento Stripe** — Completed
 
 ### Changes
-- **`modules/orders/`**: Novo módulo completo (controllers, services, repositories, validators, types, routes)
+- **`modules/order/`**: Novo módulo completo (controllers, services, repositories, validators, types, routes)
 - **`modules/webhook/`**: Novo módulo para webhook Stripe com verificação de assinatura
 - **`infra/payment/stripe.ts`**: Instância Stripe singleton
 - **`prisma/schema.prisma`**: Order model ganhou campos `discount`, `contribution`, `paymentMethod`
@@ -43,7 +43,7 @@
 ### [Task] Popular Search Suggestions Module
 
 - **Date**: 2026-06-18
-- **Decision**: Created a separate `modules/search/` module for search analytics, distinct from the product search route (`GET /products/search` which stays in `modules/products/`).
+- **Decision**: Created a separate `modules/search/` module for search analytics, distinct from the product search route (`GET /products/search` which stays in `modules/product/`).
 - **Architecture**:
   - `POST /api/search/analytics` receives `{ term }`, upserts in Prisma, pushes to Meili index `suggestions`
   - Prisma tracks the canonical `searchCount`, Meili uses `searchCount:desc` ranking rule for trending
