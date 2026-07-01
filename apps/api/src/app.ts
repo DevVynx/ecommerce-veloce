@@ -7,6 +7,7 @@ import { authRouter } from "@/modules/auth/routes";
 import { cartRouter } from "@/modules/cart/routes";
 import { couponRouter } from "@/modules/coupon/routes";
 import { orderRouter } from "@/modules/order/routes";
+import { reviewRouter } from "@/modules/review/routes";
 import { shippingRouter } from "@/modules/shipping/routes";
 import { userRouter } from "@/modules/user/routes";
 import { wishlistRouter } from "@/modules/wishlist/routes";
@@ -52,6 +53,7 @@ app.use("/api", wishlistRouter);
 app.use("/api", shippingRouter);
 app.use("/api", searchRouter);
 app.use("/api", orderRouter);
+app.use("/api", reviewRouter);
 
 app.use(notFoundHandler);
 app.use(handleGlobalError);

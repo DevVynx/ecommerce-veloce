@@ -2,7 +2,7 @@ import type { GetProductDetailsResponse } from "@repo/types/contracts";
 
 import type { EnrichedProductDetail } from "@/modules/product/types/ProductDetail";
 
-export function ProductMapperToProductDetails(
+export function productMapperToProductDetails(
   enrichedProduct: EnrichedProductDetail
 ): GetProductDetailsResponse {
   const formattedProduct = {
@@ -12,6 +12,7 @@ export function ProductMapperToProductDetails(
     description: enrichedProduct.description,
     ratingRate: Number(enrichedProduct.ratingRate),
     ratingCount: Number(enrichedProduct.ratingCount),
+    ratingDistribution: enrichedProduct.ratingDistribution,
     display: {
       variantId: enrichedProduct.heroVariant.id,
       image: enrichedProduct.image,

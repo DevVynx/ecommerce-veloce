@@ -44,6 +44,7 @@ export type DetailedProductDto = {
   description: string;
   ratingRate: number;
   ratingCount: number;
+  ratingDistribution: Record<number, number>;
   display: {
     image: string;
     price: number;

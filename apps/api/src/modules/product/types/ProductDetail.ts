@@ -9,4 +9,5 @@ export type EnrichedProductDetailVariant = RawProductDetailVariant & { offer: Pr
 export type EnrichedProductDetail = Omit<RawProductDetail, "productVariants" | "heroVariant"> & {
   productVariants: EnrichedProductDetailVariant[];
   heroVariant: EnrichedProductDetailVariant;
+  ratingDistribution: Record<number, number>;
 };

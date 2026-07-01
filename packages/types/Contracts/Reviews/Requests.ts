@@ -5,3 +5,8 @@ export type GetReviewsRequest = {
   rating?: number;
   sort?: "newest" | "relevant";
 };
+
+export type CreateReviewRequest = {
+  rating: number;
+  comment: string;
+};

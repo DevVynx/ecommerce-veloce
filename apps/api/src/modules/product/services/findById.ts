@@ -29,10 +29,15 @@ export const findProductById = async ({ productId }: FindProductByIdParams) => {
     throw new NotFoundError("Nenhuma variante ativa encontrada para este produto.");
   }
 
+  const ratingDistribution = await productRepositories.getRatingDistribution({
+    productId: rawProduct.id,
+  });
+
   const enrichedProduct = {
     ...rawProduct,
     productVariants: variantsWithEnrichment,
     heroVariant,
+    ratingDistribution,
   };
 
   return { enrichedProduct };

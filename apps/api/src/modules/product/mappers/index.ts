@@ -1,7 +1,7 @@
-import { ProductMapperToCatalogSummary } from "./toCatalogSummary";
-import { ProductMapperToProductDetails } from "./toProductDetails";
+import { productMapperToCatalogSummary } from "./toCatalogSummary";
+import { productMapperToProductDetails } from "./toProductDetails";
 
 export const ProductMapper = {
-  toCatalogSummary: ProductMapperToCatalogSummary,
-  toProductDetails: ProductMapperToProductDetails,
+  toCatalogSummary: productMapperToCatalogSummary,
+  toProductDetails: productMapperToProductDetails,
 };

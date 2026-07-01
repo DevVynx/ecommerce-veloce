@@ -6,6 +6,8 @@ import { findManyProducts } from "@/modules/product/repositories/findMany";
 import { findProductIdsByOptionValues } from "@/modules/product/repositories/findProductIdsByOptionValues";
 import { findVariantById } from "@/modules/product/repositories/findVariantById";
 import { findVariantByIdWithProduct } from "@/modules/product/repositories/findVariantByIdWithProduct";
+import { getRatingDistribution } from "@/modules/product/repositories/getRatingDistribution";
+import { updateRatingAggregates } from "@/modules/product/repositories/updateRatingAggregates";
 
 export const productRepositories = {
   findMany: findManyProducts,
@@ -16,4 +18,6 @@ export const productRepositories = {
   findVariantByIdWithProduct: findVariantByIdWithProduct,
   findProductIdsByOptionValues,
   findCategoryNamesByIds,
+  getRatingDistribution,
+  updateRatingAggregates,
 };
