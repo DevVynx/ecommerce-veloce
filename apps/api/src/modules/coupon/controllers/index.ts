@@ -1,2 +1,2 @@
-export { createCoupon } from "./createCoupon";
-export { validateCoupon } from "./validateCoupon";
+export * from "./createCoupon";
+export * from "./validateCoupon";

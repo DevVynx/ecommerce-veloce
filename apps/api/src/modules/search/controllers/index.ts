@@ -1,1 +1,1 @@
-export { registerAnalytics } from "./registerAnalytics";
+export * from "./registerAnalytics";
