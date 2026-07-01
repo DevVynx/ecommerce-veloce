@@ -24,6 +24,7 @@ model User {
   wishlist      Wishlist?
   orders        Order[]
   couponUsages  CouponUsage[]
+  reviews       Review[]
 
   @@map("users")
 }
@@ -89,6 +90,8 @@ model Product {
 
   productOptions ProductOption[]
 
+  reviews Review[]
+
   categoryId      String           @db.Uuid
   category        Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   wishlistItems   WishlistItem[]
@@ -98,6 +101,24 @@ model Product {
   @@index([categoryId])
   @@index([createdAt(sort: Desc)])
   @@map("products")
+}
+
+model Review {
+  id        String   @id @default(uuid()) @db.Uuid
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  userId    String         @db.Uuid
+  productId String         @db.Uuid
+  variantId String         @db.Uuid
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, productId])
+  @@map("reviews")
 }
 
 model ProductOption {
@@ -141,6 +162,7 @@ model ProductVariant {
   cartItems             CartItem[]
   promotions            Promotion[]
   orderItems            OrderItem[]
+  reviews               Review[]
 
   @@unique([sku])
   @@index([isActive, stock])
