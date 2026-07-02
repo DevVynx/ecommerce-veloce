@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@/shared/components/shadcn-ui/table";
 
+import { OrderDetailContent } from "./OrderDetailContent";
 import { OrderExpandedRow } from "./OrderExpandedRow";
 
 type OrdersSectionContentProps = {
@@ -88,7 +89,7 @@ export const OrdersSectionContent = ({ orders }: OrdersSectionContentProps) => {
   return (
     <div className="rounded-lg border p-6">
       <h2 className="mb-4 text-lg font-semibold">Meus Pedidos</h2>
-      <div className="overflow-x-auto">
+      <div className="hidden lg:block overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -96,14 +97,13 @@ export const OrdersSectionContent = ({ orders }: OrdersSectionContentProps) => {
               <TableHead>Data</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Total</TableHead>
-              <TableHead />
+              <TableHead className="text-right" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {orders.map((order) => (
               <Fragment key={order.id}>
                 <TableRow
-                  key={order.id}
                   className="cursor-pointer"
                   onClick={() => toggleOrder(order.id)}
                 >
@@ -127,7 +127,7 @@ export const OrdersSectionContent = ({ orders }: OrdersSectionContentProps) => {
                       currency: "BRL",
                     }).format(order.total)}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-right">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -154,6 +154,57 @@ export const OrdersSectionContent = ({ orders }: OrdersSectionContentProps) => {
             ))}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Mobile layout */}
+      <div className="flex flex-col gap-3 lg:hidden">
+        {orders.map((order) => (
+          <Fragment key={order.id}>
+            <div className="rounded-lg border p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1 space-y-1">
+                  <p className="font-mono text-xs font-medium">
+                    BEL-{String(order.orderNumber).padStart(6, "0")}
+                  </p>
+                  <p className="text-muted-foreground text-xs">
+                    {new Date(order.createdAt).toLocaleDateString("pt-BR")}
+                  </p>
+                  <p className="pt-1 font-semibold">
+                    {new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(order.total)}
+                  </p>
+                </div>
+                <span
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${STATUS_CONFIG[order.status]?.className ?? "border-muted bg-muted text-muted-foreground"}`}
+                >
+                  {STATUS_CONFIG[order.status]?.icon}
+                  {STATUS_CONFIG[order.status]?.label ?? order.status}
+                </span>
+              </div>
+              <div className="mt-3 flex justify-end">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1"
+                  onClick={() => toggleOrder(order.id)}
+                >
+                  <span className="text-xs">Detalhes</span>
+                  <ChevronDown
+                    className={`size-4 transition-transform ${expandedOrderId === order.id ? "rotate-180" : ""}`}
+                  />
+                </Button>
+              </div>
+            </div>
+
+            {expandedOrderId === order.id && (
+              <div className="-mt-2 rounded-lg border bg-muted/20 p-4">
+                <OrderDetailContent orderId={order.id} />
+              </div>
+            )}
+          </Fragment>
+        ))}
       </div>
     </div>
   );

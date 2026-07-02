@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { logout } from "@/shared/actions/auth/logout";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "@/shared/components/shadcn-ui/tabs";
+import { Tabs } from "@/shared/components/shadcn-ui/tabs";
 import { useAuthState } from "@/shared/states/auth";
 import { clearAllStorages } from "@/shared/utils/store/state/clearAllStorages";
 
@@ -31,11 +31,9 @@ export const AccountPageContent = ({ children }: AccountPageContentProps) => {
     router.push("/login");
   };
 
-  const initial = user?.name?.charAt(0).toUpperCase() ?? "?";
-
   return (
-    <div className="container mx-auto px-4 py-16 md:px-0">
-      <Tabs value={activeTab} onValueChange={handleTabChange}>
+    <Tabs value={activeTab} onValueChange={handleTabChange}>
+      <div className="container mx-auto px-4 py-16 md:px-0">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
           <aside className="hidden lg:flex lg:flex-col lg:gap-1">
             <div className="mb-6 flex items-center gap-3">
@@ -47,20 +45,35 @@ export const AccountPageContent = ({ children }: AccountPageContentProps) => {
                 <p className="text-muted-foreground text-sm">{user?.email}</p>
               </div>
             </div>
-            <TabsList className="flex h-auto flex-col items-stretch gap-1 bg-transparent p-0">
-              <TabsTrigger value="profile" className="hover:bg-muted cursor-pointer justify-start">
-                <User className="mr-2 size-4" />
+            <nav className="flex flex-col gap-1">
+              <button
+                onClick={() => handleTabChange("profile")}
+                className={`hover:bg-muted flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  activeTab === "profile" ? "bg-muted text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                <User className="size-4" />
                 Perfil
-              </TabsTrigger>
-              <TabsTrigger value="orders" className="hover:bg-muted cursor-pointer justify-start">
-                <Package className="mr-2 size-4" />
+              </button>
+              <button
+                onClick={() => handleTabChange("orders")}
+                className={`hover:bg-muted flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  activeTab === "orders" ? "bg-muted text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                <Package className="size-4" />
                 Pedidos
-              </TabsTrigger>
-              <TabsTrigger value="settings" className="hover:bg-muted cursor-pointer justify-start">
-                <Settings className="mr-2 size-4" />
+              </button>
+              <button
+                onClick={() => handleTabChange("settings")}
+                className={`hover:bg-muted flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  activeTab === "settings" ? "bg-muted text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                <Settings className="size-4" />
                 Configurações
-              </TabsTrigger>
-            </TabsList>
+              </button>
+            </nav>
             <Separator className="my-4" />
             <Button
               variant="ghost"
@@ -72,35 +85,9 @@ export const AccountPageContent = ({ children }: AccountPageContentProps) => {
             </Button>
           </aside>
 
-          <div className="flex flex-col gap-6 px-4 lg:hidden">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary flex size-12 items-center justify-center rounded-full text-lg font-bold text-white">
-                {initial}
-              </div>
-              <div>
-                <p className="font-semibold">{user?.name}</p>
-                <p className="text-muted-foreground text-sm">{user?.email}</p>
-              </div>
-            </div>
-            <TabsList className="flex overflow-x-auto">
-              <TabsTrigger value="profile">
-                <User className="mr-1 size-4" />
-                Perfil
-              </TabsTrigger>
-              <TabsTrigger value="orders">
-                <Package className="mr-1 size-4" />
-                Pedidos
-              </TabsTrigger>
-              <TabsTrigger value="settings">
-                <Settings className="mr-1 size-4" />
-                Configurações
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
           <div className="min-w-0">{children}</div>
         </div>
-      </Tabs>
-    </div>
+      </div>
+    </Tabs>
   );
 };
