@@ -1,10 +1,11 @@
 import {
+  Flame,
   HandbagIcon,
   HeartIcon,
   PackageSearch,
+  Settings,
   ShoppingCartIcon,
   UserIcon,
-  ZapIcon,
 } from "lucide-react";
 
 export const sideMenuStoreActionIcons = [
@@ -14,10 +15,10 @@ export const sideMenuStoreActionIcons = [
     link: "#categoriesSection",
   },
   {
-    icon: <ZapIcon className="size-7 stroke-red-500" />,
+    icon: <Flame className="size-7 stroke-red-500" />,
     className: "text-red-500",
-    label: "Ofertas Relâmpago",
-    link: "#flashSaleSection",
+    label: "Melhores Ofertas",
+    link: "#bestOffersSection",
   },
 ];
 
@@ -30,7 +31,7 @@ export const sideMenuPersonalActionIcons = [
   {
     icon: <HandbagIcon className="size-7" />,
     label: "Seus Pedidos",
-    link: "/account/orders",
+    link: "/account?tab=orders",
   },
   {
     icon: <HeartIcon className="size-7" />,
@@ -41,5 +42,10 @@ export const sideMenuPersonalActionIcons = [
     icon: <ShoppingCartIcon className="size-7" />,
     label: "Seu Carrinho",
     link: "/cart",
+  },
+  {
+    icon: <Settings className="size-7" />,
+    label: "Configurações",
+    link: "/account?tab=settings",
   },
 ];

@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { FileQuestionMark, LogOut, Menu, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { logout } from "@/shared/actions/auth/logout";
 import { Button } from "@/shared/components/shadcn-ui/button";
@@ -23,6 +24,7 @@ import { MobileSideMenuItem } from "./MobileSideMenuItem";
 export const MobileSideMenu = () => {
   const { user } = useAuthState();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -30,7 +32,7 @@ export const MobileSideMenu = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.3,
+        delayChildren: 0.1,
       },
     },
   };
@@ -40,14 +42,20 @@ export const MobileSideMenu = () => {
     show: { opacity: 1, x: 0 },
   };
 
+  const handleNavigate = (href: string) => {
+    setOpen(false);
+    router.push(href);
+  };
+
   const handleLogout = async () => {
+    setOpen(false);
     clearAllStorages();
     await logout();
     router.push("/login");
   };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger className="lg:hidden" asChild>
         <Button variant="ghost" className="p-1">
           {<Menu className="size-7 cursor-pointer" />}
@@ -80,7 +88,7 @@ export const MobileSideMenu = () => {
         >
           {/* Seção Loja */}
           <section className="mb-6">
-            <h3 className="text-muted-foreground/70 mb-2 px-3 text-[11px] font-black tracking-widest uppercase">
+            <h3 className="text-muted-foreground mb-2 px-3 text-[11px] font-black tracking-widest uppercase">
               Explorar Loja
             </h3>
             <div className="space-y-0.5">
@@ -91,6 +99,7 @@ export const MobileSideMenu = () => {
                     label={item.label}
                     className={item.className}
                     link={item.link}
+                    onClick={() => handleNavigate(item.link)}
                   />
                 </motion.div>
               ))}
@@ -101,13 +110,18 @@ export const MobileSideMenu = () => {
 
           {/* Seção Pessoal */}
           <section className="mb-6">
-            <h3 className="text-muted-foreground/70 mb-2 px-3 text-[11px] font-black tracking-widest uppercase">
+            <h3 className="text-muted-foreground mb-2 px-3 text-[11px] font-black tracking-widest uppercase">
               Minha Conta
             </h3>
             <div className="space-y-0.5">
               {sideMenuPersonalActionIcons.map((item) => (
                 <motion.div key={item.label} variants={itemVariants}>
-                  <MobileSideMenuItem icon={item.icon} label={item.label} link={item.link} />
+                  <MobileSideMenuItem
+                    icon={item.icon}
+                    label={item.label}
+                    link={item.link}
+                    onClick={() => handleNavigate(item.link)}
+                  />
                 </motion.div>
               ))}
             </div>

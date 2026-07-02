@@ -6,7 +6,7 @@ export const config = {
   matcher: ["/api/:path*", "/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };
 
-const protectedPaths = ["/account", "/wishlist", "/checkout"];
+const protectedPaths = ["/account", "/wishlist"];
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;

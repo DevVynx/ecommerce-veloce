@@ -31,7 +31,7 @@ export default function CheckoutSuccessPage() {
 
       <div className="flex w-full max-w-sm flex-col gap-3 sm:flex-row">
         <Button variant="outline" className="flex-1 cursor-pointer" asChild>
-          <Link href="/account">Ver meus pedidos</Link>
+          <Link href="/account?tab=orders">Ver meus pedidos</Link>
         </Button>
         <Button className="flex-1 cursor-pointer" asChild>
           <Link href="/">Continuar comprando</Link>
