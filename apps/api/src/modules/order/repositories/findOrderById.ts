@@ -1,27 +1,19 @@
 import { db } from "@/shared/lib/db";
 
-type FindPurchasedProductProps = {
+type FindOrderByIdProps = {
+  id: string;
   userId: string;
-  productId: string;
 };
 
-export const findPurchasedProduct = async ({ userId, productId }: FindPurchasedProductProps) => {
-  return db.order.findFirst({
-    where: {
-      userId,
-      status: "PAID",
-      orderItems: {
-        some: {
-          productVariant: { productId },
-        },
-      },
-    },
+export const findOrderById = async ({ id, userId }: FindOrderByIdProps) => {
+  const order = await db.order.findFirst({
+    where: { id, userId },
     include: {
       orderItems: {
-        where: { productVariant: { productId } },
         include: {
           productVariant: {
             include: {
+              product: true,
               productVariantOptions: {
                 include: {
                   productOptionValue: {
@@ -32,8 +24,9 @@ export const findPurchasedProduct = async ({ userId, productId }: FindPurchasedP
             },
           },
         },
-        take: 1,
       },
     },
   });
+
+  return order;
 };

@@ -15,3 +15,9 @@ export type GetReviewsResponse = {
 export type CreateReviewResponse = {
   review: ReviewDto;
 };
+
+export type UpdateReviewResponse = {
+  review: ReviewDto;
+};
+
+export type DeleteReviewResponse = void;

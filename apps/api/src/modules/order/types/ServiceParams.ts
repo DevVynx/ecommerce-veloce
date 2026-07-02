@@ -11,3 +11,8 @@ export type ConfirmPaymentParams = {
 export type CancelOrderParams = {
   orderId: string;
 };
+
+export type FindOrderByIdParams = {
+  orderId: string;
+  userId: string;
+};

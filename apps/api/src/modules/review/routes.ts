@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { createReview, getReviews } from "@/modules/review/controllers";
+import { createReview, deleteReview, getReviews, updateReview } from "@/modules/review/controllers";
 import v from "@/modules/review/validators";
 import { authMiddleware } from "@/shared/middlewares/auth";
 
@@ -12,6 +12,18 @@ reviewRouter.post(
   authMiddleware,
   v.createReview.middleware,
   createReview
+);
+reviewRouter.patch(
+  "/products/:productId/reviews",
+  authMiddleware,
+  v.updateReview.middleware,
+  updateReview
+);
+reviewRouter.delete(
+  "/products/:productId/reviews",
+  authMiddleware,
+  v.deleteReview.middleware,
+  deleteReview
 );
 
 export { reviewRouter };

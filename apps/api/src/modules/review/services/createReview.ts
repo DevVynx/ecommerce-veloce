@@ -1,3 +1,4 @@
+import { orderServices } from "@/modules/order/services";
 import { productServices } from "@/modules/product/services";
 import { ConflictError, ForbiddenError } from "@/shared/utils/HttpErrors";
 
@@ -16,22 +17,19 @@ export const createReview = async ({ userId, productId, rating, comment }: Creat
     throw new ConflictError("Você já avaliou este produto.");
   }
 
-  const order = await reviewRepositories.findPurchasedProduct({ userId, productId });
-  if (!order) {
+  const result = await orderServices.validateOrderProduct({ userId, productId });
+  if (!result) {
     throw new ForbiddenError("Você só pode avaliar produtos que já comprou.");
   }
 
-  const orderItem = order.orderItems[0];
-  if (!orderItem) {
-    throw new ForbiddenError("Você só pode avaliar produtos que já comprou.");
+  if (result.status !== "DELIVERED") {
+    throw new ForbiddenError("Você só pode avaliar produtos após o recebimento.");
   }
-
-  const variantId = orderItem.productVariantId;
 
   const review = await reviewRepositories.createReview({
     userId,
     productId,
-    variantId,
+    variantId: result.variantId,
     rating,
     comment,
   });
