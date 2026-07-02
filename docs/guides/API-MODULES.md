@@ -6,13 +6,13 @@ Each API module follows a layered architecture pattern. The standard structure i
 
 ```
 modules/{feature}/
-├── controllers/      # HTTP layer (request/response)
-├── services/         # Business logic
-├── repositories/     # Database operations (REQUIRED)
-├── routes.ts        # Express router
+├── controllers/    # HTTP layer (request/response)
+├── services/       # Business logic
+├── repositories/   # Database operations (REQUIRED)
+├── routes.ts       # Express router
 ├── types/          # Module-specific types
 ├── helpers/        # Module-specific utilities
-│   └── validators/  # Zod validation schemas
+├── validators/     # Zod validation schemas
 └── mappers/        # Data transformation (OPTIONAL)
 ```
 
@@ -42,7 +42,7 @@ Routes define the Express router and middleware chain:
 // routes.ts
 import { Router } from "express";
 import { addItem, findCart } from "@/modules/cart/controllers";
-import v from "@/modules/cart/helpers/validators";
+import v from "@/modules/cart/validators";
 import { authMiddleware } from "@/shared/middlewares/auth";
 
 const cartRouter: Router = Router();
@@ -149,8 +149,8 @@ Validators use Zod schemas wrapped with the shared validation middleware.
 
 Summary:
 
-- Create validator files in `helpers/validators/`
-- Export validators from `helpers/validators/index.ts`
+- Create validator files in `validators/`
+- Export validators from `validators/index.ts`
 - Use `v.validatorName.middleware` in routes
 - Use `v.validatorName.getValidatedValues(req)` in controllers
 
@@ -175,7 +175,7 @@ export type CreateCartItemParams = {
 Data directly from database, derived from repository return types:
 
 ```typescript
-export type RawCart = Awaited<ReturnType<typeof findCartByUserId>>;
+export type RawCart = NonNullable<Awaited<ReturnType<typeof findCartByUserId>>>;
 ```
 
 ### Enriched Types
@@ -190,11 +190,22 @@ export type EnrichedCartItem = Omit<RawCartItem, "productVariant"> & {
 };
 ```
 
+Enriched types may also include domain-specific computed fields (e.g., `summary` on cart, `count` on wishlist).
+
 Used by mappers to transform data for API responses.
 
 ## Mappers
 
-Mappers transform enriched data into response DTOs:
+Mappers transform enriched data into response DTOs. Each module exports its mappers via a barrel `index.ts` with a named object:
+
+```typescript
+// mappers/index.ts
+export const cartMappers = {
+  toUserCart,
+  toGetCartItems,
+  toCartItemDto,
+};
+```
 
 ```typescript
 export function toCartItemDto(item: EnrichedCartItem): CartItemDto {

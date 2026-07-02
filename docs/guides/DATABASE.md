@@ -118,18 +118,11 @@ const result = await db.$transaction(async (tx) => {
 });
 ```
 
-## Migrations
-
-```bash
-pnpm --filter api prisma:migrate     # Create migration
-pnpm --filter api db:reset           # Reset database (dev only)
-pnpm --filter api prisma:studio      # Open Prisma Studio
-```
-
 ## Seed Data
 
 ```bash
 pnpm --filter api db:seed
+pnpm --filter api db:seed-many
 ```
 
 ## Query Optimization

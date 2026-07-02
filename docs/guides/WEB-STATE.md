@@ -18,6 +18,24 @@ const UserContext = create<User | null>(null);
 const useUserStore = create<{ user: User | null }>()(...)
 ```
 
+### Exception: When React Context is Acceptable
+
+React Context is discouraged in favor of Zustand. There is **one exception** in this project:
+
+**`ProductVariantContext`** (`shared/context/ProductVariantContext.tsx`) — used on the product detail page to share variant selection state across multiple deeply-nested sibling components (image gallery, variant selector, price display, add-to-cart button).
+
+**Why Context was chosen over Zustand:**
+- The state is transient and scoped to a single page section — not global or cross-page
+- Creating a Zustand store would add unnecessary boilerplate for such localized UI state
+- Context here wraps a small, isolated component tree, avoiding the re-render issues that plague app-wide context
+
+**Rule of thumb:** If considering Context, first ask:
+1. Is the state truly scoped to a single page or section (not global)?
+2. Would a Zustand store be overkill for this use case?
+3. Is the component tree small enough that re-renders are not a concern?
+
+If yes to all three, Context may be acceptable. Otherwise, prefer Zustand.
+
 ## Location
 
 Stores are located in `apps/web/src/shared/states/`.

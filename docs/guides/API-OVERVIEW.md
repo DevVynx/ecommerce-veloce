@@ -25,11 +25,15 @@ src/
 Starts the HTTP server and initializes cron jobs:
 
 ```typescript
-import { app } from "./app";
+import { startAllCronJobs } from "@/jobs";
 import { ENV } from "@/shared/utils/env";
 
-app.listen(ENV.PORT, () => {
-  console.log(`Server running on port ${ENV.PORT}`);
+import { app } from "./app";
+
+const port = ENV.PORT;
+
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta http://localhost:${port}/api 🚀`);
   startAllCronJobs();
 });
 ```
@@ -46,8 +50,13 @@ Routes are registered under `/api` prefix:
 app.use("/api", authRouter); // → /api/auth/*
 app.use("/api", productRouter); // → /api/products/*
 app.use("/api", cartRouter); // → /api/cart/*
+app.use("/api", couponRouter); // → /api/coupons/*
+app.use("/api", userRouter); // → /api/users/*
 app.use("/api", wishlistRouter); // → /api/wishlist/*
 app.use("/api", shippingRouter); // → /api/shipping/*
+app.use("/api", searchRouter); // → /api/search/*
+app.use("/api", orderRouter); // → /api/orders/*
+app.use("/api", reviewRouter); // → /api/reviews/*
 ```
 
 ## Environment Configuration
@@ -104,7 +113,7 @@ Custom HttpError classes with consistent response format. See @docs/guides/API-S
 ```json
 {
   "error": "BadRequestError",
-  "message": { "body": { "field": { "errors": ["Error."] } } },
+  "message": { "body": { "field": { "_errors": ["Error."] } } },
   "code": "VALIDATION_ERROR"
 }
 ```

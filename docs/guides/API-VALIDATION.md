@@ -8,16 +8,16 @@ All API inputs must be validated using Zod schemas wrapped with the shared valid
 
 ### 1. Create Validator File
 
-Create a file in `modules/{feature}/helpers/validators/`:
+Create a file in `modules/{feature}/validators/`:
 
 ```typescript
-// modules/cart/helpers/validators/addItemToCart.ts
+// modules/cart/validators/addItemToCart.ts
 import z from "zod";
 import { validation } from "@/shared/middlewares/validation";
 
 const body = z.object({
   productVariantId: z.uuid("Valor inválido."),
-  quantity: z.coerce
+  quantity: z
     .number("Valor inválido.")
     .min(1, "A quantidade mínima é 1."),
 });
@@ -28,7 +28,7 @@ export const addItemToCart = validation({ body });
 ### 2. Export from Index
 
 ```typescript
-// modules/cart/helpers/validators/index.ts
+// modules/cart/validators/index.ts
 import { addItemToCart } from "./addItemToCart";
 import { removeItemFromCart } from "./removeItemFromCart";
 import { updateCartItemQuantity } from "./updateCartItemQuantity";
@@ -46,7 +46,7 @@ export default validations;
 
 ```typescript
 // modules/cart/routes.ts
-import v from "@/modules/cart/helpers/validators";
+import v from "@/modules/cart/validators";
 
 cartRouter.post(
   "/cart/items",

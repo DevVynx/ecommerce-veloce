@@ -49,33 +49,6 @@ Request body types. Named with `*Request` suffix (e.g., `LoginRequest`, `AddItem
 
 Route response types. Named with `*Response` suffix (e.g., `GetCartResponse`, `LoginResponse`).
 
-## Contracts Reference
-
-### Auth
-
-- Requests: @packages/types/src/Contracts/Auth/Requests.ts
-- Responses: @packages/types/src/Contracts/Auth/Responses.ts
-
-### Cart
-
-- Requests: @packages/types/src/Contracts/Cart/Requests.ts
-- Responses: @packages/types/src/Contracts/Cart/Responses.ts
-
-### Products
-
-- Requests: @packages/types/src/Contracts/Products/Requests.ts
-- Responses: @packages/types/src/Contracts/Products/Responses.ts
-
-### Wishlist
-
-- Requests: @packages/types/src/Contracts/Wishlist/Requests.ts
-- Responses: @packages/types/src/Contracts/Wishlist/Responses.ts
-
-### Shipping
-
-- Requests: @packages/types/src/Contracts/Shipping/Requests.ts
-- Responses: @packages/types/src/Contracts/Shipping/Responses.ts
-
 ## Best Practices
 
 1. **Use types from `@repo/types`** - Never recreate types manually in API or Web

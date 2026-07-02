@@ -13,6 +13,7 @@ apps/api/src/shared/
 ├── lib/
 │   └── db.ts              # Prisma client instance
 ├── middlewares/
+│   ├── adminOnly.ts        # Admin role verification
 │   ├── auth.ts            # JWT authentication
 │   ├── handleGlobalError.ts # Global error handler
 │   ├── notFoundHandler.ts  # 404 handler
@@ -35,20 +36,24 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer "))
-    return res
-      .status(401)
-      .json({ error: "UnauthorizedError", message: "Token não fornecido." });
+    return res.status(401).json({
+      error: "UnauthorizedError",
+      message: "Token não fornecido ou formato inválido.",
+      code: "NO_TOKEN_PROVIDED",
+    });
 
   const accessToken = authHeader.split(" ")[1];
 
   try {
-    const { userId } = await verifyToken(accessToken, "access");
-    res.locals.user = { userId };
+    const { userId, role } = await verifyToken(accessToken, "access");
+    res.locals.user = { userId, role };
     next();
   } catch {
-    return res
-      .status(401)
-      .json({ error: "UnauthorizedError", message: "Token inválido." });
+    return res.status(401).json({
+      error: "UnauthorizedError",
+      message: "Token inválido.",
+      code: "INVALID_TOKEN",
+    });
   }
 };
 ```
@@ -149,11 +154,17 @@ export const ENV = {
   NODE_ENV: getEnvOrThrow("NODE_ENV"),
   PORT: getEnvOrThrow("PORT"),
   DATABASE_URL: getEnvOrThrow("DATABASE_URL"),
+  IP_ADDRESS: getEnvOrThrow("IP_ADDRESS"),
+  SHIPPING_ORIGIN_CEP: getEnvOrThrow("SHIPPING_ORIGIN_CEP"),
   JWT_ACCESS_SECRET: getEnvOrThrow("JWT_ACCESS_SECRET"),
   JWT_REFRESH_SECRET: getEnvOrThrow("JWT_REFRESH_SECRET"),
   GOOGLE_CLIENT_ID: getEnvOrThrow("GOOGLE_CLIENT_ID"),
   GOOGLE_CLIENT_SECRET: getEnvOrThrow("GOOGLE_CLIENT_SECRET"),
-  // ...
+  MEILI_HOST: getEnvOrThrow("MEILI_HOST"),
+  MEILI_MASTER_KEY: getEnvOrThrow("MEILI_MASTER_KEY"),
+  STRIPE_SECRET_KEY: getEnvOrThrow("STRIPE_SECRET_KEY"),
+  STRIPE_WEBHOOK_SECRET: getEnvOrThrow("STRIPE_WEBHOOK_SECRET"),
+  FRONTEND_URL: getEnvOrThrow("FRONTEND_URL"),
 };
 ```
 
@@ -164,13 +175,20 @@ If a required env var is missing, the app throws on startup.
 Located in `src/shared/utils/verifyToken.ts`:
 
 ```typescript
-export async function verifyToken(token: string, type: "access" | "refresh") {
+export async function verifyToken(token: string = "", type: "access" | "refresh") {
+  if (!token) throw new UnauthorizedError("Token não fornecido.");
+
   const decoded = jwt.verify(
     token,
     type === "access" ? ENV.JWT_ACCESS_SECRET : ENV.JWT_REFRESH_SECRET,
   );
 
-  return { userId: (decoded as { userId: string }).userId };
+  const { userId, role } = decoded as {
+    userId: string;
+    role: string;
+  };
+
+  return { userId, role };
 }
 ```
 
@@ -182,15 +200,20 @@ Handles pricing calculations and promotion logic:
 
 ```typescript
 export const productLogic = {
-  calculateEnrichment(variant, promotions): ProductEnrichment {
-    // Calculates salePrice, isOnSale, isAvailable based on promotions
+  calculateEnrichment(
+    variant: MinimalVariantPricing,
+    promotions: ProductPromotionsInput
+  ): ProductEnrichment {
+    // Calculates salePrice, isOnSale, isAvailable based on promotions hierarchy
   },
 
-  applyDiscount(basePrice, promotion): Decimal {
+  applyDiscount(basePrice: Prisma.Decimal, promotion: MinimalPromotion): Prisma.Decimal {
     // Applies PERCENTAGE or FIXED discount
   },
 
-  pickHeroVariant(variants): T | undefined {
+  pickHeroVariant<T extends { offer: ProductEnrichment; stock: number }>(
+    variants: T[]
+  ): T | undefined {
     // Picks the best variant for display (sale first, then lowest price)
   },
 };
@@ -204,8 +227,13 @@ export type MinimalVariantPricing = Pick<
   ProductVariant,
   "price" | "stock" | "isActive"
 >;
+export interface ProductPromotionsInput {
+  variant?: MinimalPromotion[];
+  product?: MinimalPromotion[];
+  category?: MinimalPromotion[];
+}
 export interface ProductEnrichment {
-  salePrice: Decimal;
+  salePrice: Prisma.Decimal;
   isOnSale: boolean;
   isAvailable: boolean;
 }
@@ -231,13 +259,18 @@ Located in `src/jobs/`:
 Jobs are registered in `src/jobs/index.ts`:
 
 ```typescript
-import cron from "node-cron";
+const registeredJobs = [cleanupRefreshTokensJob];
 
 export const startAllCronJobs = () => {
+  console.log("⚙️ Iniciando motor de Cron Jobs...");
+
   registeredJobs.forEach((job) => {
     cron.schedule(job.schedule, async () => {
+      console.log(`▶️ Executando job: [${job.name}]`);
       await job.execute();
     });
+
+    console.log(`⏱️ Job [${job.name}] agendado com sucesso (${job.schedule})`);
   });
 };
 ```

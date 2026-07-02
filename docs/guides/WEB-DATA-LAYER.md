@@ -2,32 +2,19 @@
 
 ## Purpose
 
-This guide covers data fetching patterns in the web app. The app uses a hybrid approach with Server Actions as the default and React Query for specific cases.
+This guide covers data fetching patterns in the web app. The app uses Server Actions as the standard approach for all data fetching.
 
 ## Decision Rules
 
 Use these rules to decide which approach to use:
 
-### Server Actions (Default - 90% of cases)
+### Server Actions (Default)
 
 Use for:
 
 - **All Mutations** (POST, PUT, DELETE)
 - **Initial Page Read** (Products, Profile, Initial Listings)
 - **Filters & Pagination** (URL-based, SEO, shareable links)
-
-### React Query (Exception)
-
-Use only for:
-
-- **Autocomplete/Search** - Real-time search suggestions as user types
-- **Real-time Data** - Stock pooling, notifications
-- **Dashboard Widgets** - Async widgets that don't block page streaming
-- **Micro-state Updates** - Highly volatile data not in URL
-
-### When in Doubt
-
-If you see a simple form or search, try Server Side first. Don't default to `useQuery`.
 
 ## Server Actions
 
@@ -93,47 +80,11 @@ const handleSubmit = async (data: LoginRequest) => {
 };
 ```
 
-## React Query
-
-React Query is still used for specific cases.
-
-### Location
-
-```
-apps/web/src/shared/hooks/data/
-├── useAuthMutations.ts
-├── useAuthQueries.ts
-├── useProductsQueries.ts
-└── ...
-```
-
-### When to Keep Using React Query
-
-```typescript
-// Good: Autocomplete search
-const useProductSearch = (query: string) => {
-  return useQuery({
-    queryKey: ["products", "search", query],
-    queryFn: () => searchProducts(query),
-    enabled: query.length > 2,
-  });
-};
-
-// Good: Dashboard widgets
-const useDashboardStats = () => {
-  return useQuery({
-    queryKey: ["dashboard", "stats"],
-    queryFn: fetchDashboardStats,
-  });
-};
-```
-
 ## Key Files
 
-| File          | Purpose           |
-| ------------- | ----------------- |
-| `actions/`    | Server Actions    |
-| `hooks/data/` | React Query hooks |
+| File       | Purpose        |
+| ---------- | -------------- |
+| `actions/` | Server Actions |
 
 ## Related Guides
 
@@ -147,10 +98,6 @@ const useDashboardStats = () => {
 | Login/Register      | Server Action |
 | Add to Cart         | Server Action |
 | Product List        | Server Action |
-| Search Autocomplete | React Query   |
-| Stock Pooling       | React Query   |
-| Notifications       | React Query   |
 | Filters/Pagination  | Server Action |
-| Dashboard Widgets   | React Query   |
 
 Remember: When in doubt, try Server Side first.
