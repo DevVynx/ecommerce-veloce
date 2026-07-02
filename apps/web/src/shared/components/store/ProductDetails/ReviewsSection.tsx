@@ -95,7 +95,11 @@ export const ReviewsSection = ({
         </div>
 
         <div className="w-full flex-1">
-          <ReviewsSummary ratingRate={ratingRate} distribution={ratingDistribution} total={ratingCount} />
+          <ReviewsSummary
+            ratingRate={ratingRate}
+            distribution={ratingDistribution}
+            total={ratingCount}
+          />
         </div>
       </div>
 

@@ -2,10 +2,7 @@
 
 import { fetchClient } from "@/shared/utils/api/fetchClient";
 
-export async function changePassword(input: {
-  currentPassword: string;
-  newPassword: string;
-}) {
+export async function changePassword(input: { currentPassword: string; newPassword: string }) {
   const { data, error } = await fetchClient<void>("/users/password", {
     isPrivate: true,
     method: "PUT",

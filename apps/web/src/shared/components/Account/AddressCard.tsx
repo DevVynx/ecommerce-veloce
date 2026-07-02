@@ -11,21 +11,24 @@ type AddressCardProps = {
   onSetDefault: (id: string) => void;
 };
 
-export const AddressCard = ({ address: addr, onEdit, onDelete, onSetDefault }: AddressCardProps) => {
+export const AddressCard = ({
+  address: addr,
+  onEdit,
+  onDelete,
+  onSetDefault,
+}: AddressCardProps) => {
   return (
     <div className="flex items-start justify-between rounded-lg border px-4 py-3">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <p className="font-medium">{addr.receiverName}</p>
           {addr.label && (
-            <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+            <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs">
               {addr.label}
             </span>
           )}
           {addr.isDefault && (
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
-              Padrão
-            </span>
+            <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 text-xs">Padrão</span>
           )}
         </div>
         <p className="text-muted-foreground text-sm">

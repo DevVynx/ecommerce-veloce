@@ -13,8 +13,15 @@ import { formatCep } from "@/shared/utils/store/checkout/formatCep";
 import { showNotification } from "../showNotification";
 
 const DEFAULT_ADDRESS_VALUES: AddressFormValues = {
-  receiverName: "", cep: "", street: "", number: "",
-  neighborhood: "", city: "", state: "", complement: "", label: "",
+  receiverName: "",
+  cep: "",
+  street: "",
+  number: "",
+  neighborhood: "",
+  city: "",
+  state: "",
+  complement: "",
+  label: "",
 };
 
 type InlineAddressFormProps = {

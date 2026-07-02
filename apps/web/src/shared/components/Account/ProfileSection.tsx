@@ -5,6 +5,7 @@ import { ProfileSectionContent } from "./ProfileSectionContent";
 
 export const ProfileSection = async () => {
   const { data, error } = await getProfile();
+  console.log(error);
 
   if (error || !data) {
     return (

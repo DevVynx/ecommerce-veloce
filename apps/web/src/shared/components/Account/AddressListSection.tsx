@@ -18,7 +18,6 @@ import {
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
 import type { AddressFormValues } from "@/shared/schemas/address";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
-
 import { formatCep } from "@/shared/utils/store/checkout/formatCep";
 
 import { showNotification } from "../showNotification";
@@ -166,7 +165,7 @@ export const AddressListSection = () => {
       )}
 
       {isLoading ? (
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           {Array.from({ length: 2 }).map((_, i) => (
             <Skeleton key={i} className="h-24 w-full rounded-lg" />
           ))}

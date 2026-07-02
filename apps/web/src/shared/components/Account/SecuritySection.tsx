@@ -20,7 +20,10 @@ import {
 import { Field, FieldContent, FieldError, FieldLabel } from "@/shared/components/shadcn-ui/field";
 import { Input } from "@/shared/components/shadcn-ui/input";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
-import { type ChangePasswordFormValues,changePasswordSchema } from "@/shared/schemas/changePassword";
+import {
+  type ChangePasswordFormValues,
+  changePasswordSchema,
+} from "@/shared/schemas/changePassword";
 import { authenticatedAction } from "@/shared/utils/api/authenticatedAction";
 import { clearAllStorages } from "@/shared/utils/store/state/clearAllStorages";
 
