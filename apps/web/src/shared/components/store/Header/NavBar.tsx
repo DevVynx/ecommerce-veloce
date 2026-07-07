@@ -80,7 +80,7 @@ export const NavBar = () => {
         <div className="hidden lg:block">
           {user?.role === "ADMIN" && (
             <Button variant="outline" size="sm" asChild>
-              <Link href="/admin">
+              <Link href="/admin/dashboard">
                 <LayoutDashboard className="size-4" />
                 Painel Administrativo
               </Link>

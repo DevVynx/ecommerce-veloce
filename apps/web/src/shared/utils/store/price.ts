@@ -5,7 +5,10 @@ export const asDecimal = (value: number | Decimal): Decimal =>
 
 export const formatPrice = (value: number | Decimal): string => {
   const decimal = asDecimal(value);
-  return `R$ ${decimal.toDecimalPlaces(2, Decimal.ROUND_HALF_UP).toFixed(2)}`;
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(decimal.toNumber());
 };
 
 export const formatDiscount = (value: number | Decimal): string => {

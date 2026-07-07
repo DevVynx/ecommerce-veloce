@@ -97,7 +97,7 @@ export const MobileSideMenu = () => {
                   <MobileSideMenuItem
                     icon={<LayoutDashboard className="size-7" />}
                     label="Painel Administrativo"
-                    link="/admin"
+                    link="/admin/dashboard"
                   />
                 </motion.div>
               </div>
