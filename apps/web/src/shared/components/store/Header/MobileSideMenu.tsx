@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { FileQuestionMark, LogOut, Menu, User } from "lucide-react";
+import { FileQuestionMark, LayoutDashboard, LogOut, Menu, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -86,6 +86,24 @@ export const MobileSideMenu = () => {
           animate="show"
           className="scrollbar-hide flex flex-1 flex-col overflow-y-auto px-4 pt-4 pb-6"
         >
+          {/* Painel Administrativo */}
+          {user?.role === "ADMIN" && (
+            <section className="mb-6">
+              <h3 className="text-muted-foreground mb-2 px-3 text-[11px] font-black tracking-widest uppercase">
+                Admin
+              </h3>
+              <div className="space-y-0.5">
+                <motion.div variants={itemVariants}>
+                  <MobileSideMenuItem
+                    icon={<LayoutDashboard className="size-7" />}
+                    label="Painel Administrativo"
+                    link="/admin"
+                  />
+                </motion.div>
+              </div>
+            </section>
+          )}
+
           {/* Seção Loja */}
           <section className="mb-6">
             <h3 className="text-muted-foreground mb-2 px-3 text-[11px] font-black tracking-widest uppercase">

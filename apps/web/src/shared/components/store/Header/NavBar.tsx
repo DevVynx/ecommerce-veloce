@@ -1,12 +1,15 @@
 "use client";
-import { Heart } from "lucide-react";
+import { Heart, LayoutDashboard } from "lucide-react";
 import { Meilisearch } from "meilisearch";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { registerSearchAnalytics } from "@/shared/actions/search/registerAnalytics";
 import { BadgedIconButton } from "@/shared/components/BadgedIconButton";
 import { SearchBar } from "@/shared/components/SearchBar";
+import { Button } from "@/shared/components/shadcn-ui/button";
 import { UserMenu } from "@/shared/components/Store/Header/UserMenu";
+import { useAuthState } from "@/shared/states/auth";
 import { useWishlistState } from "@/shared/states/wishlist";
 import { ENV } from "@/shared/utils/env";
 
@@ -20,6 +23,7 @@ const meiliClient = new Meilisearch({
 });
 
 export const NavBar = () => {
+  const { user } = useAuthState();
   const { count: wishlistCount } = useWishlistState();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -72,6 +76,17 @@ export const NavBar = () => {
           count={wishlistCount}
           link="/wishlist"
         />
+
+        <div className="hidden lg:block">
+          {user?.role === "ADMIN" && (
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/admin">
+                <LayoutDashboard className="size-4" />
+                Painel Administrativo
+              </Link>
+            </Button>
+          )}
+        </div>
 
         {/* Side Menu - Mobile */}
         <MobileSideMenu />

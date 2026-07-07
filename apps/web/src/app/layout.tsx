@@ -10,6 +10,7 @@ import { Toaster } from "@/shared/components/shadcn-ui/sonner";
 import { TooltipProvider } from "@/shared/components/shadcn-ui/tooltip";
 import { Header } from "@/shared/components/Store/Header/Header";
 import { CartProvider } from "@/shared/providers/CartProvider";
+import { QueryProvider } from "@/shared/providers/QueryProvider";
 import { WishlistProvider } from "@/shared/providers/WishlistProvider";
 import { ENV } from "@/shared/utils/env";
 
@@ -46,18 +47,20 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${kottaOne.variable} antialiased`}
       >
-        <GoogleOAuthProvider clientId={ENV.GOOGLE_CLIENT_ID}>
-          <CartProvider />
-          <WishlistProvider />
-          <TooltipProvider>
-            <Suspense fallback={null}>
-              <Header />
-            </Suspense>
-            <div className="min-h-screen">{children}</div>
-            <Footer />
-            <Toaster />
-          </TooltipProvider>
-        </GoogleOAuthProvider>
+        <QueryProvider>
+          <GoogleOAuthProvider clientId={ENV.GOOGLE_CLIENT_ID}>
+            <CartProvider />
+            <WishlistProvider />
+            <TooltipProvider>
+              <Suspense fallback={null}>
+                <Header />
+              </Suspense>
+              <div className="min-h-screen">{children}</div>
+              <Footer />
+              <Toaster />
+            </TooltipProvider>
+          </GoogleOAuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

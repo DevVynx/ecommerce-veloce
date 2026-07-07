@@ -1,4 +1,6 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Separator } from "@/shared/components/shadcn-ui/separator";
 
@@ -77,6 +79,15 @@ const socialLinks = [
 ];
 
 export const Footer = () => {
+  const pathname = usePathname();
+
+  const hideHeaderRoutes = ["/login", "/register", "/admin"];
+  const shouldHideHeader = hideHeaderRoutes.some((route) => pathname.startsWith(route));
+
+  if (shouldHideHeader) {
+    return null;
+  }
+
   return (
     <footer className="bg-muted border-border border-t px-3 py-12">
       <div className="mx-auto lg:container">
