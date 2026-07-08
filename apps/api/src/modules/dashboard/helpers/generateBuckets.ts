@@ -12,12 +12,16 @@ function makeKey(date: Date, range: string): string {
   const h = pad(br.getUTCHours());
 
   switch (range) {
-    case "1D":     return `${y}-${m}-${d} ${h}:00:00`;
+    case "1D":
+      return `${y}-${m}-${d} ${h}:00:00`;
     case "1W":
     case "1M":
-    case "3M":     return `${y}-${m}-${d}`;
-    case "6M":     return `${y}-${m}`;
-    default:       return `${y}-${m}-${d}`;
+    case "3M":
+      return `${y}-${m}-${d}`;
+    case "6M":
+      return `${y}-${m}`;
+    default:
+      return `${y}-${m}-${d}`;
   }
 }
 

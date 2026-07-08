@@ -8,27 +8,42 @@ function getPeriods(range: string) {
     case "1W":
       return {
         current: { start: new Date(now.getTime() - 7 * DAY), end: now },
-        previous: { start: new Date(now.getTime() - 14 * DAY), end: new Date(now.getTime() - 7 * DAY) },
+        previous: {
+          start: new Date(now.getTime() - 14 * DAY),
+          end: new Date(now.getTime() - 7 * DAY),
+        },
       };
     case "1M":
       return {
         current: { start: new Date(now.getTime() - 30 * DAY), end: now },
-        previous: { start: new Date(now.getTime() - 60 * DAY), end: new Date(now.getTime() - 30 * DAY) },
+        previous: {
+          start: new Date(now.getTime() - 60 * DAY),
+          end: new Date(now.getTime() - 30 * DAY),
+        },
       };
     case "3M":
       return {
         current: { start: new Date(now.getTime() - 90 * DAY), end: now },
-        previous: { start: new Date(now.getTime() - 180 * DAY), end: new Date(now.getTime() - 90 * DAY) },
+        previous: {
+          start: new Date(now.getTime() - 180 * DAY),
+          end: new Date(now.getTime() - 90 * DAY),
+        },
       };
     case "6M":
       return {
         current: { start: new Date(now.getTime() - 180 * DAY), end: now },
-        previous: { start: new Date(now.getTime() - 360 * DAY), end: new Date(now.getTime() - 180 * DAY) },
+        previous: {
+          start: new Date(now.getTime() - 360 * DAY),
+          end: new Date(now.getTime() - 180 * DAY),
+        },
       };
     case "1Y":
       return {
         current: { start: new Date(now.getTime() - 365 * DAY), end: now },
-        previous: { start: new Date(now.getTime() - 730 * DAY), end: new Date(now.getTime() - 365 * DAY) },
+        previous: {
+          start: new Date(now.getTime() - 730 * DAY),
+          end: new Date(now.getTime() - 365 * DAY),
+        },
       };
     default:
       return { current: null, previous: null };
