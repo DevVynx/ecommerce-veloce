@@ -7,7 +7,7 @@ export const BestOffersSection = async () => {
 
   if (error) {
     return (
-      <section className="bg-neutral-100 px-3 py-12">
+      <section className="bg-neutral-100 px-2 py-12">
         <div className="relative mx-auto lg:container">
           <SectionError
             title="Ofertas indisponíveis"
@@ -27,7 +27,7 @@ export const BestOffersSection = async () => {
     }) ?? [];
 
   return (
-    <section id="bestOffersSection" className="bg-neutral-100 px-3 py-12">
+    <section id="bestOffersSection" className="bg-neutral-100 px-2 py-12">
       <div className="relative mx-auto lg:container">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <header className="flex flex-wrap items-center gap-3">

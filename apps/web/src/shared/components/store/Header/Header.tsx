@@ -23,7 +23,7 @@ export function Header() {
 
   return (
     <header
-      className={`bg-background fixed top-0 right-0 left-0 z-5 h-16 px-4 py-2 inset-shadow-2xs transition-transform duration-300 ease-in-out ${translateYClass} `}
+      className={`bg-background fixed top-0 right-0 left-0 z-5 h-16 px-2 py-2 inset-shadow-2xs transition-transform duration-300 ease-in-out ${translateYClass} `}
     >
       <div className="mx-auto lg:container">
         <Suspense fallback={null}>
