@@ -13,6 +13,16 @@ export type GetProductBySlugRequest = {
   slug: string;
 };
 
+export type AdminSearchProductsRequest = {
+  q?: string;
+  categoryId?: string;
+  isActive?: boolean;
+  stockLt?: number;
+  sortBy?: "price_asc" | "price_desc" | "stock_asc" | "stock_desc" | "newest" | "oldest";
+  page?: number;
+  limit?: number;
+};
+
 export type SearchProductsRequest = {
   q?: string;
   categoryId?: string;

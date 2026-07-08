@@ -85,8 +85,45 @@ export type AdminCountLowStockVariantsResponse = {
   lowStockCount: number;
 };
 
+export type AdminProductVariantDto = {
+  id: string;
+  sku: string;
+  price: number;
+  salePrice: number;
+  stock: number;
+  isActive: boolean;
+  options: { name: string; value: string }[];
+};
+
+export type AdminProductListItem = {
+  id: string;
+  title: string;
+  image: string;
+  category: { id: string; name: string };
+  totalStock: number;
+  activeCount: number;
+  inactiveCount: number;
+  minPrice: number;
+  maxPrice: number;
+  variants: AdminProductVariantDto[];
+};
+
+export type AdminSearchProductsResponse = {
+  products: AdminProductListItem[];
+  pagination: { total: number; page: number; totalPages: number };
+};
+
 export type SearchProductsResponse = {
   products: CatalogProductDto[];
   filters: SearchFiltersDto;
   pagination: { total: number; hasMore: boolean };
+};
+
+export type CategoryDto = {
+  id: string;
+  name: string;
+};
+
+export type GetCategoriesResponse = {
+  categories: CategoryDto[];
 };
