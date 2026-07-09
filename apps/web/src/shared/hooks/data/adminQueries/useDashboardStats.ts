@@ -18,13 +18,10 @@ export function useAdminDashboardStats(params: AdminDashboardStatsRequest) {
       }
 
       const { data, error } = await withAuthRefresh(() =>
-        fetchClient<AdminDashboardStatsResponse>(
-          `/admin/dashboard/stats`,
-          {
-            isPrivate: true,
-            params,
-          }
-        )
+        fetchClient<AdminDashboardStatsResponse>(`/admin/dashboard/stats`, {
+          isPrivate: true,
+          params,
+        })
       );
 
       if (error) {

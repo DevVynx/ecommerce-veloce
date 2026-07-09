@@ -26,10 +26,10 @@ export function useAdminSearchProducts(params: AdminSearchProductsRequest) {
       }
 
       const { data, error } = await withAuthRefresh(() =>
-        fetchClient<AdminSearchProductsResponse>(
-          "/admin/products/search",
-          { isPrivate: true, params: queryParams }
-        )
+        fetchClient<AdminSearchProductsResponse>("/admin/products/search", {
+          isPrivate: true,
+          params: queryParams,
+        })
       );
 
       if (error) {

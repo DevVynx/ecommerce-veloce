@@ -18,13 +18,10 @@ export function useAdminDashboardTimeline(params: AdminDashboardTimelineRequest)
       }
 
       const { data, error } = await withAuthRefresh(() =>
-        fetchClient<AdminDashboardTimelineResponse>(
-          `/admin/dashboard/timeline`,
-          {
-            isPrivate: true,
-            params: queryParams,
-          }
-        )
+        fetchClient<AdminDashboardTimelineResponse>(`/admin/dashboard/timeline`, {
+          isPrivate: true,
+          params: queryParams,
+        })
       );
 
       if (error) {
