@@ -9,7 +9,6 @@ import { Spinner } from "@/shared/components/shadcn-ui/spinner";
 import { showNotification } from "@/shared/components/showNotification";
 import { useAuthState } from "@/shared/states/auth";
 import { useCartState } from "@/shared/states/cart";
-
 import { formatDiscount } from "@/shared/utils/store/price";
 
 type CouponApplierProps = {

@@ -17,7 +17,6 @@ import { StockBadge } from "@/shared/components/Store/StockBadge";
 import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
 import { useProductVariantSelection } from "@/shared/hooks/data/useProductVariantSelection";
 import { useWishlistState } from "@/shared/states/wishlist";
-
 import { buildSelectedOptionsForCart } from "@/shared/utils/store/buildSelectedOptions";
 import { formatPrice } from "@/shared/utils/store/price";
 

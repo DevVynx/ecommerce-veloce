@@ -10,7 +10,6 @@ import { Field, FieldContent, FieldLabel } from "@/shared/components/shadcn-ui/f
 import { Input } from "@/shared/components/shadcn-ui/input";
 import { useAuthState } from "@/shared/states/auth";
 
-
 import { updateProfile } from "../../actions/user/updateProfile";
 import { showNotification } from "../showNotification";
 

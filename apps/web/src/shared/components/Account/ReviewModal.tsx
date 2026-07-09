@@ -17,7 +17,6 @@ import { Textarea } from "@/shared/components/shadcn-ui/textarea";
 import { showNotification } from "@/shared/components/showNotification";
 import type { ApiErrorResponse } from "@/shared/types/api/error";
 
-
 const MAX_CHARS = 500;
 
 function getErrorMessage(error: ApiErrorResponse): string {

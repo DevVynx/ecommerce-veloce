@@ -24,7 +24,6 @@ import {
   type ChangePasswordFormValues,
   changePasswordSchema,
 } from "@/shared/schemas/changePassword";
-
 import { clearAllStorages } from "@/shared/utils/store/state/clearAllStorages";
 
 import { showNotification } from "../showNotification";

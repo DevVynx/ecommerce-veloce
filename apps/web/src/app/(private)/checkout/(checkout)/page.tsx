@@ -14,7 +14,6 @@ import { showNotification } from "@/shared/components/showNotification";
 import type { AddressFormValues } from "@/shared/schemas/address";
 import { useCheckoutState } from "@/shared/states/checkout";
 
-
 const CheckoutPage = () => {
   const router = useRouter();
   const {

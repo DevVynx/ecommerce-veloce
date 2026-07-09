@@ -8,7 +8,6 @@ import { createOrder } from "@/shared/actions/orders/createOrder";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Spinner } from "@/shared/components/shadcn-ui/spinner";
 import type { PaymentMethod } from "@/shared/states/checkout";
-
 import { formatPrice } from "@/shared/utils/store/price";
 
 import { showNotification } from "../../showNotification";

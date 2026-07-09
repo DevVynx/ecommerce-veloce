@@ -8,7 +8,6 @@ import { updateCartItemQuantity } from "@/shared/actions/cart/updateItem";
 import { useAuthState } from "@/shared/states/auth";
 import { useCartState } from "@/shared/states/cart";
 
-
 export type AddItemParams = {
   productVariantId: string;
   quantity: number;

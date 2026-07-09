@@ -8,7 +8,6 @@ import { AddressCard } from "@/shared/components/Checkout/Address/AddressCard";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
 
-
 type AddressListProps = {
   selectedAddressId: string | null;
   onSelect: (addressId: string, address: AddressDto) => void;

@@ -7,7 +7,6 @@ import { Input } from "@/shared/components/shadcn-ui/input";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { Spinner } from "@/shared/components/shadcn-ui/spinner";
 import { cepSchema } from "@/shared/schemas/cep";
-
 import { formatCep } from "@/shared/utils/store/checkout/formatCep";
 import { formatPrice } from "@/shared/utils/store/price";
 

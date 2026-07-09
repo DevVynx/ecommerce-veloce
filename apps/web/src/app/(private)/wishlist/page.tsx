@@ -11,7 +11,6 @@ import { WishlistSkeleton } from "@/shared/components/Wishlist/WishlistSkeleton"
 import { useAnimatedIcon } from "@/shared/hooks/ui/useAnimatedIcon";
 import { useWishlistState } from "@/shared/states/wishlist";
 
-
 const WishlistPage = () => {
   const { items, hasHydrated, remove, rollback } = useWishlistState();
   const { handleMouseEnter, handleMouseLeave, iconRef } = useAnimatedIcon();

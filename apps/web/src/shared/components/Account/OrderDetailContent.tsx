@@ -7,7 +7,6 @@ import { Button } from "@/shared/components/shadcn-ui/button";
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/components/shadcn-ui/tooltip";
 
-
 import { ReviewModal } from "./ReviewModal";
 
 type OrderDetailContentProps = {

@@ -5,7 +5,6 @@ import { getWishlist } from "@/shared/actions/wishlist/getWishlist";
 import { useAuthState } from "@/shared/states/auth";
 import { useWishlistState } from "@/shared/states/wishlist";
 
-
 export function WishlistProvider() {
   const { hydrate } = useWishlistState();
   const { isAuthenticated } = useAuthState();

@@ -1,7 +1,6 @@
 import { getProfile } from "@/shared/actions/user/getProfile";
 import { SectionError } from "@/shared/components/SectionError";
 
-
 import { ProfileSectionContent } from "./ProfileSectionContent";
 
 export const ProfileSection = async () => {

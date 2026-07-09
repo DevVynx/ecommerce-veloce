@@ -6,7 +6,6 @@ import { syncCart } from "@/shared/actions/cart/syncCart";
 import { useAuthState } from "@/shared/states/auth";
 import { useCartState } from "@/shared/states/cart";
 
-
 export const CartProvider = () => {
   const { hydrate } = useCartState();
   const { isAuthenticated } = useAuthState();

@@ -7,7 +7,6 @@ import { CartItemQuantity } from "@/shared/components/Cart/CartItemQuantity";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { useCartMutations } from "@/shared/hooks/data/useCartMutations";
 import { useWishlistState } from "@/shared/states/wishlist";
-
 import { calculateDiscountPercent, formatPrice } from "@/shared/utils/store/price";
 
 type CartItemCardProps = {
