@@ -7,20 +7,12 @@ import { useState } from "react";
 import { createOrder } from "@/shared/actions/orders/createOrder";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Spinner } from "@/shared/components/shadcn-ui/spinner";
+import { useCartState } from "@/shared/states/cart";
 import type { PaymentMethod } from "@/shared/states/checkout";
 import { formatPrice } from "@/shared/utils/store/price";
 
 import { showNotification } from "../../showNotification";
 import { MobileSummary } from "./MobileSummary";
-
-type ReviewOrderProps = {
-  address: AddressDto;
-  shipping: ShippingOptionDto;
-  paymentMethod: PaymentMethod;
-  onEditAddress: () => void;
-  onEditShipping: () => void;
-  onEditPayment: () => void;
-};
 
 const PAYMENT_CONFIG: Record<PaymentMethod, { label: string; Icon: typeof CreditCard }> = {
   card: { label: "Cartão de Crédito", Icon: CreditCard },
@@ -52,6 +44,15 @@ const SectionCard = ({
   </div>
 );
 
+type ReviewOrderProps = {
+  address: AddressDto;
+  shipping: ShippingOptionDto;
+  paymentMethod: PaymentMethod;
+  onEditAddress: () => void;
+  onEditShipping: () => void;
+  onEditPayment: () => void;
+};
+
 export const ReviewOrder = ({
   address,
   shipping,
@@ -61,6 +62,7 @@ export const ReviewOrder = ({
   onEditPayment,
 }: ReviewOrderProps) => {
   const router = useRouter();
+  const { appliedCoupon } = useCartState();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { label, Icon } = PAYMENT_CONFIG[paymentMethod];
@@ -84,6 +86,7 @@ export const ReviewOrder = ({
           state: address.state,
         },
       }),
+      couponCode: appliedCoupon?.code,
       shippingService: shipping.service,
       paymentMethod,
     };
