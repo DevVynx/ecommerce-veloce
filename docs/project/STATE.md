@@ -1,54 +1,51 @@
 # Project State
 
-**Last Updated**: 2026-06-30
+**Last Updated**: 2026-07-10
 **State Expiration**: N/A
 
 ---
 
 ## Current Task
 
-**[vyn-052] Implementar fluxo de checkout com pagamento Stripe** — Completed
+**[vyn-053] Admin — Cupons (CRUD listagem + criação + exclusão)** — In Progress
 
-### Changes
-- **`modules/order/`**: Novo módulo completo (controllers, services, repositories, validators, types, routes)
-- **`modules/webhook/`**: Novo módulo para webhook Stripe com verificação de assinatura
-- **`infra/payment/stripe.ts`**: Instância Stripe singleton
-- **`prisma/schema.prisma`**: Order model ganhou campos `discount`, `contribution`, `paymentMethod`
-- **`cart/services/clearCart.ts`** + **`cart/repositories/clearCart.ts`**: Limpa carrinho por userId (ownership check)
-- **`env.ts`**: Adicionado `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `FRONTEND_URL`
-- **`app.ts`**: Webhook route movido pra antes do `express.json()` com `express.raw()`
-- **User module**: Refatorado barrel exports (`addressServices` → `userServices`, `addressRepositories` → `userRepositories`)
-- **Profile**: `getProfile` service + `findUserProfile` repo movidos de `auth` para `user`
-- **Auth response types**: Unificados com `UserProfile` (inclui `role`, `isEmailVerified`, `createdAt`)
-- **Order contracts**: `CreateOrderRequest`, `CreateOrderResponse`, `OrderDto` em `Contracts/Order/`
-- **Checkout frontend**: PaymentSelector + ReviewOrder components, `paymentMethod` no state, success page
-- **Search scripts**: Usam `ENV` object em vez de `process.env` direto
+### Scopo
+- Listagem de cupons com busca, filtros, ordenação, paginação
+- Criação de cupom via Sheet/Drawer com formulário completo
+- Exclusão de cupom com Dialog de confirmação (oculto se já usado)
+- `useInvalidate` hook para invalidação reativa de queries
+
+### Changes (Web)
+- **`shared/utils/date/dateTimeISO.ts`**: `add30Min`, `toBrazilISOString`, `parseISOToDateAndTime`
+- **`shared/components/Admin/Coupons/`**: `CouponTable`, `CouponFilters`, `CreateCouponSheet`, `CreateCouponForm`, `CouponDiscountFields`, `CouponSummaryTicket`, `CurrencyInput`, `DateTimePicker`
+- **`shared/schemas/coupons.ts`**: Schema Zod com `superRefine` condicional
+- **`shared/actions/coupons/`**: `createCoupon`, `deleteCoupon` server actions
+- **`shared/hooks/lib/useInvalidate.ts`**: Hook que centraliza `queryClient.invalidateQueries`
+- **`app/(private)/admin/coupons/page.tsx`**: Página com URL state (nuqs), CreateCouponSheet, CouponTable com delete
+
+### Changes (Types)
+- **`packages/types/Contracts/Coupon/`**: `AdminSearchCouponsRequest/Response`, `AdminCouponDto`, `DeleteCouponResponse`
+
+### Changes (API)
+- **`modules/coupon/`**: CRUD completo (controllers, services, repositories, validators, routes)
+- `DELETE /admin/coupons/:id` — valida UUID, 404 se não existe, 422 se já usado, 204 success
+
+### Blocked
+- `GET /admin/promotions/search` e `GET /admin/coupons/search` endpoints não existem (retornam 404)
 
 ---
 
 ## Recent Important Decisions
 
-### [Task] Checkout Flow with Stripe Payment
+### [Task] Admin Coupons — DateTimePicker + Exclusão
 
-- **Date**: 2026-06-27
-- **Decision**: Stripe Checkout Session (redirect), sem SDK no frontend, valor fixo em R$ 3 (demo).
-- **Architecture**:
-  - `POST /api/orders` cria pedido + Stripe session, retorna `paymentUrl` para redirect
-  - `POST /api/orders/webhook` com `express.raw()` antes do `express.json()` para verificação de assinatura
-  - Webhook escuta `checkout.session.completed` e atualiza status para `PAID`
-  - `createOrder` aceita `addressId` (endereço salvo) OU `shippingAddress` (não salvo) via Zod `.refine()`
-  - Cart é limpo imediatamente após criação da Stripe session (antes da confirmação)
-  - `clearCart` recebe só `userId`, faz ownership check internamente
-
-### [Task] Popular Search Suggestions Module
-
-- **Date**: 2026-06-18
-- **Decision**: Created a separate `modules/search/` module for search analytics, distinct from the product search route (`GET /products/search` which stays in `modules/product/`).
-- **Architecture**:
-  - `POST /api/search/analytics` receives `{ term }`, upserts in Prisma, pushes to Meili index `suggestions`
-  - Prisma tracks the canonical `searchCount`, Meili uses `searchCount:desc` ranking rule for trending
-  - `addDocuments()` added to `SearchEngine` interface — adapter is the single point for writing to Meili
-  - Setup script `scripts/setup-search.ts` configures the `suggestions` index (ranking rules), run via `pnpm --filter api search:setup`
+- **Date**: 2026-07-10
+- **Decision**: 
+  - DateTimePicker sem portal (`PopoverContentNoPortal`) para funcionar dentro de Sheet/Drawer
+  - Fim sempre +30min depois do início (nunca mesmo horário), sem botão "Agora"
+  - Exclusão oculta quando `usageCount > 0`; Dialog de confirmação com estado loading
+  - `useInvalidate` hook para substituir `useQueryClient` direto nos componentes
+  - Schema usa `z.number()` (não `z.coerce.number()`) com `superRefine` para validação condicional (`endsAt > startsAt`, `value` required quando PERCENTAGE/FIXED)
 
 ---
 
