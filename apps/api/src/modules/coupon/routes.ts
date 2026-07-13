@@ -1,6 +1,12 @@
 import { Router } from "express";
 
-import { createCoupon, deleteCoupon, searchCoupons, updateCoupon, validateCoupon } from "@/modules/coupon/controllers";
+import {
+  createCoupon,
+  deleteCoupon,
+  searchCoupons,
+  updateCoupon,
+  validateCoupon,
+} from "@/modules/coupon/controllers";
 import v from "@/modules/coupon/validators";
 import { adminOnlyMiddleware } from "@/shared/middlewares/adminOnly";
 import { authMiddleware } from "@/shared/middlewares/auth";

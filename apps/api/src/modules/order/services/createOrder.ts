@@ -1,11 +1,11 @@
 import { stripe } from "@/infra/payment/stripe";
 import { cartServices } from "@/modules/cart/services";
 import { couponServices } from "@/modules/coupon/services";
-import { db } from "@/shared/lib/db";
 import { orderRepositories } from "@/modules/order/repositories";
 import type { CreateOrderParams } from "@/modules/order/types/ServiceParams";
 import { shippingServices } from "@/modules/shipping/services";
 import { userServices } from "@/modules/user/services";
+import { db } from "@/shared/lib/db";
 import { ENV } from "@/shared/utils/env";
 import { BadRequestError, ForbiddenError, NotFoundError } from "@/shared/utils/HttpErrors";
 

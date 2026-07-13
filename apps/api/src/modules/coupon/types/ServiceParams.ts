@@ -1,8 +1,4 @@
-import type {
-  ApplyCouponRequest,
-  CouponType,
-  CreateCouponRequest,
-} from "@repo/types/contracts";
+import type { ApplyCouponRequest, CouponType, CreateCouponRequest } from "@repo/types/contracts";
 
 export type ValidateCouponParams = {
   userId: string;

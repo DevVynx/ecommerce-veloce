@@ -1,5 +1,5 @@
-import { db } from "@/shared/lib/db";
 import type { CancelOrderParams } from "@/modules/order/types/ServiceParams";
+import { db } from "@/shared/lib/db";
 
 export const cancelOrder = async ({ orderId }: CancelOrderParams) => {
   const order = await db.$transaction(async (tx) => {
