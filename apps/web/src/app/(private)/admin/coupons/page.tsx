@@ -16,7 +16,7 @@ import { useInvalidate } from "@/shared/hooks/lib/useInvalidate";
 import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 
 const ROW_HEIGHT = 68;
-const FILTERS_OFFSET = 350;
+const FILTERS_OFFSET = 400;
 const MIN_LIMIT = 5;
 const MAX_LIMIT = 50;
 const DEFAULT_LIMIT = 10;

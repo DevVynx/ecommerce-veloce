@@ -6,8 +6,8 @@ import { formatPrice } from "@/shared/utils/store/price";
 
 function formatSummaryDate(iso: string): string {
   const d = new Date(iso);
-  const date = `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
-  const time = iso.match(/T(\d{2}:\d{2})/)?.[1] ?? "";
+  const date = d.toLocaleDateString("pt-BR");
+  const time = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
   return `${date} às ${time}`;
 }
 

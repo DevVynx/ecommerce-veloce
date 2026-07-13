@@ -24,13 +24,12 @@ import { DateTimePicker } from "./DateTimePicker";
 
 const DESC_MAX = 50;
 
-export function EditCouponForm({
-  coupon,
-  onSuccess,
-}: {
+type EditCouponFormProps = {
   coupon: AdminCouponDto;
   onSuccess?: () => void;
-}) {
+};
+
+export function EditCouponForm({ coupon, onSuccess }: EditCouponFormProps) {
   const isFrozen = coupon.usageCount > 0;
   const today = useMemo(() => getTodayMidnight(), []);
   const currentSlot = getCurrentSlot();
@@ -174,6 +173,7 @@ export function EditCouponForm({
               <DateTimePicker
                 value={form.watch("endsAt")}
                 onChange={(v) => form.setValue("endsAt", v ?? "")}
+                minDate={endsAtDisabledBeforeDate ? new Date(endsAtDisabledBeforeDate) : today}
                 disabledBeforeTime={endsAtDisabledBeforeTime}
                 disabledBeforeDate={endsAtDisabledBeforeDate}
                 defaultTime="23:30"

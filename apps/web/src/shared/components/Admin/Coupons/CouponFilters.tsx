@@ -24,13 +24,12 @@ export type CouponFiltersValue = {
   sort: (typeof sortValues)[number];
 };
 
-export function CouponFilters({
-  values,
-  onChange,
-}: {
+type CouponFiltersProps = {
   values: CouponFiltersValue;
   onChange: (updates: Partial<CouponFiltersValue>) => void;
-}) {
+};
+
+export function CouponFilters({ values, onChange }: CouponFiltersProps) {
   return (
     <div className="space-y-4">
       <div className="relative">
