@@ -2,7 +2,7 @@ import { getAccessToken } from "@/shared/actions/auth/cookieActions";
 import type { ApiErrorResponse } from "@/shared/types/api/error";
 import { ENV } from "@/shared/utils/env";
 
-import { parseActionError } from "./parseActionError";
+import { toInternalErrorResponse } from "./toInternalErrorResponse";
 
 export interface FetchOptions extends Omit<RequestInit, "body"> {
   params?: Record<string, string | number>;
@@ -71,14 +71,18 @@ export async function fetchClient<T>(
     if (!response.ok) {
       const errorPayload = data as Record<string, unknown> | null;
 
+      const errorMessage =
+        (errorPayload?.message as string | Record<string, unknown>) ?? "Erro na requisição à API.";
+
       return {
         data: null,
         error: {
           status: response.status,
           error: typeof errorPayload?.error === "string" ? errorPayload.error : "FetchError",
           message:
-            (errorPayload?.message as string | Record<string, unknown>) ??
-            "Erro na requisição à API.",
+            typeof errorMessage === "string"
+              ? errorMessage
+              : "Erro de validação nos dados enviados.",
           code: typeof errorPayload?.code === "string" ? errorPayload.code : undefined,
         },
       };
@@ -86,6 +90,6 @@ export async function fetchClient<T>(
 
     return { data: data as T, error: null };
   } catch (error) {
-    return { data: null, error: parseActionError(error) };
+    return { data: null, error: toInternalErrorResponse(error) };
   }
 }

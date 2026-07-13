@@ -5,6 +5,6 @@
 export interface ApiErrorResponse {
   status: number; // Código HTTP (ex: 400, 401, 500)
   error: string; // Nome da classe de erro (ex: BadRequestError)
-  message: string | Record<string, unknown>; // Mensagem ou objeto com detalhes
+  message: string;
   code?: string; // Código de erro interno (opcional)
 }
