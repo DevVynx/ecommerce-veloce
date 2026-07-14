@@ -23,4 +23,6 @@ export type AdminGetOrdersRequest = {
   page?: number;
   limit?: number;
   sort?: "asc" | "desc";
+  q?: string;
+  status?: string;
 };
