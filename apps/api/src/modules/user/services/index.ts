@@ -9,6 +9,7 @@ import { findUserByEmail } from "./findUserByEmail";
 import { findUserByEmailWithPassword } from "./findUserByEmailWithPassword";
 import { findUserById } from "./findUserById";
 import { getProfile } from "./getProfile";
+import { searchCustomers } from "./searchCustomers";
 import { setDefault } from "./setDefault";
 import { updateAddress } from "./updateAddress";
 import { updateProfile } from "./updateProfile";
@@ -30,4 +31,5 @@ export const userServices = {
   changePassword,
   deleteAccount,
   updateProfile,
+  searchCustomers,
 };

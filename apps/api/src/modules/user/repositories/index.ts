@@ -9,6 +9,7 @@ import { findUserByEmailWithPassword } from "./findUserByEmailWithPassword";
 import { findUserById } from "./findUserById";
 import { findUserByIdWithPassword } from "./findUserByIdWithPassword";
 import { findUserProfile } from "./findUserProfile";
+import { searchCustomers } from "./searchCustomers";
 import { setDefaultAddress } from "./setDefaultAddress";
 import { updateAddress } from "./updateAddress";
 import { updateUserById } from "./updateUserById";
@@ -28,4 +29,5 @@ export const userRepositories = {
   findUserByEmailWithPassword,
   findUserById,
   findUserByIdWithPassword,
+  searchCustomers,
 };

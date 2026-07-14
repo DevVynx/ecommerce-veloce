@@ -4,6 +4,7 @@ export * from "./deleteAccount";
 export * from "./deleteAddress";
 export * from "./listAddresses";
 export * from "./profile";
+export * from "./searchCustomers";
 export * from "./setDefault";
 export * from "./updateAddress";
 export * from "./updateProfile";

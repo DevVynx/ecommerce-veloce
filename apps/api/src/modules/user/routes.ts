@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { adminOnlyMiddleware } from "@/shared/middlewares/adminOnly";
 import { authMiddleware } from "@/shared/middlewares/auth";
 
 import {
@@ -9,6 +10,7 @@ import {
   deleteAddress,
   listAddresses,
   profile,
+  searchCustomers,
   setDefault,
   updateAddress,
   updateProfile,
@@ -40,6 +42,14 @@ userRouter.put(
   authMiddleware,
   v.setDefault.middleware,
   setDefault
+);
+
+userRouter.get(
+  "/admin/customers",
+  authMiddleware,
+  adminOnlyMiddleware,
+  v.searchCustomers.middleware,
+  searchCustomers
 );
 
 export { userRouter };
