@@ -3,13 +3,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { BoxIcon } from "@/shared/assets/animatedIcons/box";
-import { BoxesIcon } from "@/shared/assets/animatedIcons/boxes";
 import { CircleHelpIcon } from "@/shared/assets/animatedIcons/circle-help";
+import { ClipboardListIcon } from "@/shared/assets/animatedIcons/clipboard-list";
 import { CornerUpLeftIcon } from "@/shared/assets/animatedIcons/corner-up-left";
 import { LayoutGridIcon } from "@/shared/assets/animatedIcons/layout-grid";
 import { ReceiptIcon } from "@/shared/assets/animatedIcons/receipt";
 import { SettingsIcon } from "@/shared/assets/animatedIcons/settings";
-import { UserIcon } from "@/shared/assets/animatedIcons/user";
+import { TicketPercentIcon } from "@/shared/assets/animatedIcons/ticket-percent";
+import { UserCheckIcon } from "@/shared/assets/animatedIcons/user-check";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { useAnimatedIcons } from "@/shared/hooks/ui/useAnimatedIcons";
@@ -19,9 +20,9 @@ const mainNav = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutGridIcon },
   { label: "Produtos", href: "/admin/products", icon: BoxIcon },
   { label: "Promoções", href: "/admin/promotions", icon: ReceiptIcon },
-  { label: "Cupons", href: "/admin/coupons", icon: ReceiptIcon },
-  { label: "Pedidos", href: "/admin/orders", icon: BoxesIcon },
-  { label: "Clientes", href: "/admin/customers", icon: UserIcon },
+  { label: "Cupons", href: "/admin/coupons", icon: TicketPercentIcon },
+  { label: "Pedidos", href: "/admin/orders", icon: ClipboardListIcon },
+  { label: "Clientes", href: "/admin/customers", icon: UserCheckIcon },
 ];
 
 const bottomNav = [
@@ -63,13 +64,19 @@ export function AdminSidebar({ onNavClick }: AdminSidebarProps) {
                 href={item.href}
                 onClick={onNavClick}
                 data-active={active}
-                className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
+                className={`group flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
                   active
                     ? "bg-accent text-accent-foreground font-medium"
                     : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
                 }`}
               >
-                <item.icon key={item.label} ref={getIconRef(`${item.label}`)} size={20} />
+                <item.icon
+                  ref={getIconRef(item.label)}
+                  size={20}
+                  {...(item.icon === TicketPercentIcon && {
+                    bgClassName: active ? "fill-accent" : "fill-background group-hover:fill-accent",
+                  })}
+                />
                 {item.label}
               </Link>
             );

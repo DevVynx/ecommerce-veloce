@@ -1,7 +1,6 @@
 "use client";
 
 import type { AdminSearchPromotionsRequest } from "@repo/types/contracts";
-import { Plus } from "lucide-react";
 import { parseAsIndex, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { Suspense, useCallback, useEffect, useMemo, useRef } from "react";
 
@@ -11,8 +10,10 @@ import {
   sortValues,
 } from "@/shared/components/Admin/Promotions/PromotionFilters";
 import { PromotionTable } from "@/shared/components/Admin/Promotions/PromotionTable";
+import { PlusIcon } from "@/shared/assets/animatedIcons/plus";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { useAdminSearchPromotions } from "@/shared/hooks/data/adminQueries/usePromotion";
+import { useAnimatedIcons } from "@/shared/hooks/ui/useAnimatedIcons";
 import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 
 const ROW_HEIGHT = 68;
@@ -32,6 +33,10 @@ const parsers = {
 
 function AdminPromotionsPageContent() {
   const { height } = useScreenSize();
+  const { getIconRef, getHandlers } = useAnimatedIcons({
+    autoStartDelay: 200,
+    autoStartDuration: 1500,
+  });
   const [sp, setSearchParams] = useQueryStates(parsers);
 
   const limit = useMemo(
@@ -83,8 +88,8 @@ function AdminPromotionsPageContent() {
     <>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Promoções</h1>
-        <Button disabled>
-          <Plus className="mr-2 size-4" />
+        <Button disabled {...getHandlers("create")}>
+          <PlusIcon ref={getIconRef("create")} size={18} className="mr-2" />
           Criar Promoção
         </Button>
       </div>

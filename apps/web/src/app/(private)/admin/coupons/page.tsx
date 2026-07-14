@@ -1,10 +1,10 @@
 "use client";
 
 import type { AdminCouponDto, AdminSearchCouponsRequest } from "@repo/types/contracts";
-import { Plus } from "lucide-react";
 import { parseAsIndex, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { PlusIcon } from "@/shared/assets/animatedIcons/plus";
 import type { CouponFiltersValue } from "@/shared/components/Admin/Coupons/CouponFilters";
 import { CouponFilters, sortValues } from "@/shared/components/Admin/Coupons/CouponFilters";
 import { CouponTable } from "@/shared/components/Admin/Coupons/CouponTable";
@@ -13,6 +13,7 @@ import { EditCouponSheet } from "@/shared/components/Admin/Coupons/EditCouponShe
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { useAdminSearchCoupons } from "@/shared/hooks/data/adminQueries/useCoupon";
 import { useInvalidate } from "@/shared/hooks/lib/useInvalidate";
+import { useAnimatedIcons } from "@/shared/hooks/ui/useAnimatedIcons";
 import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 
 const ROW_HEIGHT = 68;
@@ -30,6 +31,10 @@ const parsers = {
 
 function AdminCouponsPageContent() {
   const { height } = useScreenSize();
+  const { getIconRef, getHandlers } = useAnimatedIcons({
+    autoStartDelay: 200,
+    autoStartDuration: 1500,
+  });
   const [sp, setSearchParams] = useQueryStates(parsers);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState<AdminCouponDto | null>(null);
@@ -82,8 +87,8 @@ function AdminCouponsPageContent() {
     <>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Cupons</h1>
-        <Button onClick={() => setIsCreateOpen(true)}>
-          <Plus className="mr-2 size-4" />
+        <Button {...getHandlers("create")} onClick={() => setIsCreateOpen(true)}>
+          <PlusIcon ref={getIconRef("create")} size={18} className="mr-2" />
           Criar Cupom
         </Button>
       </div>

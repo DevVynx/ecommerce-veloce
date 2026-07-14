@@ -1,16 +1,17 @@
 "use client";
 
 import type { AdminSearchProductsRequest } from "@repo/types/contracts";
-import { Plus } from "lucide-react";
 import Link from "next/link";
 import { parseAsIndex, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { Suspense, useCallback, useEffect, useMemo, useRef } from "react";
 
+import { PlusIcon } from "@/shared/assets/animatedIcons/plus";
 import type { ProductFiltersValue } from "@/shared/components/Admin/Products/ProductFilters";
 import { ProductFilters, sortValues } from "@/shared/components/Admin/Products/ProductFilters";
 import { ProductTable } from "@/shared/components/Admin/Products/ProductTable";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { useAdminSearchProducts } from "@/shared/hooks/data/adminQueries/useProduct";
+import { useAnimatedIcons } from "@/shared/hooks/ui/useAnimatedIcons";
 import { useScreenSize } from "@/shared/hooks/ui/useScreenSize";
 
 const ROW_HEIGHT = 68;
@@ -30,6 +31,10 @@ const parsers = {
 
 function AdminProductsPageContent() {
   const { height } = useScreenSize();
+  const { getIconRef, getHandlers } = useAnimatedIcons({
+    autoStartDelay: 200,
+    autoStartDuration: 1500,
+  });
   const [sp, setSearchParams] = useQueryStates(parsers);
 
   const limit = useMemo(
@@ -81,9 +86,9 @@ function AdminProductsPageContent() {
     <>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Produtos</h1>
-        <Button asChild>
+        <Button asChild {...getHandlers("create")}>
           <Link href="/admin/products/create">
-            <Plus className="mr-2 size-4" />
+            <PlusIcon ref={getIconRef("create")} size={18} className="mr-2" />
             Criar Produto
           </Link>
         </Button>
