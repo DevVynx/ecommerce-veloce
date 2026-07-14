@@ -4,13 +4,13 @@ import type { AdminSearchPromotionsRequest } from "@repo/types/contracts";
 import { parseAsIndex, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { Suspense, useCallback, useEffect, useMemo, useRef } from "react";
 
+import { PlusIcon } from "@/shared/assets/animatedIcons/plus";
 import type { PromotionFiltersValue } from "@/shared/components/Admin/Promotions/PromotionFilters";
 import {
   PromotionFilters,
   sortValues,
 } from "@/shared/components/Admin/Promotions/PromotionFilters";
 import { PromotionTable } from "@/shared/components/Admin/Promotions/PromotionTable";
-import { PlusIcon } from "@/shared/assets/animatedIcons/plus";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { useAdminSearchPromotions } from "@/shared/hooks/data/adminQueries/usePromotion";
 import { useAnimatedIcons } from "@/shared/hooks/ui/useAnimatedIcons";
