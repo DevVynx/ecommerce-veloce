@@ -19,6 +19,8 @@ export function useAdminOrders(params: AdminGetOrdersRequest) {
         if (params.limit) queryParams.limit = params.limit;
         if (params.page !== undefined) queryParams.page = params.page;
         if (params.sort !== undefined) queryParams.sort = params.sort;
+        if (params.q) queryParams.q = params.q;
+        if (params.status) queryParams.status = params.status;
       }
 
       const { data, error } = await withAuthRefresh(() =>
