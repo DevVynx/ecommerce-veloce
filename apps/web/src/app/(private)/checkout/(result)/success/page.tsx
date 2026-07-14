@@ -1,10 +1,16 @@
 import { Check } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
+import { formatOrderNumber } from "@/shared/utils/store/orderNumber";
 
-import { OrderNumber } from "./order-number";
+function OrderNumberDisplay() {
+  const searchParams = useSearchParams();
+  const order = searchParams.get("order");
+  return <span>{order ? formatOrderNumber(Number(order)) : "---"}</span>;
+}
 
 export default function CheckoutSuccessPage() {
   return (
@@ -24,7 +30,7 @@ export default function CheckoutSuccessPage() {
         <p className="text-muted-foreground mb-1 text-sm">Nº do pedido</p>
         <p className="font-mono text-lg font-semibold">
           <Suspense fallback={<span>---</span>}>
-            <OrderNumber />
+            <OrderNumberDisplay />
           </Suspense>
         </p>
       </div>
