@@ -6,7 +6,6 @@ import { copyParams, normalizeParam } from "@/shared/utils/store/search";
 
 type RatingOption = {
   value: number;
-  count: number;
 };
 
 type FilterRatingProps = {
@@ -38,9 +37,9 @@ export const FilterRating = ({ ratingOptions, params }: FilterRatingProps) => {
     <div className="space-y-0">
       <span className="text-sm font-medium">Avaliação Mínima</span>
       <div className="flex flex-col gap-1">
-        {ratingOptions.map(({ value, count }) => {
+        {ratingOptions.map(({ value }) => {
           const isSelected = selected === value;
-          const hasResults = count > 0;
+          const hasResults = true;
 
           return (
             <button
@@ -81,7 +80,6 @@ export const FilterRating = ({ ratingOptions, params }: FilterRatingProps) => {
               </span>
 
               <span className="text-muted-foreground flex items-center gap-2 text-xs">
-                <span>({count})</span>
                 <Check
                   className={`h-4 w-4 transition-all duration-200 ${
                     isSelected ? "block scale-100 opacity-100" : "hidden scale-75"

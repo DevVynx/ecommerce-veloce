@@ -5,11 +5,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { copyParams, normalizeParam } from "@/shared/utils/store/search";
 
 type FilterOnSaleProps = {
-  onSaleCount: number;
   params: Record<string, string | string[] | undefined>;
 };
 
-export const FilterOnSale = ({ onSaleCount, params }: FilterOnSaleProps) => {
+export const FilterOnSale = ({ params }: FilterOnSaleProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -42,7 +41,6 @@ export const FilterOnSale = ({ onSaleCount, params }: FilterOnSaleProps) => {
       >
         <span className={isOnSale ? "font-medium" : ""}>Apenas em oferta</span>
         <span className="text-muted-foreground flex items-center gap-2 text-xs">
-          <span>({onSaleCount})</span>
           <Check
             className={`h-4 w-4 transition-all duration-200 ${
               isOnSale ? "block scale-100 opacity-100" : "hidden scale-75"

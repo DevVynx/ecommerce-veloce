@@ -13,7 +13,7 @@ import { copyParams } from "@/shared/utils/store/search";
 export type SearchOption = {
   id: string;
   name: string;
-  values: { value: string; count: number }[];
+  values: { value: string }[];
 };
 
 type FilterOptionsProps = {
@@ -58,7 +58,6 @@ export const FilterOptions = ({ options, selectedValues, params }: FilterOptions
               <span className={isSelected ? "font-medium" : ""}>{val.value}</span>
 
               <span className="text-muted-foreground flex items-center gap-2 text-xs">
-                <span>({val.count})</span>
                 <Check
                   className={`h-4 w-4 transition-all duration-200 ${
                     isSelected ? "block scale-100 opacity-100" : "hidden scale-75"

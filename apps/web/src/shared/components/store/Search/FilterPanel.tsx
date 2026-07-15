@@ -20,7 +20,7 @@ export const FilterPanel = ({ filters, selectedOptionValues, params }: FilterPan
 
       <Separator />
 
-      <FilterOnSale onSaleCount={filters.onSaleCount} params={params} />
+      <FilterOnSale params={params} />
 
       <Separator />
 

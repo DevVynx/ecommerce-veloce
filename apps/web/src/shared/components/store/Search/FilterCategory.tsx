@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { copyParams, normalizeParam } from "@/shared/utils/store/search";
 
 type FilterCategoryProps = {
-  categories: { id: string; name: string; count: number }[];
+  categories: { id: string; name: string }[];
   params: Record<string, string | string[] | undefined>;
 };
 
@@ -50,7 +50,6 @@ export const FilterCategory = ({ categories, params }: FilterCategoryProps) => {
               <span className={isSelected ? "font-medium" : ""}>{cat.name}</span>
 
               <span className="text-muted-foreground flex items-center gap-2 text-xs">
-                <span>({cat.count})</span>
                 <Check
                   className={`h-4 w-4 transition-all duration-200 ${isSelected ? "block scale-100 opacity-100" : "hidden scale-75"} `}
                 />

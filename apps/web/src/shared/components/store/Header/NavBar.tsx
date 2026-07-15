@@ -1,9 +1,9 @@
 "use client";
 import { Heart, LayoutDashboard } from "lucide-react";
-import { Meilisearch } from "meilisearch";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { getSearchSuggestions } from "@/shared/actions/search/getSuggestions";
 import { registerSearchAnalytics } from "@/shared/actions/search/registerAnalytics";
 import { BadgedIconButton } from "@/shared/components/BadgedIconButton";
 import { SearchBar } from "@/shared/components/SearchBar";
@@ -11,16 +11,10 @@ import { Button } from "@/shared/components/shadcn-ui/button";
 import { UserMenu } from "@/shared/components/Store/Header/UserMenu";
 import { useAuthState } from "@/shared/states/auth";
 import { useWishlistState } from "@/shared/states/wishlist";
-import { ENV } from "@/shared/utils/env";
 
 import { CartDropdown } from "../../Cart/CartDropdown";
 import { HeaderLogo } from "./Logo";
 import { MobileSideMenu } from "./MobileSideMenu";
-
-const meiliClient = new Meilisearch({
-  host: ENV.NEXT_PUBLIC_MEILI_HOST,
-  apiKey: ENV.NEXT_PUBLIC_MEILI_SEARCH_KEY,
-});
 
 export const NavBar = () => {
   const { user } = useAuthState();
@@ -30,16 +24,12 @@ export const NavBar = () => {
   const qFromUrl = searchParams.get("q") ?? "";
 
   const fetchSuggestions = async (query: string) => {
-    const result = await meiliClient.index("suggestions").search(query, { limit: 10 });
-    return result.hits.map((hit) => ({ id: String(hit.id), term: String(hit.term) }));
-  };
-
-  const fetchTrending = async () => {
-    const result = await meiliClient.index("suggestions").search("", {
-      sort: ["searchCount:desc"],
-      limit: 5,
-    });
-    return result.hits.map((hit) => ({ id: String(hit.id), term: String(hit.term) }));
+    const { data, error } = await getSearchSuggestions(query, 10);
+    if (error || !data) {
+      if (process.env.NODE_ENV === "development") console.error("fetchSuggestions error:", error);
+      return [];
+    }
+    return data.suggestions.map((s) => ({ id: s.id, term: s.term }));
   };
 
   const handleSelect = async (term: string) => {
@@ -54,7 +44,6 @@ export const NavBar = () => {
         queryFromUrl={qFromUrl}
         placeholder="Busque os seus produtos!"
         fetchSuggestions={fetchSuggestions}
-        fetchTrending={fetchTrending}
         onSelect={handleSelect}
         classNames={{
           root: "w-full",

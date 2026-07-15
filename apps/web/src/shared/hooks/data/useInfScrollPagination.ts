@@ -57,10 +57,22 @@ export function useInfScrollPagination<T>({
   }, [resetKey]);
 
   const loadMore = useCallback(async () => {
+    const callId = Date.now();
+    const prevLen = items.length;
+    const prevIds = new Set(items.map(p => (p as Record<string, unknown>).id as string));
+    console.log(`[loadMore#${callId}] offsetRef=${offsetRef.current}, prevItems=${prevLen}, limit=${limit}`);
     setError(null);
     setIsLoading(true);
     try {
-      const data = await actionRef.current(offsetRef.current, limit);
+      const currentOffset = offsetRef.current;
+      const data = await actionRef.current(currentOffset, limit);
+
+      const dupes = data.items.filter(p => prevIds.has((p as Record<string, unknown>).id as string));
+      if (dupes.length > 0) {
+        console.warn(`[loadMore#${callId}] DUPLICADOS=${dupes.length} ids=${dupes.map(p => (p as Record<string, unknown>).id).join(",")}`);
+      }
+      console.log(`[loadMore#${callId}] recebidos=${data.items.length} hasMore=${data.hasMore} proxOffset=${offsetRef.current + data.items.length}`);
+
       setItems((prev) => [...prev, ...data.items]);
       offsetRef.current += data.items.length;
 
