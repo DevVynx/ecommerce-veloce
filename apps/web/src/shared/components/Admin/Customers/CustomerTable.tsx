@@ -34,7 +34,7 @@ function CopyableId({ id }: { id: string }) {
     e.stopPropagation();
     navigator.clipboard.writeText(id).then(() => {
       setCopied(true);
-      showNotification({ type: "success", title: "ID copiado!" });
+      showNotification({ type: "success", title: "ID copiado!", message: "O ID do cliente foi copiado para a área de transferência." });
       timeoutRef.current = setTimeout(() => setCopied(false), 2000);
     });
   };

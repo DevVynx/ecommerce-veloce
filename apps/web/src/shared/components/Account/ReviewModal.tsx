@@ -85,7 +85,7 @@ export const ReviewModal = ({ item, open, onClose, onReviewChanged }: ReviewModa
       return;
     }
 
-    showNotification({ type: "success", title: "Avaliação atualizada!" });
+    showNotification({ type: "success", title: "Avaliação atualizada!", message: "Sua avaliação foi atualizada com sucesso." });
     onReviewChanged?.();
     onClose();
   }, [rating, comment, item.productId, onReviewChanged, onClose]);
@@ -102,7 +102,7 @@ export const ReviewModal = ({ item, open, onClose, onReviewChanged }: ReviewModa
       return;
     }
 
-    showNotification({ type: "success", title: "Avaliação excluída!" });
+    showNotification({ type: "success", title: "Avaliação excluída!", message: "Sua avaliação foi removida com sucesso." });
     onReviewChanged?.();
     onClose();
   }, [item.productId, onReviewChanged, onClose]);
