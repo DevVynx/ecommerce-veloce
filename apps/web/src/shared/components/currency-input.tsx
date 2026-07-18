@@ -10,9 +10,16 @@ type CurrencyInputProps = {
   onChange: (value: number | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
+  className?: string;
 };
 
-export function CurrencyInput({ value, onChange, placeholder, disabled }: CurrencyInputProps) {
+export function CurrencyInput({
+  value,
+  onChange,
+  placeholder,
+  disabled,
+  className,
+}: CurrencyInputProps) {
   const [display, setDisplay] = useState("");
 
   useEffect(() => {
@@ -45,6 +52,7 @@ export function CurrencyInput({ value, onChange, placeholder, disabled }: Curren
       onChange={handleChange}
       placeholder={placeholder}
       disabled={disabled}
+      className={className}
     />
   );
 }

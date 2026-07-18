@@ -1,5 +1,3 @@
-"use client";
-
 import type { CategoryDto } from "@repo/types/contracts";
 import { useFormContext } from "react-hook-form";
 
@@ -71,7 +69,7 @@ export function BasicInfoSection({ categories }: BasicInfoSectionProps) {
         <FieldContent>
           <Textarea
             placeholder="Descrição detalhada do produto..."
-            className="min-h-[100px] resize-none"
+            className="min-h-25 resize-none"
             {...register("description")}
           />
           {errors.description && (

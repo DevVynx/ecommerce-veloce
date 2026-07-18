@@ -2,6 +2,7 @@
 
 import { Controller, useFormContext } from "react-hook-form";
 
+import { CurrencyInput } from "@/shared/components/currency-input";
 import { Field, FieldContent, FieldLabel } from "@/shared/components/shadcn-ui/field";
 import { Input } from "@/shared/components/shadcn-ui/input";
 import {
@@ -12,8 +13,6 @@ import {
   SelectValue,
 } from "@/shared/components/shadcn-ui/select";
 import type { CreateCouponFormData } from "@/shared/schemas/coupons";
-
-import { CurrencyInput } from "./CurrencyInput";
 
 export function CouponDiscountFields({ disabled }: { disabled?: boolean }) {
   const {

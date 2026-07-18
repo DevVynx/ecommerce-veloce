@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { createCoupon } from "@/shared/actions/coupons/createCoupon";
+import { CurrencyInput } from "@/shared/components/currency-input";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Field, FieldContent, FieldLabel } from "@/shared/components/shadcn-ui/field";
 import { Input } from "@/shared/components/shadcn-ui/input";
@@ -18,7 +19,6 @@ import {
 
 import { CouponDiscountFields } from "./CouponDiscountFields";
 import { CouponSummaryTicket } from "./CouponSummaryTicket";
-import { CurrencyInput } from "./CurrencyInput";
 import { DateTimePicker } from "./DateTimePicker";
 
 const DESC_MAX = 50;
@@ -54,13 +54,7 @@ export function CreateCouponForm({ onSuccess }: { onSuccess?: () => void }) {
 
   const descLength = form.watch("description")?.length ?? 0;
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
-    e.preventDefault();
-    const valid = await form.trigger();
-    if (!valid) return;
-
-    const raw = form.getValues();
-
+  const onSubmit = async (raw: CreateCouponFormData) => {
     const result = await createCoupon({
       code: raw.code.toUpperCase(),
       type: raw.type,
@@ -94,7 +88,7 @@ export function CreateCouponForm({ onSuccess }: { onSuccess?: () => void }) {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <Field>
           <FieldLabel>Código</FieldLabel>
           <FieldContent>

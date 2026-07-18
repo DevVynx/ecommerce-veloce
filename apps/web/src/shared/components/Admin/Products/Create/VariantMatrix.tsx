@@ -1,9 +1,8 @@
-"use client";
-
-import { Trash2Icon } from "lucide-react";
+import { AlertCircleIcon, Trash2Icon } from "lucide-react";
 import { useEffect } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
+import { CurrencyInput } from "@/shared/components/currency-input";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Input } from "@/shared/components/shadcn-ui/input";
 import { Switch } from "@/shared/components/shadcn-ui/switch";
@@ -15,10 +14,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/shadcn-ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/components/shadcn-ui/tooltip";
 import type { CreateProductFormData } from "@/shared/schemas/createProduct";
+import { cn } from "@/shared/utils/lib/utils";
 import { generateSku } from "@/shared/utils/store/skuGenerator";
 
-export function VariantMatrix() {
+type VariantMatrixProps = {
+  optionsRevision: number;
+};
+
+export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
   const {
     control,
     register,
@@ -27,42 +37,52 @@ export function VariantMatrix() {
     setValue,
     getValues,
   } = useFormContext<CreateProductFormData>();
-  const { fields, remove, replace } = useFieldArray({ control, name: "variants" });
-  const options = watch("options");
 
-  // Regenerate variants when options change (preserving existing edits)
+  const options = watch("options");
+  const variants = watch("variants");
+
   useEffect(() => {
-    if (options.length === 0 || options.some((o) => !o.name || o.values.length === 0)) {
-      replace([]);
+    const currentOptions = getValues("options");
+    const currentName = getValues("name");
+
+    if (
+      currentOptions.length === 0 ||
+      currentOptions.some((option) => !option.name || option.values.length === 0)
+    ) {
+      setValue("variants", []);
       return;
     }
 
-    const combinations = options.reduce<Record<string, string>[]>(
-      (acc, opt) => acc.flatMap((combo) => opt.values.map((v) => ({ ...combo, [opt.name]: v }))),
+    const combinations = currentOptions.reduce<Record<string, string>[]>(
+      (acc, option) =>
+        acc.flatMap((value) => option.values.map((v) => ({ ...value, [option.name]: v }))),
       [{}]
     );
 
-    const existing = new Map(getValues("variants").map((v) => [JSON.stringify(v.attributes), v]));
+    const existing = new Map(
+      getValues("variants").map((variant) => [JSON.stringify(variant.attributes), variant])
+    );
 
-    const next = combinations.map((attrs) => {
-      const key = JSON.stringify(attrs);
+    const next = combinations.map((attributes) => {
+      const key = JSON.stringify(attributes);
       const prev = existing.get(key);
-      return (
-        prev ?? {
-          sku: generateSku(getValues("name") || "PROD", attrs),
-          price: 0 as unknown as number,
-          stock: 0 as unknown as number,
-          weight: 0.1 as unknown as number,
-          isActive: true,
-          attributes: attrs,
-        }
-      );
+      return {
+        sku: generateSku(currentName || "PROD", attributes),
+        price: prev?.price ?? 0,
+        stock: prev?.stock ?? 0,
+        weight: prev?.weight ?? 0.1,
+        isActive: prev?.isActive ?? true,
+        attributes,
+      };
     });
 
-    replace(next);
-  }, [options, replace, getValues]);
+    setValue("variants", next);
+  }, [optionsRevision, setValue, getValues]);
 
-  if (fields.length === 0) {
+  const optionsAreIncomplete =
+    options.length === 0 || options.some((option) => !option.name || option.values.length === 0);
+
+  if (optionsAreIncomplete) {
     return (
       <div className="space-y-3">
         <h2 className="text-lg font-semibold">Variantes</h2>
@@ -73,61 +93,148 @@ export function VariantMatrix() {
     );
   }
 
-  const optionNames = (watch("options") ?? []).map((o) => o.name).filter(Boolean);
+  const optionNames = options.map((option) => option.name).filter(Boolean);
+
+  const removeVariant = (index: number) => {
+    setValue(
+      "variants",
+      variants.filter((_, i) => i !== index)
+    );
+  };
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-lg font-semibold">
-        Variantes ({fields.length} combinação{fields.length !== 1 ? "ões" : ""})
-      </h2>
+    <TooltipProvider>
+      <div className="space-y-3">
+        <h2 className="text-lg font-semibold">
+          Variantes ({variants.length} combinação{variants.length !== 1 ? "ões" : ""})
+        </h2>
 
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {optionNames.map((name) => (
-                <TableHead key={name}>{name}</TableHead>
-              ))}
-              <TableHead className="min-w-[130px]">SKU</TableHead>
-              <TableHead className="min-w-[100px]">Preço</TableHead>
-              <TableHead className="min-w-[80px]">Estoque</TableHead>
-              <TableHead className="w-16">Ativo</TableHead>
-              <TableHead className="w-10" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {fields.map((field, index) => {
-              const attrs = watch(`variants.${index}.attributes`) ?? {};
-              return (
-                <TableRow key={field.id}>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {optionNames.map((name) => (
+                  <TableHead key={name}>{name}</TableHead>
+                ))}
+                <TableHead className="min-w-35">SKU</TableHead>
+                <TableHead className="min-w-25">Preço</TableHead>
+                <TableHead className="min-w-20">Estoque</TableHead>
+                <TableHead className="min-w-16">Peso</TableHead>
+                <TableHead className="w-16">Ativo</TableHead>
+                <TableHead className="w-10" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {variants.map((variant, index) => (
+                <TableRow key={JSON.stringify(variant.attributes)}>
                   {optionNames.map((name) => (
                     <TableCell key={name} className="text-sm">
-                      {attrs[name] ?? "—"}
+                      {variant.attributes[name] ?? "—"}
                     </TableCell>
                   ))}
                   <TableCell>
-                    <Input className="h-8 text-xs" {...register(`variants.${index}.sku`)} />
-                    {errors.variants?.[index]?.sku && (
-                      <p className="text-destructive mt-0.5 text-[10px]">
-                        {errors.variants[index]!.sku!.message}
-                      </p>
-                    )}
+                    <div className="flex items-center gap-1">
+                      <Input
+                        className={cn(
+                          "h-8 text-xs",
+                          errors.variants?.[index]?.sku && "border-destructive"
+                        )}
+                        {...register(`variants.${index}.sku`)}
+                      />
+                      {errors.variants?.[index]?.sku && (
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <button type="button" className="text-destructive shrink-0">
+                              <AlertCircleIcon className="size-4" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="right" className="text-destructive">
+                            <p>{errors.variants[index]!.sku!.message}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
-                    <Input
-                      className="h-8 text-xs"
-                      inputMode="decimal"
-                      placeholder="0,00"
-                      {...register(`variants.${index}.price`, { valueAsNumber: true })}
-                    />
+                    <div className="flex items-center gap-1">
+                      <Controller
+                        control={control}
+                        name={`variants.${index}.price`}
+                        render={({ field }) => (
+                          <CurrencyInput
+                            className={cn(
+                              "h-8 text-xs",
+                              errors.variants?.[index]?.price && "border-destructive"
+                            )}
+                            value={field.value as number | null | undefined}
+                            onChange={(v) => field.onChange(v)}
+                            placeholder="0,00"
+                          />
+                        )}
+                      />
+                      {errors.variants?.[index]?.price && (
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <button type="button" className="text-destructive shrink-0">
+                              <AlertCircleIcon className="size-4" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="right" className="text-destructive">
+                            <p>{errors.variants[index]!.price!.message}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
-                    <Input
-                      className="h-8 text-xs"
-                      inputMode="numeric"
-                      placeholder="0"
-                      {...register(`variants.${index}.stock`, { valueAsNumber: true })}
-                    />
+                    <div className="flex items-center gap-1">
+                      <Input
+                        className={cn(
+                          "h-8 text-xs",
+                          errors.variants?.[index]?.stock && "border-destructive"
+                        )}
+                        inputMode="numeric"
+                        placeholder="0"
+                        {...register(`variants.${index}.stock`, { valueAsNumber: true })}
+                      />
+                      {errors.variants?.[index]?.stock && (
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <button type="button" className="text-destructive shrink-0">
+                              <AlertCircleIcon className="size-4" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="right" className="text-destructive">
+                            <p>{errors.variants[index]!.stock!.message}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Input
+                        className={cn(
+                          "h-8 text-xs",
+                          errors.variants?.[index]?.weight && "border-destructive"
+                        )}
+                        inputMode="decimal"
+                        placeholder="0,00"
+                        {...register(`variants.${index}.weight`, { valueAsNumber: true })}
+                      />
+                      {errors.variants?.[index]?.weight && (
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <button type="button" className="text-destructive shrink-0">
+                              <AlertCircleIcon className="size-4" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="right" className="text-destructive">
+                            <p>{errors.variants[index]!.weight!.message}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex h-8 items-center">
@@ -143,23 +250,17 @@ export function VariantMatrix() {
                       variant="ghost"
                       size="icon"
                       className="text-muted-foreground size-8"
-                      onClick={() => remove(index)}
+                      onClick={() => removeVariant(index)}
                     >
                       <Trash2Icon className="size-4" />
                     </Button>
                   </TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-
-      {fields.length === 0 && (
-        <p className="text-muted-foreground text-sm">
-          Todas as variantes foram removidas. Adicione ao menos uma para criar o produto.
-        </p>
-      )}
-    </div>
+    </TooltipProvider>
   );
 }

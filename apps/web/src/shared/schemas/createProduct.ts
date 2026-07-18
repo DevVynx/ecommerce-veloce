@@ -3,7 +3,7 @@ import { z } from "zod";
 export const createProductSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(200),
   description: z.string().min(1, "Descrição é obrigatória"),
-  categoryId: z.string().uuid("Selecione uma categoria"),
+  categoryId: z.uuid("Selecione uma categoria"),
   options: z
     .array(
       z.object({
@@ -16,12 +16,18 @@ export const createProductSchema = z.object({
     .array(
       z.object({
         sku: z.string().min(1, "SKU é obrigatório").max(50),
-        price: z.coerce.number().positive("Preço deve ser positivo").multipleOf(0.01),
+        price: z.coerce
+          .number("Preço deve ser um número")
+          .positive("Preço deve ser positivo")
+          .multipleOf(0.01),
         stock: z.coerce
-          .number()
+          .number("Estoque deve ser um número")
           .int("Deve ser inteiro")
           .nonnegative("Estoque não pode ser negativo"),
-        weight: z.coerce.number().positive("Peso deve ser positivo").default(0.1),
+        weight: z.coerce
+          .number("Peso deve ser um número")
+          .positive("Peso deve ser positivo")
+          .default(0.1),
         isActive: z.boolean().default(true),
         attributes: z.record(z.string(), z.string()),
       })

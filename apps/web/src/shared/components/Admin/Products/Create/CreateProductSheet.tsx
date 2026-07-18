@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Drawer,
   DrawerContent,
@@ -43,7 +42,7 @@ export function CreateProductSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-3xl">
+      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-4xl">
         <SheetHeader>
           <SheetTitle>Criar Produto</SheetTitle>
         </SheetHeader>
