@@ -33,10 +33,8 @@ export const PersonalInfoForm = ({ user }: PersonalInfoFormProps) => {
   });
   const { errors } = form.formState;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (values: ProfileFormValues) => {
     setIsSaving(true);
-    const values = form.getValues();
     const { data, error } = await updateProfile(values);
     if (data) {
       setUser(data.user);
@@ -61,7 +59,7 @@ export const PersonalInfoForm = ({ user }: PersonalInfoFormProps) => {
       <p className="text-muted-foreground mb-4 text-sm">
         Gerencie suas informações pessoais e endereços.
       </p>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field>
             <FieldLabel>Nome</FieldLabel>
