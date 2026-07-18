@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { CopyIcon } from "@/shared/assets/animatedIcons/copy";
 import { Pagination } from "@/shared/components/Pagination";
-import { useAnimatedIcons } from "@/shared/hooks/ui/useAnimatedIcons";
 import {
   Table,
   TableBody,
@@ -17,6 +16,7 @@ import {
   TableRow,
 } from "@/shared/components/shadcn-ui/table";
 import { showNotification } from "@/shared/components/showNotification";
+import { useAnimatedIcons } from "@/shared/hooks/ui/useAnimatedIcons";
 import { formatPrice } from "@/shared/utils/store/price";
 
 function CopyableId({ id }: { id: string }) {
@@ -34,7 +34,11 @@ function CopyableId({ id }: { id: string }) {
     e.stopPropagation();
     navigator.clipboard.writeText(id).then(() => {
       setCopied(true);
-      showNotification({ type: "success", title: "ID copiado!", message: "O ID do cliente foi copiado para a área de transferência." });
+      showNotification({
+        type: "success",
+        title: "ID copiado!",
+        message: "O ID do cliente foi copiado para a área de transferência.",
+      });
       timeoutRef.current = setTimeout(() => setCopied(false), 2000);
     });
   };
@@ -99,9 +103,7 @@ export function CustomerTable({ data, page, onPageChange }: CustomerTableProps) 
                   <p className="text-sm font-medium">{customer.name}</p>
                   <CopyableId id={customer.id} />
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {customer.email}
-                </TableCell>
+                <TableCell className="text-muted-foreground text-sm">{customer.email}</TableCell>
                 <TableCell className="text-right text-sm tabular-nums">
                   {customer.orderCount}
                 </TableCell>

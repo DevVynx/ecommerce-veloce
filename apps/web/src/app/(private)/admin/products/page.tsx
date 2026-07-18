@@ -6,9 +6,9 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "rea
 
 import { getCategories } from "@/shared/actions/products/getCategories";
 import { PlusIcon } from "@/shared/assets/animatedIcons/plus";
+import { CreateProductSheet } from "@/shared/components/Admin/Products/Create/CreateProductSheet";
 import type { ProductFiltersValue } from "@/shared/components/Admin/Products/ProductFilters";
 import { ProductFilters, sortValues } from "@/shared/components/Admin/Products/ProductFilters";
-import { CreateProductSheet } from "@/shared/components/Admin/Products/Create/CreateProductSheet";
 import { ProductTable } from "@/shared/components/Admin/Products/ProductTable";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { useAdminSearchProducts } from "@/shared/hooks/data/adminQueries/useProduct";

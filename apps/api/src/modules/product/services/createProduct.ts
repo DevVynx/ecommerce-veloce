@@ -1,7 +1,7 @@
+import type { CreateProductRequest } from "@repo/types/contracts";
+
 import { productRepositories } from "@/modules/product/repositories";
 import { db } from "@/shared/lib/db";
-
-import type { CreateProductRequest } from "@repo/types/contracts";
 
 function slugify(text: string): string {
   return text

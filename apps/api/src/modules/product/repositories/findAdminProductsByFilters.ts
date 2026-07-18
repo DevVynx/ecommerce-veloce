@@ -110,7 +110,11 @@ export const findAdminProductsByFilters = async (params: Params) => {
   // In-memory sort: fetches all matching products to compute effective sale price per product,
   // then sorts in-memory. Alternative: materialized `minPrice` column on Product table.
   if (sortBy?.startsWith("price_")) {
-    const activePromotions = { isActive: true, startsAt: { lte: new Date() }, endsAt: { gte: new Date() } };
+    const activePromotions = {
+      isActive: true,
+      startsAt: { lte: new Date() },
+      endsAt: { gte: new Date() },
+    };
 
     const allProducts = await db.product.findMany({
       where,

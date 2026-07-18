@@ -18,7 +18,12 @@ type CreateProductSheetProps = {
   categories: { id: string; name: string }[];
 };
 
-export function CreateProductSheet({ open, onOpenChange, onSuccess, categories }: CreateProductSheetProps) {
+export function CreateProductSheet({
+  open,
+  onOpenChange,
+  onSuccess,
+  categories,
+}: CreateProductSheetProps) {
   const { isMobile } = useScreenSize();
 
   if (isMobile) {

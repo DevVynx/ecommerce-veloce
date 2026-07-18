@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { validation } from "@/shared/middlewares/validation";
 
 const body = z.object({
@@ -10,7 +11,7 @@ const body = z.object({
       z.object({
         name: z.string().min(1),
         values: z.array(z.string().min(1)).min(1),
-      }),
+      })
     )
     .min(1),
   variants: z
@@ -27,10 +28,10 @@ const body = z.object({
             z.object({
               url: z.string().url(),
               publicId: z.string().min(1),
-            }),
+            })
           )
           .min(1),
-      }),
+      })
     )
     .min(1),
 });

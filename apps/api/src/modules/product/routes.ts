@@ -45,7 +45,7 @@ productRouter.post(
   authMiddleware,
   adminOnlyMiddleware,
   uploadMiddleware.single("file"),
-  uploadVariantImage,
+  uploadVariantImage
 );
 
 productRouter.post(
@@ -53,7 +53,7 @@ productRouter.post(
   authMiddleware,
   adminOnlyMiddleware,
   v.createProduct.middleware,
-  createProduct,
+  createProduct
 );
 
 export { productRouter };

@@ -64,7 +64,11 @@ export const AddressForm = ({
       setValue("city", result.city, { shouldValidate: true });
       setValue("state", result.state, { shouldValidate: true });
     } else {
-      showNotification({ type: "error", title: "CEP não encontrado.", message: "O CEP informado não foi encontrado. Verifique e tente novamente." });
+      showNotification({
+        type: "error",
+        title: "CEP não encontrado.",
+        message: "O CEP informado não foi encontrado. Verifique e tente novamente.",
+      });
     }
   };
 

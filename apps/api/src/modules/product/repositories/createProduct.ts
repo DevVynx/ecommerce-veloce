@@ -1,6 +1,6 @@
-import { db } from "@/shared/lib/db";
-
 import type { CreateProductRequest } from "@repo/types/contracts";
+
+import { db } from "@/shared/lib/db";
 
 type CreateProductReturn = {
   id: string;
@@ -9,7 +9,7 @@ type CreateProductReturn = {
 };
 
 export const createProduct = async (
-  data: CreateProductRequest & { slug: string },
+  data: CreateProductRequest & { slug: string }
 ): Promise<CreateProductReturn> => {
   return await db.$transaction(async (tx) => {
     const product = await tx.product.create({
@@ -45,17 +45,13 @@ export const createProduct = async (
     let totalStock = 0;
 
     for (const variant of data.variants) {
-      const optionValueIds = Object.entries(variant.attributes).map(
-        ([optName, optValue]) => {
-          const id = valueMap.get(`${optName}::${optValue}`);
-          if (!id) {
-            throw new Error(
-              `Valor de opção "${optValue}" não encontrado para "${optName}"`,
-            );
-          }
-          return id;
-        },
-      );
+      const optionValueIds = Object.entries(variant.attributes).map(([optName, optValue]) => {
+        const id = valueMap.get(`${optName}::${optValue}`);
+        if (!id) {
+          throw new Error(`Valor de opção "${optValue}" não encontrado para "${optName}"`);
+        }
+        return id;
+      });
 
       await tx.productVariant.create({
         data: {
