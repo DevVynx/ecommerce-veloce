@@ -59,7 +59,9 @@ export default async function RootLayout({
               <NuqsAdapter>
                 <div className="min-h-screen">{children}</div>
               </NuqsAdapter>
-              <Footer />
+              <Suspense fallback={null}>
+                <Footer />
+              </Suspense>
               <Toaster />
             </TooltipProvider>
           </GoogleOAuthProvider>
