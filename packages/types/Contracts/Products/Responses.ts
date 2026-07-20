@@ -18,6 +18,7 @@ export type VariantDto = {
   isOnSale: boolean;
   isAvailable: boolean;
   optionValueIds: string[];
+  images: { url: string }[];
 };
 
 export type CatalogProductDto = {
@@ -92,6 +93,7 @@ export type AdminProductVariantDto = {
   stock: number;
   isActive: boolean;
   options: { name: string; value: string }[];
+  images: { url: string }[];
 };
 
 export type AdminProductListItem = {

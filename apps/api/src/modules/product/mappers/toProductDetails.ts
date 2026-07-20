@@ -45,6 +45,7 @@ export function productMapperToProductDetails(
     isOnSale: variant.offer.isOnSale,
     isAvailable: variant.offer.isAvailable,
     optionValueIds: variant.optionValues.map((vOpt) => vOpt.productOptionValueId),
+    images: variant.images.map((img) => ({ url: img.url })),
   }));
 
   return { product: formattedProduct, options: formattedOptions, variants: formattedVariants };

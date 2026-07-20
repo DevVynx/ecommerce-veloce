@@ -38,6 +38,7 @@ async function searchWithDb(
           name: pvo.productOptionValue.productOption.name,
           value: pvo.productOptionValue.value,
         })),
+        images: variant.images.map((img) => ({ url: img.url })),
       };
     });
 
