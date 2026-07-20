@@ -22,6 +22,7 @@ export function BasicInfoSection({ categories }: BasicInfoSectionProps) {
     register,
     formState: { errors },
     setValue,
+    clearErrors,
     watch,
   } = useFormContext<CreateProductFormData>();
 
@@ -36,6 +37,9 @@ export function BasicInfoSection({ categories }: BasicInfoSectionProps) {
             <Input
               placeholder="Ex: Camiseta Algodão Premium"
               maxLength={200}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") e.preventDefault();
+              }}
               {...register("name")}
             />
             {errors.name && <p className="text-destructive mt-1 text-xs">{errors.name.message}</p>}
@@ -45,7 +49,7 @@ export function BasicInfoSection({ categories }: BasicInfoSectionProps) {
         <Field>
           <FieldLabel>Categoria</FieldLabel>
           <FieldContent>
-            <Select value={watch("categoryId")} onValueChange={(v) => setValue("categoryId", v)}>
+            <Select value={watch("categoryId")} onValueChange={(v) => { setValue("categoryId", v); clearErrors("categoryId"); }}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>

@@ -8,6 +8,7 @@ import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { showNotification } from "@/shared/components/showNotification";
 import { type CreateProductFormData, createProductSchema } from "@/shared/schemas/createProduct";
 
+import { BaseValuesSection } from "./BaseValuesSection";
 import { BasicInfoSection } from "./BasicInfoSection";
 import { ImageGroupSection } from "./ImageGroupSection";
 import type { StoredImage } from "./ImageUploadBlock";
@@ -26,6 +27,9 @@ export function CreateProductForm({ categories, onSuccess }: CreateProductFormPr
       name: "",
       description: "",
       categoryId: "",
+      basePrice: undefined,
+      baseStock: undefined,
+      baseWeight: undefined,
       options: [],
       variants: [],
     },
@@ -138,6 +142,10 @@ export function CreateProductForm({ categories, onSuccess }: CreateProductFormPr
 
         <Separator />
 
+        <BaseValuesSection />
+
+        <Separator />
+
         <OptionsBuilder onOptionsChange={handleOptionsChange} />
 
         <Separator />
@@ -146,7 +154,6 @@ export function CreateProductForm({ categories, onSuccess }: CreateProductFormPr
           imageOptionIndex={imageOptionIndex}
           onImageOptionIndexChange={setImageOptionIndex}
           onImagesChange={handleImagesChange}
-          generalImages={generalImages}
           onGeneralImagesChange={handleGeneralImagesChange}
         />
 

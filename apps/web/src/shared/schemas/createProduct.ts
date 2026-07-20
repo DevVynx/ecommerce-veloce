@@ -4,6 +4,9 @@ export const createProductSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(200),
   description: z.string().min(1, "Descrição é obrigatória"),
   categoryId: z.uuid("Selecione uma categoria"),
+  basePrice: z.coerce.number("Preço base deve ser um número").positive("Preço base deve ser positivo").optional(),
+  baseStock: z.coerce.number("Estoque base deve ser um número").int("Deve ser inteiro").nonnegative("Estoque base não pode ser negativo").optional(),
+  baseWeight: z.coerce.number("Peso base deve ser um número").positive("Peso base deve ser positivo").optional(),
   options: z
     .array(
       z.object({

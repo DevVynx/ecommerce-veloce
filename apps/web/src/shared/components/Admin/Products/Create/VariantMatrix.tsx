@@ -44,6 +44,9 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
   useEffect(() => {
     const currentOptions = getValues("options");
     const currentName = getValues("name");
+    const basePrice = getValues("basePrice");
+    const baseStock = getValues("baseStock");
+    const baseWeight = getValues("baseWeight");
 
     if (
       currentOptions.length === 0 ||
@@ -68,9 +71,9 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
       const prev = existing.get(key);
       return {
         sku: generateSku(currentName || "PROD", attributes),
-        price: prev?.price ?? 0,
-        stock: prev?.stock ?? 0,
-        weight: prev?.weight ?? 0.1,
+        price: prev?.price ?? basePrice ?? 0,
+        stock: prev?.stock ?? baseStock ?? 0,
+        weight: prev?.weight ?? baseWeight ?? 0.1,
         isActive: prev?.isActive ?? true,
         attributes,
       };
@@ -119,7 +122,7 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
                 <TableHead className="min-w-35">SKU</TableHead>
                 <TableHead className="min-w-25">Preço</TableHead>
                 <TableHead className="min-w-20">Estoque</TableHead>
-                <TableHead className="min-w-16">Peso</TableHead>
+                <TableHead className="min-w-16">Peso(kg)</TableHead>
                 <TableHead className="w-16">Ativo</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
@@ -190,7 +193,7 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
                     <div className="flex items-center gap-1">
                       <Input
                         className={cn(
-                          "h-8 text-xs",
+                          "h-8 w-20 text-xs",
                           errors.variants?.[index]?.stock && "border-destructive"
                         )}
                         inputMode="numeric"
@@ -215,7 +218,7 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
                     <div className="flex items-center gap-1">
                       <Input
                         className={cn(
-                          "h-8 text-xs",
+                          "h-8 w-15 text-xs",
                           errors.variants?.[index]?.weight && "border-destructive"
                         )}
                         inputMode="decimal"
