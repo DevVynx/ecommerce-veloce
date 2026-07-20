@@ -89,7 +89,7 @@ export const ProductDetails = ({
       productSlug: slug,
       productTitle: title,
       variantId: selectedVariant.id,
-      image: display.image,
+      image: selectedVariant.images[0]?.url ?? display.image,
       price: selectedVariant.price,
       salePrice: selectedVariant.salePrice,
       isOnSale: displayIsOnSale,

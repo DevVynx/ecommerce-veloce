@@ -46,7 +46,7 @@ export const ProductActions = () => {
       productSlug: product.slug,
       productTitle: product.title,
       variantId: selectedVariant.id,
-      image: product.display.image,
+      image: selectedVariant.images[0]?.url ?? product.display.image,
       price: selectedVariant.price,
       salePrice: selectedVariant.salePrice,
       isOnSale: displayIsOnSale,
