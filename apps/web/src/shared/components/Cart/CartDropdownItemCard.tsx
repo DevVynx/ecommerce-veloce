@@ -37,7 +37,7 @@ export const CartDropdownItemCard = ({ item }: CartDropdownItemCardProps) => {
           <img
             src={item.product.variant.image}
             alt={item.product.title}
-            className="h-full w-full object-contain"
+            className="h-full w-full object-cover"
           />
         ) : null}
       </Link>

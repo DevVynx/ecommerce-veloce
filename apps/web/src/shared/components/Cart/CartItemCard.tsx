@@ -73,7 +73,7 @@ export const CartItemCard = ({ item }: CartItemCardProps) => {
             <img
               src={item.product.variant.image}
               alt={item.product.title}
-              className="h-full w-full object-contain"
+              className="h-full w-full object-cover"
             />
             {isOnSale && (
               <span className="absolute top-1 right-1 rounded bg-red-500 px-1 py-0.5 text-[10px] font-bold text-white">

@@ -34,7 +34,7 @@ export const OrderSummary = () => {
                   src={item.product.variant.image}
                   alt={item.product.title}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                 />
               )}
             </Link>

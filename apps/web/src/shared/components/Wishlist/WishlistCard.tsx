@@ -19,12 +19,12 @@ export const WishlistCard = ({ item, onRemove }: WishlistCardProps) => {
 
   return (
     <div className="group overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:scale-[1.02]">
-      <div className="relative bg-black/10 p-4">
+      <div className="relative bg-black/10">
         <Link href={`/product/${product.slug}`}>
           <img
             src={display.image}
             alt={product.title}
-            className="aspect-square w-full cursor-pointer object-contain"
+            className="aspect-square w-full cursor-pointer object-cover"
           />
         </Link>
 

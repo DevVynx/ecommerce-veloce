@@ -30,7 +30,7 @@ export const MobileSummary = ({ shippingPrice }: MobileSummaryProps) => {
                   src={item.product.variant.image}
                   alt={item.product.title}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                 />
               )}
             </div>
