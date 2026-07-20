@@ -35,19 +35,6 @@ export function ImageUploadBlock({ label, onImagesChange }: ImageUploadBlockProp
     <div>
       <h3 className="mb-2 text-sm font-medium">{label}</h3>
 
-      {uploadFiles.length > 0 && (
-        <div className="mb-3 space-y-2">
-          {uploadFiles.map((item) => (
-            <ImageUploadItem
-              key={item.id}
-              item={item}
-              onRemove={removeUploadFile}
-              onRetry={retryUpload}
-            />
-          ))}
-        </div>
-      )}
-
       <ImageUploadDropZone
         isDragging={isDragging}
         onDragEnter={handleDragEnter}
@@ -58,23 +45,39 @@ export function ImageUploadBlock({ label, onImagesChange }: ImageUploadBlockProp
         getInputProps={getInputProps}
       />
 
-      {(completedCount > 0 || errorCount > 0 || uploadingCount > 0) && (
-        <div className="mt-2 flex items-center gap-2">
-          {completedCount > 0 && (
-            <span className="bg-success/15 border-success text-success rounded-md border px-1 text-xs font-semibold">
-              Concluído{completedCount !== 1 ? "s:" : ":"} {completedCount}
-            </span>
-          )}
-          {errorCount > 0 && (
-            <span className="bg-destructive/15 border-destructive text-destructive rounded-md border px-1 text-xs font-semibold">
-              Falho{errorCount !== 1 ? "s:" : ":"} {errorCount}
-            </span>
-          )}
-          {uploadingCount > 0 && (
-            <span className="bg-muted border-muted-foreground text-muted-foreground rounded-md border px-1 text-xs font-semibold">
-              Enviando: {uploadingCount}
-            </span>
-          )}
+      <div className="my-2 flex items-center gap-1">
+        <span className="text-muted-foreground text-sm font-semibold">Progresso:</span>
+        {(completedCount > 0 || errorCount > 0 || uploadingCount > 0) && (
+          <div className="flex items-center gap-2">
+            {completedCount > 0 && (
+              <span className="bg-success/15 border-success text-success rounded-md border px-1 text-xs font-semibold">
+                Concluído{completedCount !== 1 ? "s:" : ":"} {completedCount}
+              </span>
+            )}
+            {errorCount > 0 && (
+              <span className="bg-destructive/15 border-destructive text-destructive rounded-md border px-1 text-xs font-semibold">
+                Falho{errorCount !== 1 ? "s:" : ":"} {errorCount}
+              </span>
+            )}
+            {uploadingCount > 0 && (
+              <span className="bg-muted border-muted-foreground text-muted-foreground rounded-md border px-1 text-xs font-semibold">
+                Enviando: {uploadingCount}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {uploadFiles.length > 0 && (
+        <div className="mb-3 space-y-2">
+          {uploadFiles.map((item) => (
+            <ImageUploadItem
+              key={item.id}
+              item={item}
+              onRemove={removeUploadFile}
+              onRetry={retryUpload}
+            />
+          ))}
         </div>
       )}
 

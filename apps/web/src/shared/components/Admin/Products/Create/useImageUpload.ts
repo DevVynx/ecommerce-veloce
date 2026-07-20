@@ -1,7 +1,9 @@
 import imageCompression from "browser-image-compression";
 import { useCallback, useState } from "react";
 
+import { deleteImageFile } from "@/shared/actions/products/deleteImageFile";
 import { uploadImage } from "@/shared/actions/products/uploadImage";
+import { showNotification } from "@/shared/components/showNotification";
 import { type FileWithPreview, useFileUpload } from "@/shared/hooks/ui/use-file-upload";
 
 export type StoredImage = { id: string; url: string; publicId: string };
@@ -122,11 +124,26 @@ export function useImageUpload({ onImagesChange }: UseImageUploadOptions) {
   );
 
   const removeUploadFile = useCallback(
-    (fileId: string) => {
+    async (fileId: string) => {
+      const item = uploadFiles.find((currentFile) => currentFile.id === fileId);
+      const storedImage = item?.result;
+
+      if (storedImage?.publicId) {
+        const { error } = await deleteImageFile(storedImage.publicId);
+        if (error) {
+          showNotification({
+            type: "error",
+            title: "Erro ao remover imagem",
+            message: error.message,
+          });
+          return;
+        }
+      }
+
       removeFile(fileId);
       setUploadFiles((prev) => prev.filter((currentFile) => currentFile.id !== fileId));
     },
-    [removeFile]
+    [uploadFiles, removeFile]
   );
 
   const completedCount = uploadFiles.filter((file) => file.status === "completed").length;

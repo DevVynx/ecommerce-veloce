@@ -26,7 +26,7 @@ type ImageUploadItemProps = {
 export function ImageUploadItem({ item, onRemove, onRetry }: ImageUploadItemProps) {
   return (
     <div key={item.id} className="border-border bg-card rounded-lg border p-2.5">
-      <div className="flex items-start gap-2.5">
+      <div className="flex items-center gap-2.5">
         <div className="shrink-0">
           {item.preview ? (
             <img
@@ -50,7 +50,7 @@ export function ImageUploadItem({ item, onRemove, onRetry }: ImageUploadItemProp
               onClick={() => onRemove(item.id)}
               variant="ghost"
               size="icon"
-              className="text-muted-foreground size-6 hover:bg-transparent hover:opacity-100"
+              className="text-muted-foreground size-6"
             >
               <XIcon className="size-4" />
             </Button>
