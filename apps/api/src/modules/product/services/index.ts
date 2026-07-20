@@ -1,5 +1,6 @@
 import { countLowStockVariants } from "@/modules/product/services/countLowStockVariants";
 import { createProduct } from "@/modules/product/services/createProduct";
+import { deleteVariantImage } from "@/modules/product/services/deleteVariantImage";
 import { findProductById } from "@/modules/product/services/findById";
 import { findProductBySlug } from "@/modules/product/services/findBySlug";
 import { findManyProducts } from "@/modules/product/services/findMany";
@@ -14,6 +15,7 @@ import { uploadVariantImage } from "@/modules/product/services/uploadVariantImag
 export const productServices = {
   countLowStockVariants,
   createProduct,
+  deleteVariantImage,
   getCategories,
   findMany: findManyProducts,
   findById: findProductById,

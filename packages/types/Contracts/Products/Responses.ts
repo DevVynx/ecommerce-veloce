@@ -137,3 +137,7 @@ export type CreateProductResponse = {
   name: string;
   variantsCount: number;
 };
+
+export type DeleteVariantImageResponse = {
+  message: string;
+};

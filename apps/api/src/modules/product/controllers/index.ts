@@ -1,5 +1,6 @@
 export * from "./countLowStockVariants";
 export * from "./createProduct";
+export * from "./deleteVariantImage";
 export * from "./getCategories";
 export * from "./getProductBySlug";
 export * from "./getProductDetails";

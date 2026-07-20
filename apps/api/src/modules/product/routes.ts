@@ -8,6 +8,7 @@ import { uploadMiddleware } from "@/shared/middlewares/upload";
 import {
   countLowStockVariants,
   createProduct,
+  deleteVariantImage,
   getAllProducts,
   getCategories,
   getProductBySlug,
@@ -53,7 +54,14 @@ productRouter.post(
   authMiddleware,
   adminOnlyMiddleware,
   v.createProduct.middleware,
-  createProduct
+  createProduct,
+);
+
+productRouter.delete(
+  "/admin/products/images/:publicId",
+  authMiddleware,
+  adminOnlyMiddleware,
+  deleteVariantImage,
 );
 
 export { productRouter };
