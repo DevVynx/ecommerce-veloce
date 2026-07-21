@@ -2,17 +2,26 @@ import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import Link from "next/link";
 
+import { getCategories } from "@/shared/actions/products/getCategories";
+import { CATEGORY_LOGO_MAP } from "@/shared/components/Store/CategoriesSection/categoryLogos";
+
 type Category = {
   label: string;
   logo: StaticImageData;
   href: string;
 };
 
-type CategoriesSectionProps = {
-  categories: Category[];
-};
+export const CategoriesSection = async () => {
+  const { data } = await getCategories();
+  const categories =
+    data?.categories
+      .filter((cat) => CATEGORY_LOGO_MAP[cat.name])
+      .map((cat) => ({
+        label: cat.name,
+        logo: CATEGORY_LOGO_MAP[cat.name]!,
+        href: `/search?categoryId=${cat.id}`,
+      })) ?? [];
 
-export const CategoriesSection = ({ categories }: CategoriesSectionProps) => {
   return (
     <section id="categoriesSection" className="overflow-x-auto">
       <div className="grid auto-cols-max grid-flow-col grid-rows-1 gap-6 py-10 sm:justify-center">
