@@ -11,3 +11,16 @@ export type AdminSearchPromotionsRequest = {
   page?: number;
   limit?: number;
 };
+
+export type CreatePromotionRequest = {
+  name: string;
+  type: PromotionType;
+  discountValue: number;
+  isActive?: boolean;
+  startsAt: string;
+  endsAt: string;
+  targetType: PromotionTargetType;
+  targetId: string;
+};
+
+export type UpdatePromotionRequest = Partial<CreatePromotionRequest>;

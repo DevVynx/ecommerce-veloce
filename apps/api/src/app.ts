@@ -8,6 +8,7 @@ import { cartRouter } from "@/modules/cart/routes";
 import { couponRouter } from "@/modules/coupon/routes";
 import { dashboardRouter } from "@/modules/dashboard/routes";
 import { orderRouter } from "@/modules/order/routes";
+import { promotionRouter } from "@/modules/promotion/routes";
 import { reviewRouter } from "@/modules/review/routes";
 import { shippingRouter } from "@/modules/shipping/routes";
 import { userRouter } from "@/modules/user/routes";
@@ -55,6 +56,7 @@ app.use("/api", wishlistRouter);
 app.use("/api", shippingRouter);
 app.use("/api", searchRouter);
 app.use("/api", orderRouter);
+app.use("/api", promotionRouter);
 app.use("/api", reviewRouter);
 
 app.use(notFoundHandler);
