@@ -15,7 +15,8 @@ export const OrderSummary = () => {
   const { selectedShipping, step } = useCheckoutState();
 
   const couponDiscount = appliedCoupon?.discount ?? 0;
-  const shippingPrice = selectedShipping?.price ?? 0;
+  const shippingPrice =
+    appliedCoupon?.type === "FREE_SHIPPING" ? 0 : (selectedShipping?.price ?? 0);
   const finalTotal = asDecimal(total).minus(couponDiscount).plus(shippingPrice);
 
   return (
@@ -87,16 +88,20 @@ export const OrderSummary = () => {
         {appliedCoupon && (
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Cupom ({appliedCoupon.code})</span>
-            <span className="font-semibold text-red-500">
-              {formatDiscount(appliedCoupon.discount)}
-            </span>
+            {appliedCoupon.type === "FREE_SHIPPING" ? (
+              <span className="font-semibold text-green-600">Frete Grátis</span>
+            ) : (
+              <span className="font-semibold text-red-500">
+                {formatDiscount(appliedCoupon.discount)}
+              </span>
+            )}
           </div>
         )}
 
         {selectedShipping ? (
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">{selectedShipping.service}</span>
-            {selectedShipping.price === 0 ? (
+            {appliedCoupon?.type === "FREE_SHIPPING" || selectedShipping.price === 0 ? (
               <span className="font-semibold text-green-600">Grátis</span>
             ) : (
               <span>{formatPrice(selectedShipping.price)}</span>

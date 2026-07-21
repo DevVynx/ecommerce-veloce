@@ -8,6 +8,7 @@ import { formatPrice } from "@/shared/utils/store/price";
 type ShippingOptionsProps = {
   options: ShippingOptionDto[];
   freeShippingMinValue: number | null;
+  freeShippingByCoupon?: boolean;
   selectedShipping: ShippingOptionDto | null;
   onSelect: (option: ShippingOptionDto) => void;
   onPrevious: () => void;
@@ -17,6 +18,7 @@ type ShippingOptionsProps = {
 export const ShippingOptions = ({
   options,
   freeShippingMinValue,
+  freeShippingByCoupon,
   selectedShipping,
   onSelect,
   onPrevious,
@@ -26,9 +28,13 @@ export const ShippingOptions = ({
     <div className="flex flex-col gap-3">
       {freeShippingMinValue !== null && (
         <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
-          {options.every((o) => o.price === 0)
-            ? "Você atingiu o valor mínimo para frete grátis!"
-            : `Frete grátis a partir de R$ ${freeShippingMinValue.toFixed(2)}`}
+          {options.every((o) => o.price === 0) ? (
+            freeShippingByCoupon
+              ? "Você possui um cupom de frete grátis!"
+              : "Você atingiu o valor mínimo para frete grátis!"
+          ) : (
+            `Frete grátis a partir de ${formatPrice(freeShippingMinValue)}`
+          )}
         </div>
       )}
 

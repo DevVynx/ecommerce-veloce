@@ -60,6 +60,7 @@ export const CouponApplier = ({ subtotal: _subtotal }: CouponApplierProps) => {
       code: data.coupon.code,
       discount: data.discountValue,
       description: data.coupon.description,
+      type: data.coupon.type,
     });
     setInputValue("");
     setIsApplying(false);
@@ -76,9 +77,13 @@ export const CouponApplier = ({ subtotal: _subtotal }: CouponApplierProps) => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-red-500">
-            {formatDiscount(appliedCoupon.discount)}
-          </span>
+          {appliedCoupon.type === "FREE_SHIPPING" ? (
+            <span className="text-sm font-bold text-green-600">Frete Grátis</span>
+          ) : (
+            <span className="text-sm font-bold text-red-500">
+              {formatDiscount(appliedCoupon.discount)}
+            </span>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -106,7 +111,7 @@ export const CouponApplier = ({ subtotal: _subtotal }: CouponApplierProps) => {
                 setInputValue(e.target.value.toUpperCase());
                 setError(null);
               }}
-              className="h-9 pl-8 text-sm"
+              className="h-9 pl-8"
               maxLength={15}
               onKeyDown={(e) => e.key === "Enter" && handleApply()}
             />

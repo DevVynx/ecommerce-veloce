@@ -47,22 +47,25 @@ export const CartSummary = ({ summary }: CartSummaryProps) => {
           {appliedCoupon && (
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Cupom ({appliedCoupon.code})</span>
-              <span className="font-semibold text-red-500">
-                {formatDiscount(appliedCoupon.discount)}
-              </span>
+              {appliedCoupon.type === "FREE_SHIPPING" ? (
+                <span className="font-semibold text-green-600">Frete Grátis</span>
+              ) : (
+                <span className="font-semibold text-red-500">
+                  {formatDiscount(appliedCoupon.discount)}
+                </span>
+              )}
             </div>
           )}
 
-          {total < FREE_SHIPPING_THRESHOLD && (
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Frete</span>
-              <span className="text-muted-foreground text-xs">Calculado no checkout</span>
-            </div>
-          )}
-          {total >= FREE_SHIPPING_THRESHOLD && (
+          {appliedCoupon?.type === "FREE_SHIPPING" || total >= FREE_SHIPPING_THRESHOLD ? (
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Frete</span>
               <span className="font-semibold text-green-600">Grátis</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Frete</span>
+              <span className="text-muted-foreground text-xs">Calculado no checkout</span>
             </div>
           )}
         </div>

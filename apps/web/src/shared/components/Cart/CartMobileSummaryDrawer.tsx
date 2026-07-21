@@ -1,5 +1,6 @@
 import type { CartDto } from "@repo/types/contracts";
 import { ChevronUp, Truck } from "lucide-react";
+import { useCallback, useState } from "react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
 import {
@@ -25,6 +26,8 @@ type CartMobileSummaryDrawerProps = {
 export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProps) => {
   const { count, subtotal, total, discount } = summary;
   const { appliedCoupon } = useCartState();
+  const [open, setOpen] = useState(false);
+  const closeDrawer = useCallback(() => setOpen(false), []);
 
   const couponDiscount = appliedCoupon?.discount ?? 0;
   const finalTotal = total - couponDiscount;
@@ -33,7 +36,7 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
   const freeShippingProgress = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
 
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white px-4 py-4 shadow-lg lg:hidden">
           <div className="mx-auto flex max-w-7xl items-center justify-between">
@@ -60,7 +63,12 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
         </DrawerHeader>
 
         <div className="space-y-4 overflow-y-auto px-4 pb-8">
-          {total < FREE_SHIPPING_THRESHOLD ? (
+          {appliedCoupon?.type === "FREE_SHIPPING" || total >= FREE_SHIPPING_THRESHOLD ? (
+            <div className="rounded-md bg-green-50 p-3 text-center text-xs font-semibold text-green-700">
+              <Truck className="mx-auto mb-1 size-5" />
+              Parabéns! Você ganhou <span className="font-bold">frete grátis</span>!
+            </div>
+          ) : (
             <div className="space-y-1.5">
               <div className="bg-muted h-2 w-full overflow-hidden rounded-full">
                 <div
@@ -75,11 +83,6 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
                 </span>{" "}
                 para <span className="font-semibold text-green-600">frete grátis</span>
               </p>
-            </div>
-          ) : (
-            <div className="rounded-md bg-green-50 p-3 text-center text-xs font-semibold text-green-700">
-              <Truck className="mx-auto mb-1 size-5" />
-              Parabéns! Você ganhou <span className="font-bold">frete grátis</span>!
             </div>
           )}
 
@@ -96,24 +99,28 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
               </div>
             )}
 
-            {total < FREE_SHIPPING_THRESHOLD ? (
+            {appliedCoupon?.type === "FREE_SHIPPING" || total >= FREE_SHIPPING_THRESHOLD ? (
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Frete</span>
-                <span className="text-muted-foreground text-xs">Calculado no checkout</span>
+                <span className="font-medium text-green-600">Grátis</span>
               </div>
             ) : (
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Frete</span>
-                <span className="font-medium text-green-600">Grátis</span>
+                <span className="text-muted-foreground text-xs">Calculado no checkout</span>
               </div>
             )}
 
             {appliedCoupon && (
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Cupom ({appliedCoupon.code})</span>
-                <span className="font-medium text-red-500">
-                  {formatDiscount(appliedCoupon.discount)}
-                </span>
+                {appliedCoupon.type === "FREE_SHIPPING" ? (
+                  <span className="font-medium text-green-600">Frete Grátis</span>
+                ) : (
+                  <span className="font-medium text-red-500">
+                    {formatDiscount(appliedCoupon.discount)}
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -127,7 +134,7 @@ export const CartMobileSummaryDrawer = ({ summary }: CartMobileSummaryDrawerProp
             <span className="font-bold">{formatPrice(finalTotal)}</span>
           </div>
 
-          <CheckoutButton buttonClassname="w-full py-3" />
+          <CheckoutButton buttonClassname="w-full py-3" onBeforeNavigate={closeDrawer} />
         </div>
       </DrawerContent>
     </Drawer>

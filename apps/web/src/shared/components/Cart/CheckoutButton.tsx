@@ -1,5 +1,5 @@
 import { ShoppingCart } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { AuthModal } from "@/shared/components/Auth/AuthModal";
@@ -8,26 +8,38 @@ import { useAuthState } from "@/shared/states/auth";
 
 type CheckoutButtonProps = {
   buttonClassname: string;
+  onBeforeNavigate?: () => void;
 };
 
-export const CheckoutButton = ({ buttonClassname }: CheckoutButtonProps) => {
+export const CheckoutButton = ({ buttonClassname, onBeforeNavigate }: CheckoutButtonProps) => {
   const { isAuthenticated } = useAuthState();
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const router = useRouter();
 
   if (isAuthenticated) {
     return (
-      <Button className={buttonClassname} asChild>
-        <Link href="/checkout">
-          <ShoppingCart className="size-5" />
-          Finalizar Compra
-        </Link>
+      <Button
+        className={buttonClassname}
+        onClick={() => {
+          onBeforeNavigate?.();
+          setTimeout(() => router.push("/checkout"), 0);
+        }}
+      >
+        <ShoppingCart className="size-5" />
+        Finalizar Compra
       </Button>
     );
   }
 
   return (
     <>
-      <Button className={buttonClassname} onClick={() => setAuthModalOpen(true)}>
+      <Button
+        className={buttonClassname}
+        onClick={() => {
+          onBeforeNavigate?.();
+          setTimeout(() => setAuthModalOpen(true), 0);
+        }}
+      >
         <ShoppingCart className="size-5" />
         Finalizar Compra
       </Button>

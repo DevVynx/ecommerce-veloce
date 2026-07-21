@@ -1,4 +1,4 @@
-import type { CartDto, CartItemDto } from "@repo/types/contracts";
+import type { CartDto, CartItemDto, CouponType } from "@repo/types/contracts";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -8,6 +8,7 @@ type AppliedCouponData = {
   code: string;
   discount: number;
   description: string;
+  type: CouponType;
 };
 
 type CartState = {

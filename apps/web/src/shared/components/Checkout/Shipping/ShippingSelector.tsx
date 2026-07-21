@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { quoteShipping } from "@/shared/actions/shipping/quoteShipping";
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
+import { useCartState } from "@/shared/states/cart";
 
 import { ShippingError } from "./ShippingError";
 import { ShippingOptions } from "./ShippingOptions";
@@ -25,8 +26,10 @@ export const ShippingSelector = ({
 }: ShippingSelectorProps) => {
   const [options, setOptions] = useState<ShippingOptionDto[]>([]);
   const [freeShippingMinValue, setFreeShippingMinValue] = useState<number | null>(null);
+  const [freeShippingByCoupon, setFreeShippingByCoupon] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { appliedCoupon } = useCartState();
 
   useEffect(() => {
     const fetchShipping = async () => {
@@ -42,10 +45,18 @@ export const ShippingSelector = ({
       }
 
       if (data) {
-        setOptions(data.shippingOptions);
-        setFreeShippingMinValue(data.freeShippingMinValue);
+        const hasFreeShippingCoupon = appliedCoupon?.type === "FREE_SHIPPING";
+        const apiAlreadyZeroed = data.shippingOptions.every((o) => o.price === 0);
+        const finalOptions =
+          hasFreeShippingCoupon && !apiAlreadyZeroed
+            ? data.shippingOptions.map((o) => ({ ...o, price: 0 }))
+            : data.shippingOptions;
 
-        const cheapest = data.shippingOptions.reduce((prev, curr) =>
+        setOptions(finalOptions);
+        setFreeShippingMinValue(data.freeShippingMinValue);
+        setFreeShippingByCoupon(hasFreeShippingCoupon && !apiAlreadyZeroed);
+
+        const cheapest = finalOptions.reduce((prev, curr) =>
           curr.price < prev.price ? curr : prev
         );
 
@@ -84,6 +95,7 @@ export const ShippingSelector = ({
     <ShippingOptions
       options={options}
       freeShippingMinValue={freeShippingMinValue}
+      freeShippingByCoupon={freeShippingByCoupon}
       selectedShipping={selectedShipping}
       onSelect={onSelect}
       onPrevious={onPrevious}
