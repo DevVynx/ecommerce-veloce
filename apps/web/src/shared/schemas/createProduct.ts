@@ -17,14 +17,12 @@ export const createProductSchema = z.object({
     .number("Peso base deve ser um número")
     .positive("Peso base deve ser positivo")
     .optional(),
-  options: z
-    .array(
-      z.object({
-        name: z.string().min(1, "Nome da opção é obrigatório"),
-        values: z.array(z.string().min(1)).min(1, "Adicione ao menos um valor"),
-      })
-    )
-    .min(1, "Adicione ao menos uma opção"),
+  options: z.array(
+    z.object({
+      name: z.string().min(1, "Nome da opção é obrigatório"),
+      values: z.array(z.string().min(1)).min(1, "Adicione ao menos um valor"),
+    })
+  ),
   variants: z
     .array(
       z.object({

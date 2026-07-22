@@ -40,6 +40,7 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
 
   const options = watch("options");
   const variants = watch("variants");
+  const name = watch("name");
 
   useEffect(() => {
     const currentOptions = getValues("options");
@@ -48,10 +49,22 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
     const baseStock = getValues("baseStock");
     const baseWeight = getValues("baseWeight");
 
-    if (
-      currentOptions.length === 0 ||
-      currentOptions.some((option) => !option.name || option.values.length === 0)
-    ) {
+    if (currentOptions.length === 0) {
+      const prev = getValues("variants")?.[0];
+      setValue("variants", [
+        {
+          sku: generateSku(currentName || "PROD", {}),
+          price: prev?.price ?? basePrice ?? 0,
+          stock: prev?.stock ?? baseStock ?? 0,
+          weight: prev?.weight ?? baseWeight ?? 0.1,
+          isActive: prev?.isActive ?? true,
+          attributes: {},
+        },
+      ]);
+      return;
+    }
+
+    if (currentOptions.some((option) => !option.name || option.values.length === 0)) {
       setValue("variants", []);
       return;
     }
@@ -82,8 +95,20 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
     setValue("variants", next);
   }, [optionsRevision, setValue, getValues]);
 
+  useEffect(() => {
+    const currentVariants = getValues("variants");
+    if (currentVariants.length === 0) return;
+
+    const updated = currentVariants.map((v) => ({
+      ...v,
+      sku: generateSku(name || "PROD", v.attributes),
+    }));
+
+    setValue("variants", updated);
+  }, [name, setValue, getValues]);
+
   const optionsAreIncomplete =
-    options.length === 0 || options.some((option) => !option.name || option.values.length === 0);
+    options.length > 0 && options.some((option) => !option.name || option.values.length === 0);
 
   if (optionsAreIncomplete) {
     return (
@@ -104,6 +129,141 @@ export function VariantMatrix({ optionsRevision }: VariantMatrixProps) {
       variants.filter((_, i) => i !== index)
     );
   };
+
+  if (options.length === 0) {
+    return (
+      <div className="space-y-3">
+        <h2 className="text-lg font-semibold">Variante</h2>
+
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="min-w-35">SKU</TableHead>
+                <TableHead className="min-w-25">Preço</TableHead>
+                <TableHead className="min-w-20">Estoque</TableHead>
+                <TableHead className="min-w-16">Peso(kg)</TableHead>
+                <TableHead className="w-16">Ativo</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      className={cn("h-8 text-xs", errors.variants?.[0]?.sku && "border-destructive")}
+                      {...register("variants.0.sku")}
+                    />
+                    {errors.variants?.[0]?.sku && (
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <button type="button" className="text-destructive shrink-0">
+                            <AlertCircleIcon className="size-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="text-destructive">
+                          <p>{errors.variants[0]!.sku!.message}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Controller
+                      control={control}
+                      name="variants.0.price"
+                      render={({ field }) => (
+                        <CurrencyInput
+                          className={cn(
+                            "h-8 text-xs",
+                            errors.variants?.[0]?.price && "border-destructive"
+                          )}
+                          value={field.value as number | null | undefined}
+                          onChange={(v) => field.onChange(v)}
+                          placeholder="0,00"
+                        />
+                      )}
+                    />
+                    {errors.variants?.[0]?.price && (
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <button type="button" className="text-destructive shrink-0">
+                            <AlertCircleIcon className="size-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="text-destructive">
+                          <p>{errors.variants[0]!.price!.message}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      className={cn(
+                        "h-8 w-20 text-xs",
+                        errors.variants?.[0]?.stock && "border-destructive"
+                      )}
+                      inputMode="numeric"
+                      placeholder="0"
+                      {...register("variants.0.stock", { valueAsNumber: true })}
+                    />
+                    {errors.variants?.[0]?.stock && (
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <button type="button" className="text-destructive shrink-0">
+                            <AlertCircleIcon className="size-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="text-destructive">
+                          <p>{errors.variants[0]!.stock!.message}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      className={cn(
+                        "h-8 w-15 text-xs",
+                        errors.variants?.[0]?.weight && "border-destructive"
+                      )}
+                      inputMode="decimal"
+                      placeholder="0,00"
+                      {...register("variants.0.weight", { valueAsNumber: true })}
+                    />
+                    {errors.variants?.[0]?.weight && (
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <button type="button" className="text-destructive shrink-0">
+                            <AlertCircleIcon className="size-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="text-destructive">
+                          <p>{errors.variants[0]!.weight!.message}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex h-8 items-center">
+                    <Switch
+                      checked={watch("variants.0.isActive")}
+                      onCheckedChange={(v) => setValue("variants.0.isActive", v)}
+                    />
+                  </div>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <TooltipProvider>

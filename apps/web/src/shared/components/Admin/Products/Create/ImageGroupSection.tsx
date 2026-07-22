@@ -34,28 +34,29 @@ export function ImageGroupSection({
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">Imagens</h2>
 
-      <Field>
-        <FieldLabel>Imagens por variação</FieldLabel>
-        <FieldContent>
-          <Select
-            value={imageOptionIndex !== null ? String(imageOptionIndex) : "__none__"}
-            onValueChange={(v) => onImageOptionIndexChange(v === "__none__" ? null : Number(v))}
-            disabled={!options[0]}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione uma opção" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__none__">Nenhuma (mesmas imagens para todas)</SelectItem>
-              {options.map((opt, idx) => (
-                <SelectItem key={idx} value={String(idx)}>
-                  {opt.name || `Opção ${idx + 1}`}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </FieldContent>
-      </Field>
+      {options.length > 0 && (
+        <Field>
+          <FieldLabel>Imagens por variação</FieldLabel>
+          <FieldContent>
+            <Select
+              value={imageOptionIndex !== null ? String(imageOptionIndex) : "__none__"}
+              onValueChange={(v) => onImageOptionIndexChange(v === "__none__" ? null : Number(v))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione uma opção" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Nenhuma (mesmas imagens para todas)</SelectItem>
+                {options.map((opt, idx) => (
+                  <SelectItem key={idx} value={String(idx)}>
+                    {opt.name || `Opção ${idx + 1}`}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FieldContent>
+        </Field>
+      )}
 
       {isGeneral ? (
         <ImageUploadBlock label="Imagens do Produto" onImagesChange={onGeneralImagesChange} />
