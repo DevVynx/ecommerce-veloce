@@ -1,6 +1,6 @@
 "use client";
 import { Menu } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/shared/components/shadcn-ui/sheet";
@@ -13,7 +13,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col lg:flex-row lg:gap-6">
       <aside className="border-border bg-card sticky top-0 hidden h-screen w-full max-w-xs flex-col border-r lg:flex">
-        <AdminSidebar />
+        <Suspense fallback={null}>
+          <AdminSidebar />
+        </Suspense>
       </aside>
 
       <header className="border-border bg-card left-0 z-30 container mx-auto flex h-14 items-center justify-between border-b px-2 lg:hidden">
@@ -26,13 +28,15 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           </SheetTrigger>
           <SheetContent side="right" className="w-72 p-0">
             <SheetTitle className="sr-only">Menu de navegação</SheetTitle>
-            <AdminSidebar onNavClick={() => setOpen(false)} />
+            <Suspense fallback={null}>
+              <AdminSidebar onNavClick={() => setOpen(false)} />
+            </Suspense>
           </SheetContent>
         </Sheet>
       </header>
 
       <main className="container mx-auto min-h-screen flex-1 px-2 py-8 lg:pr-6 lg:pl-0">
-        {children}
+        <Suspense fallback={null}>{children}</Suspense>
       </main>
     </div>
   );
