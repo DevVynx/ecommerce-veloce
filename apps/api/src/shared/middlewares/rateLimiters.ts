@@ -7,9 +7,9 @@ export const globalLimiter = rateLimit({
 });
 
 export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: { error: "Muitas tentativas de autenticação. Tente novamente em 15 minutos." },
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  message: { error: "Muitas tentativas de autenticação. Tente novamente em 10 minutos." },
 });
 
 export const checkoutLimiter = rateLimit({

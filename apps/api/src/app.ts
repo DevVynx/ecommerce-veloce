@@ -7,6 +7,7 @@ import { authRouter } from "@/modules/auth/routes";
 import { cartRouter } from "@/modules/cart/routes";
 import { couponRouter } from "@/modules/coupon/routes";
 import { dashboardRouter } from "@/modules/dashboard/routes";
+import { stripeWebhook } from "@/modules/order/controllers";
 import { orderRouter } from "@/modules/order/routes";
 import { promotionRouter } from "@/modules/promotion/routes";
 import { reviewRouter } from "@/modules/review/routes";
@@ -24,6 +25,8 @@ import { searchRouter } from "./modules/search/routes";
 export const app: Express = express();
 
 // Configs -----------------------------------------------------------
+app.set("trust proxy", 1);
+
 app.use(
   express.json({
     verify: (req, _res, buf, _encoding) => {
@@ -31,6 +34,7 @@ app.use(
     },
   })
 );
+
 app.use(cookieParser());
 app.use(
   cors({
@@ -47,6 +51,8 @@ app.use(
 );
 
 // Routes ------------------------------------------------------------
+orderRouter.post("/webhook/stripe", stripeWebhook);
+
 app.use("/api", globalLimiter);
 
 app.use("/api", authRouter);
