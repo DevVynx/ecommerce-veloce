@@ -1,5 +1,5 @@
 "use client";
-import { FileQuestionMark, LogIn, Truck, User, UserPlus } from "lucide-react";
+import { LogIn, User, UserPlus } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/shared/components/shadcn-ui/button";
@@ -36,27 +36,6 @@ export const UserMenuContentUnauthenticated = () => {
             Criar conta
           </Link>
         </Button>
-      </div>
-
-      <Separator />
-
-      {/* Links úteis */}
-      <div className="flex flex-col py-2">
-        <Link
-          href="/orders"
-          className="hover:bg-muted flex cursor-pointer items-center gap-2 px-4 py-2.5 text-sm transition-colors"
-        >
-          <Truck className="size-5" />
-          Rastrear pedido
-        </Link>
-
-        <Link
-          href="/support"
-          className="hover:bg-muted flex cursor-pointer items-center gap-2 px-4 py-2.5 text-sm transition-colors"
-        >
-          <FileQuestionMark className="size-5" />
-          Ajuda e suporte
-        </Link>
       </div>
     </div>
   );
