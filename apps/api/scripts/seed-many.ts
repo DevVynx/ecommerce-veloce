@@ -11,8 +11,14 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-const CATEGORY_NAMES = ["Eletrônicos", "Masculino", "Feminino", "Joias"] as const;
-type CategoryName = (typeof CATEGORY_NAMES)[number];
+const CATEGORIES = [
+  { name: "Eletrônicos", image: "https://res.cloudinary.com/lj6rrdyz/image/upload/f_auto,q_auto/v1784824658/cat_eletronics_pirhxe.webp" },
+  { name: "Masculino", image: "https://res.cloudinary.com/lj6rrdyz/image/upload/f_auto,q_auto/v1784824658/cat_mens_clothing_vrcraj.webp" },
+  { name: "Feminino", image: "https://res.cloudinary.com/lj6rrdyz/image/upload/f_auto,q_auto/v1784824659/cat_womens_clothing_irlkvw.jpg" },
+  { name: "Joias", image: "https://res.cloudinary.com/lj6rrdyz/image/upload/f_auto,q_auto/v1784824659/joias_l42luj.jpg" },
+] as const;
+
+type CategoryName = (typeof CATEGORIES)[number]["name"];
 
 type ProductLine = {
   name: string;
@@ -287,7 +293,7 @@ async function main() {
   // ── Criar categorias ──
   console.log("🌱 Criando categorias...");
   const createdCategories = await prisma.$transaction(
-    CATEGORY_NAMES.map((name) => prisma.category.create({ data: { name } }))
+    CATEGORIES.map((cat) => prisma.category.create({ data: { name: cat.name, image: cat.image } }))
   );
   const categoryMap = new Map(createdCategories.map((c) => [c.name, c.id]));
   console.log(`✅ Categorias: ${createdCategories.map((c) => c.name).join(", ")}\n`);
@@ -295,7 +301,7 @@ async function main() {
   // ── Gerar produtos ──
   console.log(`🛍️  Gerando ${count} produtos...\n`);
 
-  const categoryNames = [...CATEGORY_NAMES];
+  const categoryNames = CATEGORIES.map((c) => c.name);
   let totalVariants = 0;
   let totalOptions = 0;
   let totalPromotions = 0;

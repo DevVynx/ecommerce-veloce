@@ -123,6 +123,7 @@ export type SearchProductsResponse = {
 export type CategoryDto = {
   id: string;
   name: string;
+  image?: string;
 };
 
 export type GetCategoriesResponse = {
