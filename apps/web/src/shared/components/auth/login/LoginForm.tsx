@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { LoginRequest } from "@repo/types/contracts";
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { startTransition, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { login } from "@/shared/actions/auth/login";
@@ -30,6 +30,8 @@ export const LoginForm = ({ redirectTo = "/", onSuccess }: LoginFormProps) => {
 
   useEffect(() => {
     if (authError) {
+      console.log(authError);
+      
       showNotification({
         type: "error",
         title: "Erro ao tentar fazer login",
@@ -61,7 +63,7 @@ export const LoginForm = ({ redirectTo = "/", onSuccess }: LoginFormProps) => {
     if (data) {
       setUser(data.user);
       onSuccess?.();
-      startTransition(() => router.push(redirectTo));
+      window.location.href = redirectTo;
     }
   };
 

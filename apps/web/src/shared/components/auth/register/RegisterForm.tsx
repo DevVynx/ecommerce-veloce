@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { register } from "@/shared/actions/auth/register";
@@ -105,7 +105,7 @@ export const RegisterForm = ({ redirectTo = "/", onSuccess }: RegisterFormProps)
       setStep("account");
       form.reset();
       onSuccess?.();
-      startTransition(() => router.push(redirectTo));
+      window.location.href = redirectTo;
     }
   };
 
