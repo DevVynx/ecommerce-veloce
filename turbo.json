@@ -5,7 +5,13 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["JWT_ACCESS_SECRET", "GOOGLE_CLIENT_ID"]
+    },
+    "web#build": {
       "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "api#build": {
+      "outputs": ["dist/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
