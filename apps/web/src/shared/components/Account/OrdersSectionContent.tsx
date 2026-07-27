@@ -14,6 +14,7 @@ import {
 } from "@/shared/components/shadcn-ui/table";
 import { STATUS_CONFIG } from "@/shared/utils/store/orders/statusConfig";
 import { formatPrice } from "@/shared/utils/store/price";
+import { formatOrderNumber } from "@/shared/utils/store/orderNumber";
 
 import { OrderDetailContent } from "./OrderDetailContent";
 import { OrderExpandedRow } from "./OrderExpandedRow";
@@ -60,7 +61,7 @@ export const OrdersSectionContent = ({ orders }: OrdersSectionContentProps) => {
               <Fragment key={order.id}>
                 <TableRow className="cursor-pointer" onClick={() => toggleOrder(order.id)}>
                   <TableCell className="font-mono text-xs">
-                    BEL-{String(order.orderNumber).padStart(6, "0")}
+                    {formatOrderNumber(order.orderNumber)}
                   </TableCell>
                   <TableCell className="text-sm">
                     {new Date(order.createdAt).toLocaleDateString("pt-BR")}
@@ -111,7 +112,7 @@ export const OrdersSectionContent = ({ orders }: OrdersSectionContentProps) => {
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1 space-y-1">
                   <p className="font-mono text-xs font-medium">
-                    BEL-{String(order.orderNumber).padStart(6, "0")}
+                    {formatOrderNumber(order.orderNumber)}
                   </p>
                   <p className="text-muted-foreground text-xs">
                     {new Date(order.createdAt).toLocaleDateString("pt-BR")}

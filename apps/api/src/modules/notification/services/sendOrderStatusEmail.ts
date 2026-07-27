@@ -1,3 +1,4 @@
+import { formatOrderNumber } from "@repo/helpers/formatters";
 import { resend } from "@/infra/mail";
 import { orderStatusEmailHtml } from "@/infra/mail/templates/orderStatusEmail";
 import { db } from "@/shared/lib/db";
@@ -28,7 +29,7 @@ export async function sendOrderStatusEmail(orderId: string, status: OrderStatus)
   await resend.emails.send({
     from: "Veloce <onboarding@resend.dev>",
     to: order.user.email,
-    subject: `Seu pedido BEL-${String(order.orderNumber).padStart(6, "0")} foi ${label}!`,
+    subject: `Seu pedido ${formatOrderNumber(order.orderNumber)} foi ${label}!`,
     html: orderStatusEmailHtml({
       userName: order.user.name,
       orderNumber: order.orderNumber,

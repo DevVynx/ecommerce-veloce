@@ -8,6 +8,7 @@ import { SectionError } from "@/shared/components/SectionError";
 import { useAdminOrders } from "@/shared/hooks/data/adminQueries/useOrder";
 import { STATUS_CONFIG } from "@/shared/utils/store/orders/statusConfig";
 import { formatPrice } from "@/shared/utils/store/price";
+import { formatOrderNumber } from "@/shared/utils/store/orderNumber";
 
 import { RecentOrdersSkeleton } from "./RecentOrdersSkeleton";
 
@@ -81,7 +82,7 @@ export function RecentOrders() {
               return (
                 <tr key={item.order.id} className="border-b last:border-b-0">
                   <td className="py-3 pr-4 font-mono text-xs">
-                    BEL-{String(item.order.orderNumber).padStart(6, "0")}
+                    {formatOrderNumber(item.order.orderNumber)}
                   </td>
                   <td className="py-3 pr-4 text-sm">{item.order.user.name}</td>
                   <td className="py-3 pr-4 text-sm font-medium tabular-nums">

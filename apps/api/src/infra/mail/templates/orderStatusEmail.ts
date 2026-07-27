@@ -1,3 +1,5 @@
+import { formatOrderNumber } from "@repo/helpers/formatters";
+
 type OrderStatusEmailData = {
   userName: string;
   orderNumber: number;
@@ -37,7 +39,7 @@ export function orderStatusEmailHtml(data: OrderStatusEmailData): string {
             <td style="padding:32px">
               <h2 style="margin:0 0 8px;font-size:20px;color:#18181b;font-weight:600">Boas notícias, ${data.userName}!</h2>
               <p style="margin:0 0 16px;font-size:16px;color:#52525b;line-height:1.5">
-                Seu pedido <strong>BEL-${String(data.orderNumber).padStart(6, "0")}</strong> acabou de ser <strong>${label}</strong>.
+                Seu pedido <strong>${formatOrderNumber(data.orderNumber)}</strong> acabou de ser <strong>${label}</strong>.
               </p>
               <p style="margin:0 0 24px;font-size:15px;color:#71717a;line-height:1.5">${message}</p>
               <p style="margin:0;font-size:14px;color:#a1a1aa">
