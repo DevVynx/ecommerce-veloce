@@ -42,5 +42,4 @@ yarn-error.log*
 *.pem
 
 # Prisma
-apps/api/prisma/migrations
 apps/api/prisma/generated
