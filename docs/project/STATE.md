@@ -1,13 +1,16 @@
 # Project State
 
-**Last Updated**: 2026-07-10
+**Last Updated**: 2026-07-27
 **State Expiration**: N/A
 
 ---
 
 ## Current Task
 
-**[vyn-053] Admin — Cupons (CRUD listagem + criação + exclusão)** — In Progress
+**[vyn-054] Correção: desconto do cupom deve considerar preço com promoção** — Completed
+
+### Changes
+- **`apps/api/src/modules/coupon/services/validateCoupon.ts`**: Substituído `cart.summary.subtotal` por `cart.summary.total` no cálculo do desconto e validação de valor mínimo, para usar o preço promocional como base
 
 ### Scopo
 - Listagem de cupons com busca, filtros, ordenação, paginação

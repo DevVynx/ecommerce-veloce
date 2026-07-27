@@ -49,9 +49,9 @@ export const validateCoupon = async ({ userId, code }: ValidateCouponParams) => 
     throw new UnprocessableEntityError("Carrinho vazio.");
   }
 
-  const subtotal = cart.summary.subtotal;
+  const orderTotal = cart.summary.total;
 
-  if (subtotal.lessThan(coupon.minOrderValue)) {
+  if (orderTotal.lessThan(coupon.minOrderValue)) {
     throw new UnprocessableEntityError(
       `O seu carrinho não possui o valor mínimo para utilizar este cupom.`
     );
@@ -64,7 +64,7 @@ export const validateCoupon = async ({ userId, code }: ValidateCouponParams) => 
   }
 
   if (coupon.type === "PERCENTAGE") {
-    discountValue = subtotal.times(coupon.value).div(100);
+    discountValue = orderTotal.times(coupon.value).div(100);
 
     if (coupon.maxDiscount) {
       discountValue = Prisma.Decimal.min(discountValue, coupon.maxDiscount);
@@ -72,7 +72,7 @@ export const validateCoupon = async ({ userId, code }: ValidateCouponParams) => 
   }
 
   if (coupon.type === "FIXED") {
-    discountValue = Prisma.Decimal.min(new Prisma.Decimal(coupon.value), subtotal);
+    discountValue = Prisma.Decimal.min(new Prisma.Decimal(coupon.value), orderTotal);
   }
 
   discountValue = discountValue.toDecimalPlaces(2);
