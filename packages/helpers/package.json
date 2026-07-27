@@ -1,6 +1,7 @@
 {
   "name": "@repo/helpers",
   "version": "0.0.0",
+  "type": "module",
   "exports": {
     "./formatters": "./formatters/index.ts"
   },
