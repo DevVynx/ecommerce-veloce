@@ -39,15 +39,16 @@ export function useProductVariantSelection(
 
   const selectedVariant = useMemo((): VariantDto | null => {
     if (options.length === 0) {
+      const realVariant = variants.find((v) => v.id === displayVariant.variantId);
       return {
         id: displayVariant.variantId,
-        sku: "",
+        sku: realVariant?.sku ?? "",
         price: displayVariant.price,
         salePrice: displayVariant.salePrice,
         stock: displayVariant.stock,
         isOnSale: displayVariant.isOnSale,
         isAvailable: displayVariant.isAvailable,
-        optionValueIds: [],
+        optionValueIds: realVariant?.optionValueIds ?? [],
         images: displayVariant.images,
       };
     }
