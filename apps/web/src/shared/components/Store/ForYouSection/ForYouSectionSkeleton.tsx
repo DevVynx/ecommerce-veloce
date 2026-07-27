@@ -1,6 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
+import { ProductCardSkeleton } from "@/shared/components/Store/ProductCardSkeleton";
 
 export const ForYouSectionSkeleton = () => {
   return (
@@ -9,8 +10,8 @@ export const ForYouSectionSkeleton = () => {
         <Skeleton className="mx-auto h-7 w-32" />
 
         <div className="grid grid-cols-2 gap-6 py-10 md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <Skeleton key={i} className="h-80 w-full rounded-lg" />
+          {Array.from({ length: 8 }).map((_, i) => (
+            <ProductCardSkeleton key={i} grid />
           ))}
         </div>
       </div>
