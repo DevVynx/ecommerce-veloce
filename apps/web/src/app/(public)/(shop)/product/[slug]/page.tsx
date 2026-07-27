@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import { getProductBySlug } from "@/shared/actions/products/getProductBySlug";
 import { ProductDetailsServer } from "@/shared/components/Store/ProductDetails/ProductDetailsServer";
+import { ProductDetailsSkeleton } from "@/shared/components/Store/ProductDetails/ProductDetailsSkeleton";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 const ProductPage = async ({ params }: ProductPageProps) => {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<ProductDetailsSkeleton />}>
       <ProductDetailsServer params={params} />
     </Suspense>
   );
