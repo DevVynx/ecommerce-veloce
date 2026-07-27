@@ -21,29 +21,6 @@ Este documento registra funcionalidades e melhorias que seriam importantes em um
 - **O que seria**: Mecanismo de retry com fila (bull/bullmq) para reprocessar webhooks falhos, idempotência, e logging de eventos rejeitados.
 - **Por que não foi**: Em test mode o volume de eventos é baixo e não há risco financeiro. Um sistema real precisaria de fila + dashboard de monitoramento.
 
-### Confirmação por E-mail
-
-- **O que seria**: Enviar e-mail de confirmação ao usuário após pagamento aprovado (com detalhes do pedido, frete, etc.).
-- **Por que não foi**: Não há serviço de e-mail integrado (nem nodemailer, resend, sendgrid, etc.). A mensagem "você receberá um e-mail" na página de sucesso é ilustrativa.
-
----
-
-## Admin & Gestão
-
-### Painel Administrativo
-
-- **O que seria**: Dashboard para gerenciar produtos, pedidos, usuários, cupons — com gráficos, filtros, actions de CRUD.
-- **Por que não foi**: Trade-off de tempo — já foi gasto muito tempo neste projeto, então optou-se por não implementar o painel administrativo. Existem rotas protegidas apenas para ADMIN que servem para gerenciar a parte importante do projeto (produtos, cupons, etc.). Ficará marcado para uma futura adição de maneira simples.
-
----
-
-## Produto & Catálogo
-
-### Upload de Imagens
-
-- **O que seria**: Upload de imagens de produtos com redimensionamento, compressão e CDN.
-- **Por que não foi**: Não há infraestrutura de upload (multer/sharp) nem storage (S3/Cloudflare R2). As imagens vêm de URLs externas no seed.
-
 ---
 
 ## Infraestrutura & Operação
