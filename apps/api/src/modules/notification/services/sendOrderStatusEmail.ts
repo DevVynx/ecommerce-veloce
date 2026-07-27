@@ -1,4 +1,5 @@
 import { formatOrderNumber } from "@repo/helpers/formatters";
+
 import { resend } from "@/infra/mail";
 import { orderStatusEmailHtml } from "@/infra/mail/templates/orderStatusEmail";
 import { db } from "@/shared/lib/db";
