@@ -33,7 +33,7 @@ export const RegisterModal = ({
         <div className="flex flex-col items-center gap-4">
           <RegisterForm redirectTo={redirectTo} />
 
-          <div className="w-full hidden">
+          <div className="hidden w-full">
             <OrDivider />
             <GoogleSocialLoginButton redirectTo={redirectTo} />
           </div>

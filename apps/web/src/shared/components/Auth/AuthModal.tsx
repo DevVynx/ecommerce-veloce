@@ -90,7 +90,7 @@ export const AuthModal = ({
             )}
           </p>
 
-          <div className="w-full hidden">
+          <div className="hidden w-full">
             <OrDivider />
             <GoogleSocialLoginButton redirectTo={redirectTo} onSuccess={onLoginSuccess} />
           </div>

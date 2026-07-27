@@ -2,7 +2,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { LoginRequest } from "@repo/types/contracts";
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -26,7 +25,6 @@ export const LoginForm = ({ redirectTo = "/", onSuccess }: LoginFormProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [checked, setChecked] = useState(false);
   const { setUser, authError, setAuthError } = useAuthState();
-  const router = useRouter();
 
   useEffect(() => {
     if (authError) {
@@ -151,7 +149,6 @@ export const LoginForm = ({ redirectTo = "/", onSuccess }: LoginFormProps) => {
 
         <Button
           variant={"link"}
-          onClick={() => router.push("/forgot-password")}
           className="text-card-foreground hover:text-muted-foreground p-0 font-bold"
         >
           Esqueceu a senha?

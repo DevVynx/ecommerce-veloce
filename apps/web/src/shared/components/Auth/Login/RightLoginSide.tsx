@@ -50,7 +50,7 @@ export const RightLoginSide = () => {
           </p>
         </div>
 
-        <div className="w-full hidden">
+        <div className="hidden w-full">
           <OrDivider />
           <div className="flex flex-col gap-3">
             <GoogleSocialLoginButton />
