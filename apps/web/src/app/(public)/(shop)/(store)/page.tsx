@@ -1,5 +1,5 @@
-import { Suspense } from "react";
 import { connection } from "next/server";
+import { Suspense } from "react";
 
 import { HeroBanner } from "@/shared/components/Store/Banner";
 import { BestOffersSection } from "@/shared/components/Store/BestOffersSection/BestOffersSection";
