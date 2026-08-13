@@ -1,6 +1,7 @@
 import "./globals.css";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Kotta_One } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -33,10 +34,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://veloce-ecommerce.vercel.app"),
   title: "Veloce | Sua Loja Online de Produtos",
   description:
     "Bem-vindo à Veloce Store! Explore nossa loja online e encontre os melhores produtos com qualidade e praticidade em um só lugar.",
+  applicationName: "Veloce",
   icons: "/veloce-logo.jpeg",
+  openGraph: {
+    type: "website",
+    siteName: "Veloce",
+    locale: "pt_BR",
+    url: "/",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1897,
+        height: 1061,
+        alt: "Veloce — Sua Loja Online de Produtos",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og-image.png"],
+  },
 };
 
 export default async function RootLayout({
@@ -49,6 +70,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${kottaOne.variable} antialiased`}
       >
+        <Analytics />
         <Suspense fallback={null}>
           <QueryProvider>
             <GoogleOAuthProvider clientId={ENV.GOOGLE_CLIENT_ID}>
